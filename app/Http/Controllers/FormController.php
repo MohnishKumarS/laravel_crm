@@ -35,7 +35,7 @@ class FormController extends Controller
             'fields' => json_decode($request->fields, true),
         ]);
 
-        return redirect()->route('forms.index')->with('success', 'Form created');
+        return redirect()->route('forms.index')->with('success', 'Form Created Successfully!');
     }
 
     public function show(string $id)
@@ -66,7 +66,7 @@ class FormController extends Controller
             'fields' => json_decode($request->fields, true),
         ]);
 
-        return redirect()->route('forms.index')->with('success', 'Form updated');
+        return redirect()->route('forms.index')->with('success', 'Form Updated Successfully!');
     }
 
     public function destroy(string $id)

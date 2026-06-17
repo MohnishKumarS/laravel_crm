@@ -120,7 +120,7 @@
             <div class="col-lg-6 d-none d-lg-flex image-section">
                 <div class="overlay-content">
 
-
+                    {{-- <img src="{{ asset('uploads/logo/logo_new.png') }}" class="logo mb-4" alt="Logo"> --}}
                     <h1>Welcome Back!</h1>
                     <p>
                         Manage your CRM, customers, sales and reports
@@ -135,7 +135,7 @@
 
                     {{-- <h2 class="auth-title">Sign In</h2> --}}
                     <div class="text-center">
-                        <img src="{{ asset('uploads/logo/logo1.png') }}" class="logo mb-4" alt="Logo">
+                        <img src="{{ asset('uploads/logo/logo_dark.png') }}" class="logo mb-5" alt="Logo">
                     </div>
 
                     <form action="{{ route('login.submit') }}" method="POST">
