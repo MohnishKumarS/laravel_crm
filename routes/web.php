@@ -1,5 +1,7 @@
 <?php
 
+
+use App\Http\Controllers\FormController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -12,7 +14,14 @@ Route::prefix('admin')->group(function () {
     Route::view('/add-brands', 'admin.base.add-brand')->name('brands.create');
     Route::view('/sample', 'admin.base.sample')->name('sample');
     Route::view('/dashboard', 'admin.base.dashboard')->name('dashboard');
+
+    
+    Route::view('/forms', 'admin.forms.create')->name('forms.create');
+    Route::resource('forms', FormController::class);
+    // Route::resource('posts', PostController::class);
 });
+
+
 
 ## cache clear
 Route::get('/clear', function() {

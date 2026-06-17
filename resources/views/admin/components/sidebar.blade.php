@@ -85,6 +85,29 @@
                           </ul>
                       </div>
                   </li>
+                  <li class="nav-item">
+                      <a data-bs-toggle="collapse" href="#forms_list">
+                          <i class="fas fa-file-alt"></i>
+                          <p>Forms</p>
+                          <span class="caret"></span>
+                      </a>
+                      <div class="collapse" id="forms_list">
+                          <ul class="nav nav-collapse" style="list-style: none">
+                              <li>
+                                  <a href="{{ route('forms.create') }}">
+                                      <span class="ms-5">Add Form</span>
+                                  </a>
+                              </li>
+                              <li>
+                                  <a href="{{ route('forms.index') }}">
+                                      <span class="ms-5">View Forms</span>
+                                  </a>
+                              </li>
+                          </ul>
+                      </div>
+                  </li>
+              
+                    
 
 
               </ul>
