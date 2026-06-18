@@ -2,7 +2,7 @@
     <div class="main-header-logo">
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
-            <a href="{{url('/')}}" class="logo" target="_blank">
+            <a href="{{ url('/') }}" class="logo" target="_blank">
                 <img src="{{ asset('uploads/logo/logo1.png') }}" alt="navbar brand" class="navbar-brand" height="20" />
             </a>
             <div class="nav-toggle">
@@ -64,7 +64,8 @@
                                 <div class="notif-center">
                                     <a href="#">
                                         <div class="notif-img">
-                                            <img src="{{ asset('yuukke/assets/img/jm_denis.jpg') }}" alt="Img Profile" />
+                                            <img src="{{ asset('yuukke/assets/img/jm_denis.jpg') }}"
+                                                alt="Img Profile" />
                                         </div>
                                         <div class="notif-content">
                                             <span class="subject">Jimmy Denis</span>
@@ -255,7 +256,7 @@
                         </div>
                         <span class="profile-username">
                             <span class="op-7">Hi,</span>
-                            <span class="fw-bold">Moni</span>
+                            <span class="fw-bold">{{ Auth::user()->name }}</span>
                         </span>
                     </a>
                     <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -267,14 +268,21 @@
                                             alt="image profile" class="avatar-img rounded" />
                                     </div>
                                     <div class="u-text">
-                                        <h4>Moni</h4>
-                                        <p class="text-muted">moni@example.com</p>
-                                        <a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View
-                                            Profile</a>
+                                        <h4>{{ Auth::user()->name }}</h4>
+                                        <p class="text-muted">{{ Auth::user()->email }}</p>
+                                        {{-- <a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View
+                                            Profile</a> --}}
+                                        {{-- <a href="{{ route('logout') }}" class="btn btn-xs btn-danger btn-sm">Logout</a> --}}
+                                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                Logout
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </li>
-                            <li>
+                            {{-- <li>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#">My Profile</a>
                                 <a class="dropdown-item" href="#">My Balance</a>
@@ -282,14 +290,9 @@
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#">Account Setting</a>
                                 <div class="dropdown-divider"></div>
-                                {{-- <a class="dropdown-item" href="{{ route('logout') }}"
-                                    onclick="event.preventDefault();
-                                  document.getElementById('logout-form').submit();">Logout</a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                    class="d-none">
-                                    @csrf
-                                </form> --}}
-                            </li>
+                                <a class="dropdown-item" href="">Logout</a>
+                             
+                            </li> --}}
                         </div>
                     </ul>
                 </li>
