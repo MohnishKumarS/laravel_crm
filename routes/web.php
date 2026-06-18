@@ -18,6 +18,10 @@ Route::prefix('admin')->group(function () {
     
     Route::view('/forms', 'admin.forms.create')->name('forms.create');
     Route::resource('forms', FormController::class);
+       Route::get('forms/{id}/submissions', [FormController::class, 'submissions'])
+        ->name('forms.submissions');
+    Route::get('forms/{id}/submissions/export', [FormController::class, 'exportSubmissions'])
+        ->name('forms.submissions.export');
     // Route::resource('posts', PostController::class);
 });
 

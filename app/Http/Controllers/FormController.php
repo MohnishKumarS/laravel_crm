@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\FormSubmissionsExport;
 use App\Models\Form;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FormController extends Controller
 {
@@ -74,4 +76,20 @@ class FormController extends Controller
         Form::findOrFail($id)->delete();
         return redirect()->route('forms.index')->with('success', 'Form deleted');
     }
+
+    public function submissions(string $id)
+{
+    $form = Form::with('submissions')->findOrFail($id);
+    return view('admin.forms.submissions', compact('form'));
+}
+
+public function exportSubmissions(string $id)
+{
+    $form = Form::findOrFail($id);
+
+    return Excel::download(
+        new FormSubmissionsExport($form),
+        $form->slug . '-submissions-' . now()->format('Y-m-d') . '.xlsx'
+    );
+}
 }
