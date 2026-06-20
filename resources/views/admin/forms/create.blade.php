@@ -15,7 +15,7 @@
                     <h5 class="alert alert-success">{{ session('success') }}</h5>
                 @endif
 
-                <form action="{{ route('forms.store') }}" method="POST">
+                <form action="{{ route('forms.store') }}" method="POST" onsubmit="serializeFields()">
                     @csrf
 
                     <div class="form-group">
@@ -50,9 +50,7 @@
                     <input type="hidden" name="fields" id="fields-json" />
 
                     <div class="card-action mt-3">
-                        <button type="submit" class="btn btn-success" onclick="serializeFields()">
-                            Save Form
-                        </button>
+                        <button type="submit" class="btn btn-success">Save Form</button>
                     </div>
                 </form>
             </div>
@@ -62,6 +60,7 @@
 
 <script>
 let fields = [];
+
 function addField() {
     fields.push({ name: '', type: 'text', label: '', required: false, options: [] });
     renderFields();
@@ -74,6 +73,7 @@ function removeField(i) {
 
 function renderFields() {
     const container = document.getElementById('field-builder');
+
     container.innerHTML = fields.map((f, i) => `
         <div class="row align-items-center mb-2 border p-2 rounded" data-index="${i}">
             <div class="col-md-3">
@@ -86,18 +86,28 @@ function renderFields() {
                 <select class="form-control field-type">
                     <option value="text"     ${f.type === 'text' ? 'selected' : ''}>Text</option>
                     <option value="email"    ${f.type === 'email' ? 'selected' : ''}>Email</option>
+                    <option value="mobile"   ${f.type === 'mobile' ? 'selected' : ''}>Mobile</option>
                     <option value="textarea" ${f.type === 'textarea' ? 'selected' : ''}>Textarea</option>
                     <option value="select"   ${f.type === 'select' ? 'selected' : ''}>Select</option>
                     <option value="checkbox" ${f.type === 'checkbox' ? 'selected' : ''}>Checkbox</option>
-                    <option value="mobile"   ${f.type === 'mobile' ? 'selected' : ''}>Mobile</option>
                 </select>
             </div>
-            <div class="col-md-2 form-check">
+            <div class="col-md-2 form-check pt-2">
                 <input type="checkbox" class="form-check-input field-required" ${f.required ? 'checked' : ''} />
                 <label class="form-check-label">Required</label>
             </div>
             <div class="col-md-2 text-right">
                 <button type="button" class="btn btn-sm btn-danger remove-field">Remove</button>
+            </div>
+
+            <div class="col-md-12 mt-2 options-wrapper" style="${['select','checkbox'].includes(f.type) ? '' : 'display:none'}">
+                <label class="small mb-1">
+                    Options (comma separated)
+                    ${f.type === 'checkbox' ? '— leave blank for a single yes/no checkbox' : ''}
+                </label>
+                <input class="form-control field-options"
+                    placeholder="e.g. Red, Blue, Green"
+                    value="${(f.options || []).join(', ')}" />
             </div>
         </div>
     `).join('');
@@ -114,20 +124,33 @@ function attachFieldListeners() {
         row.querySelector('.field-name').addEventListener('input', e => {
             fields[i].name = e.target.value;
         });
+
         row.querySelector('.field-label').addEventListener('input', e => {
             fields[i].label = e.target.value;
         });
+
         row.querySelector('.field-type').addEventListener('change', e => {
             fields[i].type = e.target.value;
+            renderFields();
         });
+
         row.querySelector('.field-required').addEventListener('change', e => {
             fields[i].required = e.target.checked;
         });
+
+        row.querySelector('.field-options').addEventListener('input', e => {
+            fields[i].options = e.target.value
+                .split(',')
+                .map(opt => opt.trim())
+                .filter(opt => opt.length > 0);
+        });
+
         row.querySelector('.remove-field').addEventListener('click', () => {
             removeField(i);
         });
     });
 }
+
 function serializeFields() {
     document.getElementById('fields-json').value = JSON.stringify(fields);
 }
