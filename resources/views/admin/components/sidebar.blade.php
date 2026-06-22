@@ -106,6 +106,27 @@
                           </ul>
                       </div>
                   </li>
+                    <li class="nav-item">
+                        <a data-bs-toggle="collapse" href="#posts_list">
+                            <i class="fas fa-file-alt"></i>
+                            <p>Posts</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse" id="posts_list">
+                            <ul class="nav nav-collapse" style="list-style: none">
+                                <li>
+                                    <a href="{{ route('posts.create') }}">
+                                        <span class="ms-5">Add Post</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('posts.index') }}">
+                                        <span class="ms-5">View Posts</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
               
                     
 

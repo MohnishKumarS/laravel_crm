@@ -45,13 +45,12 @@
                                        class="btn btn-info btn-sm">View</a>
                                     <a href="{{ route('forms.edit', $form->id) }}"
                                        class="btn btn-warning btn-sm">Edit</a>
-                                    <form action="{{ route('forms.destroy', $form->id) }}"
-                                          method="POST" style="display:inline-block"
-                                          onsubmit="return confirm('Delete this form?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                    </form>
+                                  <form action="{{ route('forms.destroy', $form->id) }}" method="POST"
+                                        class="delete-form" style="display:inline-block">
+                                      @csrf
+                                      @method('DELETE')
+                                      <button type="button" class="btn btn-danger btn-sm delete-btn">Delete</button>
+                                  </form>
                                      <a href="{{ route('forms.submissions', $form->id) }}"
                                        class="btn btn-warning btn-sm">Submissions</a>
                                 </td>
@@ -70,3 +69,27 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.querySelectorAll('.delete-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+        const form = btn.closest('.delete-form');
+
+        Swal.fire({
+            title: 'Delete this form?',
+            text: 'This cannot be undone.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it',
+            cancelButtonText: 'Cancel',
+            confirmButtonColor: '#dc3545',
+        }).then(function (result) {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
+});
+</script>
+@endpush

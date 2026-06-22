@@ -1,8 +1,9 @@
 <?php
 
 
-use App\Http\Controllers\FormController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\FormController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -39,11 +40,14 @@ Route::middleware(['auth', 'admin'])->group(function () {
     
     Route::view('/forms', 'admin.forms.create')->name('forms.create');
     Route::resource('forms', FormController::class);
-       Route::get('forms/{id}/submissions', [FormController::class, 'submissions'])
+    Route::get('forms/{id}/submissions', [FormController::class, 'submissions'])
         ->name('forms.submissions');
     Route::get('forms/{id}/submissions/export', [FormController::class, 'exportSubmissions'])
         ->name('forms.submissions.export');
-    // Route::resource('posts', PostController::class);
+    Route::view('/posts', 'admin.posts.create')->name('posts.create');
+    
+    Route::resource('posts', PostController::class);
+    
 });
 
 

@@ -27,11 +27,14 @@
 
 <!-- Sweet Alert -->
 {{-- <script src="{{ asset('yuukke/assets/js/plugin/sweetalert/sweetalert.min.js') }}"></script> --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- main JS -->
 <script src="{{ asset('yuukke/assets/js/main.min.js') }}"></script>
 {{-- select2 --}}
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+{{-- CKEditor 5 via CDN --}}
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
 <!-- Kaiyuukke DEMO methods, don't include it in your project! -->
 {{-- <script src="{{ asset('yuukke/assets/js/setting-demo.js') }}"></script>
