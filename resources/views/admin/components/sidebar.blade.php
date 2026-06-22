@@ -3,9 +3,9 @@
       <div class="sidebar-logo">
           <!-- Logo Header -->
           <div class="logo-header" data-background-color="dark">
-              <a href="{{ url('/') }}" class="logo text-white" target="_blank">
-                  <img src="{{ asset('uploads/logo/logo1.png') }}" alt="navbar brand" class="navbar-brand"
-                      width="150" />
+              <a href="{{ url('/') }}" class="logo" target="_blank">
+                  <img src="{{ asset('uploads/logo/logo_light.png') }}" alt="navbar brand" class="navbar-brand"
+                      width="100" />
               </a>
               <div class="nav-toggle">
                   <button class="btn btn-toggle toggle-sidebar">
@@ -46,7 +46,7 @@
                       </span>
                       <h4 class="text-section">Components</h4>
                   </li>
-                  <li class="nav-item">
+                  {{-- <li class="nav-item">
                       <a data-bs-toggle="collapse" href="#banners_list">
                           <i class="fas fa-image"></i>
                           <p>Layouts</p>
@@ -63,8 +63,8 @@
 
                           </ul>
                       </div>
-                  </li>
-                  <li class="nav-item">
+                  </li> --}}
+                  {{-- <li class="nav-item">
                       <a data-bs-toggle="collapse" href="#brands_list">
                           <i class="fas fa-ghost"></i>
                           <p>Users</p>
@@ -84,7 +84,7 @@
                               </li>
                           </ul>
                       </div>
-                  </li>
+                  </li> --}}
                   <li class="nav-item">
                       <a data-bs-toggle="collapse" href="#forms_list">
                           <i class="fas fa-file-alt"></i>

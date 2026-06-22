@@ -4,75 +4,104 @@
 @section('title', 'Edit Form | Yuukke Dashboard')
 
 @section('content')
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">Edit Form: {{ $form->title }}</div>
-            </div>
-            <div class="card-body">
-                <form action="{{ route('forms.update', $form->id) }}" method="POST" onsubmit="serializeFields()">
-                    @csrf
-                    @method('PUT')
+    {{-- Breadcrumb --}}
+    <div class="page-header">
+        <h3 class="fw-bold mb-3">Form Page</h3>
+        <ul class="breadcrumbs mb-3">
+            <li class="nav-home">
+                <a href="{{ route('dashboard') }}">
+                    <i class="icon-home"></i>
+                </a>
+            </li>
+            <li class="separator">
+                <i class="icon-arrow-right"></i>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('forms.index') }}">Forms</a>
+            </li>
+            <li class="separator">
+                <i class="icon-arrow-right"></i>
+            </li>
+            <li class="nav-item">
+                <a href="#">Edit</a>
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Edit Form: {{ $form->title }}</div>
+                </div>
+                <div class="card-body">
+                      <form action="{{ route('forms.update', $form->id) }}" method="POST"
+                        onsubmit="serializeFields()">
+                                        @csrf
+                                        @method('PUT')
 
-                    <div class="form-group">
-                        <label for="title">Form Title</label>
-                        <input name="title" type="text" class="form-control" id="title"
-                            value="{{ old('title', $form->title) }}" required />
-                        @error('title')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
+    <div class="form-group">
+        <label for="title">Form Title</label>
+        <input name="title" type="text" class="form-control" id="title"
+            value="{{ old('title', $form->title) }}" required />
+        @error('title')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
 
-                    <div class="form-group">
-                        <label for="slug">Slug</label>
-                        <input name="slug" type="text" class="form-control" id="slug"
-                            value="{{ old('slug', $form->slug) }}" required />
-                        @error('slug')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
+    <div class="form-group">
+        <label for="slug">Slug</label>
+        <input name="slug" type="text" class="form-control" id="slug"
+            value="{{ old('slug', $form->slug) }}" required />
+        @error('slug')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
 
-                    <div class="form-group">
-                        <label>Fields</label>
-                        <div id="field-builder" class="mb-2"></div>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addField()">
-                            + Add field
-                        </button>
-                        @error('fields')
-                            <span class="text-danger d-block">{{ $message }}</span>
-                        @enderror
-                    </div>
+    <div class="form-group">
+        <label>Fields</label>
+        <div id="field-builder" class="mb-2"></div>
+        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addField()">
+            + Add field
+        </button>
+        @error('fields')
+            <span class="text-danger d-block">{{ $message }}</span>
+        @enderror
+    </div>
 
-                    <input type="hidden" name="fields" id="fields-json" />
+    <input type="hidden" name="fields" id="fields-json" />
 
-                    <div class="card-action mt-3">
-                        <button type="submit" class="btn btn-success">Update Form</button>
-                        <a href="{{ route('forms.index') }}" class="btn btn-secondary">Cancel</a>
-                    </div>
-                </form>
+    <div class="card-action mt-3">
+        <button type="submit" class="btn btn-success">Update Form</button>
+        <a href="{{ route('forms.index') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-// Seed with existing fields from the DB
-let fields = @json($form->fields ?? []);
+    <script>
+        // Seed with existing fields from the DB
+        let fields = @json($form->fields ?? []);
 
-function addField() {
-    fields.push({ name: '', type: 'text', label: '', required: false, options: [] });
-    renderFields();
-}
+        function addField() {
+            fields.push({
+                name: '',
+                type: 'text',
+                label: '',
+                required: false,
+                options: []
+            });
+            renderFields();
+        }
 
-function removeField(i) {
-    fields.splice(i, 1);
-    renderFields();
-}
+        function removeField(i) {
+            fields.splice(i, 1);
+            renderFields();
+        }
 
 function renderFields() {
     const container = document.getElementById('field-builder');
-
     container.innerHTML = fields.map((f, i) => `
         <div class="row align-items-center mb-2 border p-2 rounded" data-index="${i}">
             <div class="col-md-3">
@@ -111,50 +140,38 @@ function renderFields() {
         </div>
     `).join('');
 
-    attachFieldListeners();
-}
+            attachFieldListeners();
+        }
 
-function attachFieldListeners() {
-    const container = document.getElementById('field-builder');
+        function attachFieldListeners() {
+            const container = document.getElementById('field-builder');
 
-    container.querySelectorAll('[data-index]').forEach(row => {
-        const i = Number(row.dataset.index);
+            container.querySelectorAll('[data-index]').forEach(row => {
+                const i = Number(row.dataset.index);
 
         row.querySelector('.field-name').addEventListener('input', e => {
             fields[i].name = e.target.value;
         });
-
         row.querySelector('.field-label').addEventListener('input', e => {
             fields[i].label = e.target.value;
         });
-
         row.querySelector('.field-type').addEventListener('change', e => {
             fields[i].type = e.target.value;
-            renderFields();
         });
-
         row.querySelector('.field-required').addEventListener('change', e => {
             fields[i].required = e.target.checked;
         });
-
-        row.querySelector('.field-options').addEventListener('input', e => {
-            fields[i].options = e.target.value
-                .split(',')
-                .map(opt => opt.trim())
-                .filter(opt => opt.length > 0);
-        });
-
         row.querySelector('.remove-field').addEventListener('click', () => {
             removeField(i);
         });
     });
 }
 
-// Render immediately on page load with seeded data
-renderFields();
+        // Render immediately on page load with seeded data
+        renderFields();
 
-function serializeFields() {
-    document.getElementById('fields-json').value = JSON.stringify(fields);
-}
-</script>
+        function serializeFields() {
+            document.getElementById('fields-json').value = JSON.stringify(fields);
+        }
+    </script>
 @endsection

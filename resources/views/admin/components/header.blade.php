@@ -270,8 +270,8 @@
                                     <div class="u-text">
                                         <h4>{{ Auth::user()->name }}</h4>
                                         <p class="text-muted">{{ Auth::user()->email }}</p>
-                                        {{-- <a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View
-                                            Profile</a> --}}
+                                        <a href="{{ route('profile') }}" class="btn btn-xs btn-secondary btn-sm">View
+                                            Profile</a>
                                         {{-- <a href="{{ route('logout') }}" class="btn btn-xs btn-danger btn-sm">Logout</a> --}}
                                         <form action="{{ route('logout') }}" method="POST" class="d-inline">
                                             @csrf
