@@ -1381,11 +1381,12 @@ body {
     z-index: 1001;
     font-size: 17px;
     font-weight: 400;
-    padding-left: 25px;
+    /* padding-left: 25px; */
     padding-right: 25px;
     z-index: 1001;
     display: flex;
     align-items: center;
+    justify-content: center;
     position: relative;
     transition: all .3s
 }

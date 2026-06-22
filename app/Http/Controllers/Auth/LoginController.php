@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -23,8 +25,9 @@ class LoginController extends Controller
             'name' => ['required'],
             'password' => ['required'],
         ]);
+        $remember = $request->boolean('remember');
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $remember)) {
 
             $request->session()->regenerate();
 
@@ -36,7 +39,7 @@ class LoginController extends Controller
             // $request->session()->invalidate();
             // $request->session()->regenerateToken();
 
-            return redirect()->back()->with('status', 'failed')->with('message', 'You do not have permission to access the admin panel.');
+            return redirect()->back()->with('status', 'danger')->with('message', 'You do not have permission to access the admin panel.');
         }
 
         return back()->withErrors([
@@ -53,5 +56,23 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/login');
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|unique:users,name',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|confirmed|min:6',
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'user',
+        ]);
+
+        return redirect()->route('login')->with('status', 'success')->with('message', 'Account created successfully.');
     }
 }

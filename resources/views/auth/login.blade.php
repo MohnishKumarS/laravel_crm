@@ -156,8 +156,9 @@
                             </div>
                         @endif
                         @if (session('message'))
-                            <div class="alert alert-danger">
+                            <div class="alert alert-{{ session('status', 'danger') }} alert-dismissible fade show">
                                 {{ session('message') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
                         @endif
                         <div class="mb-4">
@@ -171,8 +172,8 @@
 
                         <div class="d-flex justify-content-between mb-4">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox">
-                                <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" name="remember" id="remember">
+                                <label class="form-check-label" for="remember">
                                     Remember Me
                                 </label>
                             </div>
@@ -185,10 +186,10 @@
                         </button>
                     </form>
 
-                    <div class="auth-footer">
+                    {{-- <div class="auth-footer">
                         Don't have an account?
                         <a href="#">Sign Up</a>
-                    </div>
+                    </div> --}}
 
                 </div>
             </div>

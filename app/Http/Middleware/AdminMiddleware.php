@@ -20,7 +20,7 @@ class AdminMiddleware
             return $next($request);
         }
 
-        return redirect('/login')->with('status', 'failed')->with('message', 'Permission denied!');
+        return redirect('/login')->with('status', 'danger')->with('message', 'Permission denied!');
 
     }
 }
