@@ -46,7 +46,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ->name('forms.submissions.export');
     Route::view('/posts', 'admin.posts.create')->name('posts.create');
     
-    Route::resource('posts', PostController::class);
+    Route::resource('posts', PostController::class); 
+    
     
 });
 
