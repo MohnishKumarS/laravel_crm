@@ -3,7 +3,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\FormController;
-use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +26,9 @@ Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'authenticate'])->name('login.submit');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+Route::view('/register', 'auth.register')->name('register');
+Route::post('/register', [LoginController::class, 'register'])->name('register.submit');
+
 
 Route::middleware(['auth', 'admin'])->group(function () {
 
@@ -37,17 +40,18 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::view('/add-brands', 'admin.base.add-brand')->name('brands.create');
     Route::view('/sample', 'admin.base.sample')->name('sample');
 
-    
+    // DYNAMIC FORM BUILDER
     Route::view('/forms', 'admin.forms.create')->name('forms.create');
     Route::resource('forms', FormController::class);
-    Route::get('forms/{id}/submissions', [FormController::class, 'submissions'])
+    
+       Route::get('forms/{id}/submissions', [FormController::class, 'submissions'])
         ->name('forms.submissions');
     Route::get('forms/{id}/submissions/export', [FormController::class, 'exportSubmissions'])
         ->name('forms.submissions.export');
-    Route::view('/posts', 'admin.posts.create')->name('posts.create');
-    
-    Route::resource('posts', PostController::class);
-    
+    // PROFILE
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 });
 
 

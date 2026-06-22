@@ -37,7 +37,7 @@ class FormController extends Controller
             'fields' => json_decode($request->fields, true),
         ]);
 
-        return redirect()->route('forms.index')->with('success', 'Form created');
+        return redirect()->route('forms.index')->with('success', 'Form Created Successfully!');
     }
 
     public function show(string $id)
@@ -61,14 +61,14 @@ class FormController extends Controller
             'slug'   => 'required|string|unique:forms,slug,' . $form->id,
             'fields' => 'required|json',
         ]);
-// print_r($request->all());exit;
+        // print_r($request->all());exit;
         $form->update([
             'title'  => $request->title,
             'slug'   => $request->slug,
             'fields' => json_decode($request->fields, true),
         ]);
 
-        return redirect()->route('forms.index')->with('success', 'Form updated');
+        return redirect()->route('forms.index')->with('success', 'Form Updated Successfully!');
     }
 
     public function destroy(string $id)

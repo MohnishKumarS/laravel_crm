@@ -2,6 +2,7 @@
 
 
 @section('content')
+    {{-- Breadcrumb --}}
     <div class="page-header">
         <h3 class="fw-bold mb-3">Base Page</h3>
         <ul class="breadcrumbs mb-3">

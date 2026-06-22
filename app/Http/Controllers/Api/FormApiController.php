@@ -47,9 +47,15 @@ class FormApiController extends Controller
             return response()->json(['message' => 'Form not found'], 404);
         }
 
+        // print_r($form->fields);exit;
+
         $rules = $this->buildValidationRules($form->fields);
 
+        // print_r($rules);exit;
+
         $validated = $request->validate($rules);
+        
+        // print_r($validated);exit;
 
         $submission = FormSubmission::create([
             'form_id' => $form->id,
