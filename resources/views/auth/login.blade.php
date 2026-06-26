@@ -47,6 +47,7 @@
 
         .logo {
             width: 100%;
+            max-width: 250px;
             height: auto;
         }
 
@@ -117,16 +118,18 @@
         <div class="row g-0 min-vh-100">
 
             <!-- Left Image Section -->
-            <div class="col-lg-6 d-none d-lg-flex image-section">
+            {{-- <div class="col-lg-6 d-none d-lg-flex image-section">
                 <div class="overlay-content">
 
-                    {{-- <img src="{{ asset('uploads/logo/logo_new.png') }}" class="logo mb-4" alt="Logo"> --}}
                     <h1>Welcome Back!</h1>
                     <p>
                         Manage your CRM, customers, sales and reports
                         from one powerful dashboard.
                     </p>
                 </div>
+            </div> --}}
+             <div class="col-lg-6 d-flex align-items-center justify-content-center">
+                <img src="{{ asset('uploads/pics/p4.svg') }}" alt="forgot-password">
             </div>
 
             <!-- Right Login Section -->
@@ -178,7 +181,7 @@
                                 </label>
                             </div>
 
-                            <a href="#">Forgot Password?</a>
+                            <a href="{{route('forgot.password')}}">Forgot Password?</a>
                         </div>
 
                         <button type="submit" class="btn btn-auth w-100">

@@ -1,14 +1,19 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\FormApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
-})->middleware('auth:sanctum');
+})->middleware(['check.token','auth:sanctum']);
 
-Route::prefix('forms')->group(function () {
+Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+
+Route::middleware('auth:sanctum')->prefix('forms')->group(function () {
     Route::get('/{slug}', [FormApiController::class, 'show']);
     Route::post('/{slug}/submit', [FormApiController::class, 'submit']);
+    
 });
