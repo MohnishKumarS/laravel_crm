@@ -25,16 +25,31 @@ class FormController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'title'  => 'required|string',
-            'slug'   => 'required|string|unique:forms,slug',
-            'fields' => 'required|json',
+        
+         $request->validate([
+        'title'             => 'required|string',
+        'slug'              => 'required|string|unique:forms,slug',
+        'fields'            => 'required|json',
+        'send_email'        => 'nullable|boolean',
+        'email_field_name'  => 'nullable|string',
+        'customer_subject'  => 'nullable|string',
+        'customer_template' => 'nullable|string',
+        'admin_email'       => 'nullable|email',
+        'admin_subject'     => 'nullable|string',
+        'admin_template'    => 'nullable|string',
         ]);
 
-        Form::create([
-            'title'  => $request->title,
-            'slug'   => $request->slug,
-            'fields' => json_decode($request->fields, true),
+       Form::create([
+        'title'             => $request->title,
+        'slug'              => $request->slug,
+        'fields'            => json_decode($request->fields, true),
+        'send_email'        => $request->boolean('send_email'),
+        'email_field_name'  => $request->email_field_name,
+        'customer_subject'  => $request->customer_subject,
+        'customer_template' => $request->customer_template,
+        'admin_email'       => $request->admin_email,
+        'admin_subject'     => $request->admin_subject,
+        'admin_template'    => $request->admin_template,
         ]);
 
         return redirect()->route('forms.index')->with('success', 'Form Created Successfully!');
@@ -56,19 +71,32 @@ class FormController extends Controller
     {
         $form = Form::findOrFail($id);
 
-        $request->validate([
-            'title'  => 'required|string',
-            'slug'   => 'required|string|unique:forms,slug,' . $form->id,
-            'fields' => 'required|json',
-        ]);
-        // print_r($request->all());exit;
-        $form->update([
-            'title'  => $request->title,
-            'slug'   => $request->slug,
-            'fields' => json_decode($request->fields, true),
+           $request->validate([
+        'title'             => 'required|string',
+         'slug'   => 'required|string|unique:forms,slug,' . $form->id,
+        'fields'            => 'required|json',
+        'send_email'        => 'nullable|boolean',
+        'email_field_name'  => 'nullable|string',
+        'customer_subject'  => 'nullable|string',
+        'customer_template' => 'nullable|string',
+        'admin_email'       => 'nullable|email',
+        'admin_subject'     => 'nullable|string',
+        'admin_template'    => 'nullable|string',
         ]);
 
-        return redirect()->route('forms.index')->with('success', 'Form Updated Successfully!');
+       Form::where('id', $form->id)->update([
+        'title'             => $request->title,
+        'slug'              => $request->slug,
+        'fields'            => json_decode($request->fields, true),
+        'send_email'        => $request->boolean('send_email'),
+        'email_field_name'  => $request->email_field_name,
+        'customer_subject'  => $request->customer_subject,
+        'customer_template' => $request->customer_template,
+        'admin_email'       => $request->admin_email,
+        'admin_subject'     => $request->admin_subject,
+        'admin_template'    => $request->admin_template,
+        ]);
+        return redirect()->route('forms.index')->with('success', 'Form updated');
     }
 
     public function destroy(string $id)
