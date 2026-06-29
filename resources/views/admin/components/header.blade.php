@@ -46,7 +46,7 @@
                             </div>
                         </form>
                     </ul>
-                </li>
+                {{-- </li>
                 <li class="nav-item topbar-icon dropdown hidden-caret">
                     <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -245,7 +245,7 @@
                             </div>
                         </div>
                     </div>
-                </li>
+                </li> --}}
 
                 <li class="nav-item topbar-user dropdown hidden-caret">
                     <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#"
@@ -264,8 +264,8 @@
                             <li>
                                 <div class="user-box">
                                     <div class="avatar-lg">
-                                        <img src="{{ asset('uploads/favicon/favicon-32x32.png') }}"
-                                            alt="image profile" class="avatar-img rounded" />
+                                        <img src="{{ asset('uploads/favicon/favicon-32x32.png') }}" alt="image profile"
+                                            class="avatar-img rounded" />
                                     </div>
                                     <div class="u-text">
                                         <h4>{{ Auth::user()->name }}</h4>

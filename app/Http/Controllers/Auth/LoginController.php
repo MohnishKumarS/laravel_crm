@@ -12,6 +12,8 @@ class LoginController extends Controller
 {
     public function index()
     {
+        //  session()->flush();
+
         if (Auth::check() && Auth::user()->role === 'admin') {
             return redirect()->route('dashboard');
         }
@@ -35,7 +37,7 @@ class LoginController extends Controller
                 return redirect()->route('dashboard');
             }
 
-            // Auth::logout();
+            Auth::logout();
             // $request->session()->invalidate();
             // $request->session()->regenerateToken();
 

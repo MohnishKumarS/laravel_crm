@@ -70,6 +70,7 @@ class FormController extends Controller
     public function update(Request $request, string $id)
     {
         $form = Form::findOrFail($id);
+        
 
            $request->validate([
         'title'             => 'required|string',
