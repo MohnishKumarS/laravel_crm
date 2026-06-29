@@ -11,7 +11,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::latest()->paginate(20);
+        $posts = Post::latest()->get();
         return view('admin.post.index', compact('posts'));
     }
 
@@ -41,7 +41,12 @@ class PostController extends Controller
 
         $imagePath = null;
         if ($request->hasFile('featured_image')) {
-            $imagePath = $request->file('featured_image')->store('posts', 'public');
+            // $imagePath = $request->file('featured_image')->store('posts', 'public');
+            $image = $request->file('featured_image');
+
+            $filename = time() . '_' . Str::slug($request->title) . '.' . $image->getClientOriginalExtension();
+
+            $imagePath = $image->storeAs('posts', $filename, 'public');
         }
 
         Post::create([
@@ -53,7 +58,7 @@ class PostController extends Controller
             'published_at'   => $request->status === 'published' ? now() : null,
         ]);
 
-        return redirect()->route('posts.index')->with('success', 'Post created');
+        return redirect()->route('posts.index')->with('message', 'Post created successfully.');
     }
 
     public function show(string $id)
@@ -83,10 +88,15 @@ class PostController extends Controller
         $imagePath = $post->featured_image;
         if ($request->hasFile('featured_image')) {
             // Remove old image before storing the new one
-            if ($imagePath) {
+            if ($imagePath && Storage::disk('public')->exists($post->featured_image)) {
                 Storage::disk('public')->delete($imagePath);
             }
-            $imagePath = $request->file('featured_image')->store('posts', 'public');
+            // $imagePath = $request->file('featured_image')->store('posts', 'public');
+             $image = $request->file('featured_image');
+
+            $filename = time() . '_' . Str::slug($request->title) . '.' . $image->getClientOriginalExtension();
+
+            $imagePath = $image->storeAs('posts', $filename, 'public');
         }
 
         $post->update([
@@ -96,11 +106,11 @@ class PostController extends Controller
             'featured_image' => $imagePath,
             'status'         => $request->status,
             'published_at'   => $request->status === 'published'
-                                  ? ($post->published_at ?? now())
-                                  : null,
+                ? ($post->published_at ?? now())
+                : null,
         ]);
 
-        return redirect()->route('posts.index')->with('success', 'Post updated');
+        return redirect()->route('posts.index')->with('message', 'Post updated successsfully.');
     }
 
     public function destroy(string $id)
@@ -113,6 +123,6 @@ class PostController extends Controller
 
         $post->delete();
 
-        return redirect()->route('posts.index')->with('success', 'Post deleted');
+        return redirect()->route('posts.index')->with('message', 'Post deleted successsfully.');
     }
 }

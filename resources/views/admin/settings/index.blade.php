@@ -1,5 +1,7 @@
 @extends('admin.layouts.main')
 
+@section('title', 'Settings | Yuukke Dashboard')
+
 @section('content')
     {{-- Breadcrumb --}}
     <div class="page-header">

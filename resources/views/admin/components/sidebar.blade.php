@@ -70,7 +70,7 @@
                   </li> --}}
                   <li class="nav-item">
                       <a data-bs-toggle="collapse" href="#forms_list">
-                          <i class="fas fa-file-alt"></i>
+                          <i class="fas fa-book-open"></i>
                           <p>Forms</p>
                           <span class="caret"></span>
                       </a>
@@ -91,7 +91,7 @@
                   </li>
                     <li class="nav-item">
                         <a data-bs-toggle="collapse" href="#posts_list">
-                            <i class="fas fa-file-alt"></i>
+                            <i class="fas fa-newspaper"></i>
                             <p>Posts</p>
                             <span class="caret"></span>
                         </a>
@@ -112,7 +112,7 @@
                     </li>
                   <li class="nav-item">
                       <a data-bs-toggle="collapse" href="#banners_list">
-                          <i class="fas fa-image"></i>
+                          <i class="fas fa-gear"></i>
                           <p>Settings</p>
                           <span class="caret"></span>
                       </a>
