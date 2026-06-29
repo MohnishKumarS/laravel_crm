@@ -46,24 +46,7 @@
                       </span>
                       <h4 class="text-section">Components</h4>
                   </li>
-                  {{-- <li class="nav-item">
-                      <a data-bs-toggle="collapse" href="#banners_list">
-                          <i class="fas fa-image"></i>
-                          <p>Layouts</p>
-                          <span class="caret"></span>
-                      </a>
-                      <div class="collapse" id="banners_list">
-                          <ul class="nav nav-collapse" style="list-style: none">
-                              <li>
-                                  <a href="{{ route('sample') }}">
-                                      <span class="ms-5">Add Layout</span>
-                                  </a>
-                              </li>
-
-
-                          </ul>
-                      </div>
-                  </li> --}}
+                  
                   {{-- <li class="nav-item">
                       <a data-bs-toggle="collapse" href="#brands_list">
                           <i class="fas fa-ghost"></i>
@@ -103,6 +86,24 @@
                                       <span class="ms-5">View Forms</span>
                                   </a>
                               </li>
+                          </ul>
+                      </div>
+                  </li>
+                  <li class="nav-item">
+                      <a data-bs-toggle="collapse" href="#banners_list">
+                          <i class="fas fa-image"></i>
+                          <p>Settings</p>
+                          <span class="caret"></span>
+                      </a>
+                      <div class="collapse" id="banners_list">
+                          <ul class="nav nav-collapse" style="list-style: none">
+                              <li>
+                                  <a href="{{ route('settings') }}">
+                                      <span class="ms-5">View Setting</span>
+                                  </a>
+                              </li>
+
+
                           </ul>
                       </div>
                   </li>

@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -79,6 +80,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
     // SETTINGS
+    Route::controller(SettingController::class)->group(function(){
+        Route::get('/settings','index')->name('settings');
+        Route::post('/settings','update')->name('settings.update');
+    });
 });
 
 // MIGRATION
