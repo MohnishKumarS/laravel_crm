@@ -14,7 +14,7 @@
                     <div class="row align-items-center">
                         <div class="col-icon">
                             <div class="icon-big text-center icon-primary bubble-shadow-small">
-                                <i class="fas fa-wpforms"></i>
+                                <i class="fas fa-clipboard-list"></i>
                             </div>
                         </div>
                         <div class="col col-stats ms-3 ms-sm-0">

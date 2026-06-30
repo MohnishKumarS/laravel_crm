@@ -27,8 +27,7 @@ class SettingController extends Controller
         if ($request->hasFile('site_logo')) {
             // Delete old logo
             if ($setting->site_logo) {
-
-                $path = 'uploads/logo/' . $setting->site_logo;
+                 $path = public_path('uploads/logo/' . $setting->site_logo);
 
                 if (File::exists($path)) {
                     File::delete($path);
@@ -39,7 +38,7 @@ class SettingController extends Controller
 
             $filename = time() . '_logo.' . $file->getClientOriginalExtension();
 
-            $destinationPath = 'uploads/logo';
+            $destinationPath =  public_path('uploads/logo');
 
             // Create directory if it doesn't exist
             if (!File::exists($destinationPath)) {
@@ -54,7 +53,7 @@ class SettingController extends Controller
         if ($request->hasFile('site_favicon')) {
 
             if ($setting->site_favicon) {
-                $path = 'uploads/logo/' . $setting->site_favicon;
+                 $path = public_path('uploads/logo/' . $setting->site_favicon);
                 if (File::exists($path)) {
                     File::delete($path);
                 }
@@ -64,7 +63,7 @@ class SettingController extends Controller
 
             $filename = time() . '_logo.' . $file->getClientOriginalExtension();
 
-            $destinationPath = 'uploads/logo';
+            $destinationPath =  public_path('uploads/logo');
 
             if (!File::exists($destinationPath)) {
                 File::makeDirectory($destinationPath, 0755, true);
