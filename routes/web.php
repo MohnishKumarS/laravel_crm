@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
@@ -60,9 +61,10 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 // ADMIN ROUTES
 Route::middleware(['auth', 'admin'])->group(function () {
 
-    Route::get('dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    // Route::get('dashboard', function () {
+    //     return view('admin.dashboard');
+    // })->name('dashboard');
+     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::view('/brands', 'admin.base.view-brand')->name('brands.index');
     Route::view('/add-brands', 'admin.base.add-brand')->name('brands.create');
