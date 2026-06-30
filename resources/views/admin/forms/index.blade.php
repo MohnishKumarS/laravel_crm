@@ -1,5 +1,5 @@
 @extends('admin.layouts.main')
-
+ 
 @section('title', 'Forms | Yuukke Dashboard')
 
 @section('content')
