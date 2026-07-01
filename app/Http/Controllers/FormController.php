@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\FormSubmissionsExport;
 use App\Models\Form;
+use App\Models\FormSubmission;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -25,31 +26,31 @@ class FormController extends Controller
 
     public function store(Request $request)
     {
-        
-         $request->validate([
-        'title'             => 'required|string',
-        'slug'              => 'required|string|unique:forms,slug',
-        'fields'            => 'required|json',
-        'send_email'        => 'nullable|boolean',
-        'email_field_name'  => 'nullable|string',
-        'customer_subject'  => 'nullable|string',
-        'customer_template' => 'nullable|string',
-        'admin_email'       => 'nullable|email',
-        'admin_subject'     => 'nullable|string',
-        'admin_template'    => 'nullable|string',
+
+        $request->validate([
+            'title'             => 'required|string',
+            'slug'              => 'required|string|unique:forms,slug',
+            'fields'            => 'required|json',
+            'send_email'        => 'nullable|boolean',
+            'email_field_name'  => 'nullable|string',
+            'customer_subject'  => 'nullable|string',
+            'customer_template' => 'nullable|string',
+            'admin_email'       => 'nullable|email',
+            'admin_subject'     => 'nullable|string',
+            'admin_template'    => 'nullable|string',
         ]);
 
-       Form::create([
-        'title'             => $request->title,
-        'slug'              => $request->slug,
-        'fields'            => json_decode($request->fields, true),
-        'send_email'        => $request->boolean('send_email'),
-        'email_field_name'  => $request->email_field_name,
-        'customer_subject'  => $request->customer_subject,
-        'customer_template' => $request->customer_template,
-        'admin_email'       => $request->admin_email,
-        'admin_subject'     => $request->admin_subject,
-        'admin_template'    => $request->admin_template,
+        Form::create([
+            'title'             => $request->title,
+            'slug'              => $request->slug,
+            'fields'            => json_decode($request->fields, true),
+            'send_email'        => $request->boolean('send_email'),
+            'email_field_name'  => $request->email_field_name,
+            'customer_subject'  => $request->customer_subject,
+            'customer_template' => $request->customer_template,
+            'admin_email'       => $request->admin_email,
+            'admin_subject'     => $request->admin_subject,
+            'admin_template'    => $request->admin_template,
         ]);
 
         return redirect()->route('forms.index')->with('success', 'Form Created Successfully!');
@@ -70,32 +71,32 @@ class FormController extends Controller
     public function update(Request $request, string $id)
     {
         $form = Form::findOrFail($id);
-        
 
-           $request->validate([
-        'title'             => 'required|string',
-         'slug'   => 'required|string|unique:forms,slug,' . $form->id,
-        'fields'            => 'required|json',
-        'send_email'        => 'nullable|boolean',
-        'email_field_name'  => 'nullable|string',
-        'customer_subject'  => 'nullable|string',
-        'customer_template' => 'nullable|string',
-        'admin_email'       => 'nullable|email',
-        'admin_subject'     => 'nullable|string',
-        'admin_template'    => 'nullable|string',
+
+        $request->validate([
+            'title'             => 'required|string',
+            'slug'   => 'required|string|unique:forms,slug,' . $form->id,
+            'fields'            => 'required|json',
+            'send_email'        => 'nullable|boolean',
+            'email_field_name'  => 'nullable|string',
+            'customer_subject'  => 'nullable|string',
+            'customer_template' => 'nullable|string',
+            'admin_email'       => 'nullable|email',
+            'admin_subject'     => 'nullable|string',
+            'admin_template'    => 'nullable|string',
         ]);
 
-       Form::where('id', $form->id)->update([
-        'title'             => $request->title,
-        'slug'              => $request->slug,
-        'fields'            => json_decode($request->fields, true),
-        'send_email'        => $request->boolean('send_email'),
-        'email_field_name'  => $request->email_field_name,
-        'customer_subject'  => $request->customer_subject,
-        'customer_template' => $request->customer_template,
-        'admin_email'       => $request->admin_email,
-        'admin_subject'     => $request->admin_subject,
-        'admin_template'    => $request->admin_template,
+        Form::where('id', $form->id)->update([
+            'title'             => $request->title,
+            'slug'              => $request->slug,
+            'fields'            => json_decode($request->fields, true),
+            'send_email'        => $request->boolean('send_email'),
+            'email_field_name'  => $request->email_field_name,
+            'customer_subject'  => $request->customer_subject,
+            'customer_template' => $request->customer_template,
+            'admin_email'       => $request->admin_email,
+            'admin_subject'     => $request->admin_subject,
+            'admin_template'    => $request->admin_template,
         ]);
         return redirect()->route('forms.index')->with('success', 'Form updated');
     }
@@ -107,18 +108,28 @@ class FormController extends Controller
     }
 
     public function submissions(string $id)
-{
-    $form = Form::with('submissions')->findOrFail($id);
-    return view('admin.forms.submissions', compact('form'));
-}
+    {
+        $form = Form::with('submissions')->findOrFail($id);
+        // return $form->submissions;
+        return view('admin.forms.submissions', compact('form'));
+    }
 
-public function exportSubmissions(string $id)
-{
-    $form = Form::findOrFail($id);
+    public function exportSubmissions(string $id)
+    {
+        $form = Form::findOrFail($id);
 
-    return Excel::download(
-        new FormSubmissionsExport($form),
-        $form->slug . '-submissions-' . now()->format('Y-m-d') . '.xlsx'
-    );
-}
+        return Excel::download(
+            new FormSubmissionsExport($form),
+            $form->slug . '-submissions-' . now()->format('Y-m-d') . '.xlsx'
+        );
+    }
+
+    public function deleteSubmission(string $id)
+    {
+        $data = FormSubmission::findOrFail($id);
+        // return $data;
+        $data->delete();
+
+        return back()->with('success', 'Form submission deleted successsfully.');
+    }
 }

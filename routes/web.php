@@ -71,18 +71,19 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::view('/sample', 'admin.base.sample')->name('sample');
 
     // DYNAMIC FORM BUILDER
-    Route::view('/forms', 'admin.forms.create')->name('forms.create');
     Route::resource('forms', FormController::class);
 
     Route::get('forms/{id}/submissions', [FormController::class, 'submissions'])->name('forms.submissions');
     Route::get('forms/{id}/submissions/export', [FormController::class, 'exportSubmissions'])->name('forms.submissions.export');
 
+    Route::delete('submissions/{id}',[FormController::class,'deleteSubmission'])->name('forms.submissions.delete');
+
     // PROFILE
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
-    Route::view('/posts', 'admin.posts.create')->name('posts.create');
-    
+
+    // POSTS - BLOGS
     Route::resource('posts', PostController::class); 
     
     

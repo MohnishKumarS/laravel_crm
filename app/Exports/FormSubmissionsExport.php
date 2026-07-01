@@ -4,13 +4,14 @@ namespace App\Exports;
 
 use App\Models\FormSubmission;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class FormSubmissionsExport implements FromCollection, WithHeadings, WithMapping, WithStyles
+class FormSubmissionsExport implements FromCollection, WithHeadings, WithMapping, WithStyles, WithColumnWidths
 {
     protected $form;
     protected $fieldNames;
@@ -69,6 +70,15 @@ class FormSubmissionsExport implements FromCollection, WithHeadings, WithMapping
                     'startColor' => ['rgb' => '4472C4'],
                 ],
             ],
+        ];
+    }
+    public function columnWidths(): array
+    {
+        return [
+            'A' => 30,
+            'B' => 40,
+            'C' => 20,
+            'D' => 25,
         ];
     }
 }
