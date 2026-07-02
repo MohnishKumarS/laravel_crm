@@ -46,7 +46,7 @@
                       </span>
                       <h4 class="text-section">Components</h4>
                   </li>
-                  
+
                   {{-- <li class="nav-item">
                       <a data-bs-toggle="collapse" href="#brands_list">
                           <i class="fas fa-ghost"></i>
@@ -68,13 +68,13 @@
                           </ul>
                       </div>
                   </li> --}}
-                  <li class="nav-item">
+                  <li class="nav-item {{ request()->routeIs('forms.*') ? 'active' : '' }}">
                       <a data-bs-toggle="collapse" href="#forms_list">
                           <i class="fas fa-book-open"></i>
                           <p>Forms</p>
                           <span class="caret"></span>
                       </a>
-                      <div class="collapse" id="forms_list">
+                      <div class="collapse  {{ request()->routeIs('forms.*') ? 'show' : '' }}" id="forms_list">
                           <ul class="nav nav-collapse" style="list-style: none">
                               <li>
                                   <a href="{{ route('forms.create') }}">
@@ -89,55 +89,34 @@
                           </ul>
                       </div>
                   </li>
-                    <li class="nav-item">
-                        <a data-bs-toggle="collapse" href="#posts_list">
-                            <i class="fas fa-newspaper"></i>
-                            <p>Posts</p>
-                            <span class="caret"></span>
-                        </a>
-                        <div class="collapse" id="posts_list">
-                            <ul class="nav nav-collapse" style="list-style: none">
-                                <li>
-                                    <a href="{{ route('posts.create') }}">
-                                        <span class="ms-5">Add Post</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('posts.index') }}">
-                                        <span class="ms-5">View Posts</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a data-bs-toggle="collapse" href="#campaigns_list">
-                            <i class="fas fa-bullhorn"></i>
-                            <p>Campaigns</p>
-                            <span class="caret"></span>
-                        </a>
-                        <div class="collapse" id="campaigns_list">
-                            <ul class="nav nav-collapse" style="list-style: none">
-                                <li>
-                                    <a href="{{ route('admin.campaigns.create') }}">
-                                        <span class="ms-5">Add Campaign</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('admin.campaigns.index') }}">
-                                        <span class="ms-5">View Campaigns</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                  <li class="nav-item">
+                  <li class="nav-item {{ request()->routeIs('posts.*') ? 'active' : '' }}">
+                      <a data-bs-toggle="collapse" href="#posts_list">
+                          <i class="fas fa-newspaper"></i>
+                          <p>Posts</p>
+                          <span class="caret"></span>
+                      </a>
+                      <div class="collapse  {{ request()->routeIs('posts.*') ? 'show' : '' }}" id="posts_list">
+                          <ul class="nav nav-collapse" style="list-style: none">
+                              <li class="nav-item">
+                                  <a href="{{ route('posts.create') }}">
+                                      <span class="ms-5">Add Post</span>
+                                  </a>
+                              </li>
+                              <li>
+                                  <a href="{{ route('posts.index') }}">
+                                      <span class="ms-5">View Posts</span>
+                                  </a>
+                              </li>
+                          </ul>
+                      </div>
+                  </li>
+                  <li class="nav-item {{ request()->is('settings*') ? 'active' : '' }}">
                       <a data-bs-toggle="collapse" href="#banners_list">
                           <i class="fas fa-gear"></i>
                           <p>Settings</p>
                           <span class="caret"></span>
                       </a>
-                      <div class="collapse" id="banners_list">
+                      <div class="collapse  {{ request()->is('settings*') ? 'show' : '' }}" id="banners_list">
                           <ul class="nav nav-collapse" style="list-style: none">
                               <li>
                                   <a href="{{ route('settings') }}">
@@ -149,8 +128,8 @@
                           </ul>
                       </div>
                   </li>
-              
-                    
+
+
 
 
               </ul>
