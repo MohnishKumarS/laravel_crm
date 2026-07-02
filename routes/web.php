@@ -65,6 +65,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     //     return view('admin.dashboard');
     // })->name('dashboard');
      Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+     Route::get('/dashboard/visitors-per-day', [DashboardController::class, 'visitorsPerDay'])->name('dashboard.visitors-per-day');
 
     Route::view('/brands', 'admin.base.view-brand')->name('brands.index');
     Route::view('/add-brands', 'admin.base.add-brand')->name('brands.create');
