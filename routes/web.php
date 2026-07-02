@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\PostController;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+
 
 // Route::get('/', function () {
 //     return view('admin.dashboard');
@@ -92,6 +94,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/settings','index')->name('settings');
         Route::post('/settings','update')->name('settings.update');
     });
+//    Route::resource('campaigns', CampaignController::class);
+
+Route::resource('campaigns', CampaignController::class)
+    ->names('admin.campaigns')
+    ->except(['show']);
+
 });
 
 // MIGRATION

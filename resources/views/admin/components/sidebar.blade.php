@@ -110,6 +110,27 @@
                             </ul>
                         </div>
                     </li>
+                    <li class="nav-item">
+                        <a data-bs-toggle="collapse" href="#campaigns_list">
+                            <i class="fas fa-bullhorn"></i>
+                            <p>Campaigns</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse" id="campaigns_list">
+                            <ul class="nav nav-collapse" style="list-style: none">
+                                <li>
+                                    <a href="{{ route('admin.campaigns.create') }}">
+                                        <span class="ms-5">Add Campaign</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.campaigns.index') }}">
+                                        <span class="ms-5">View Campaigns</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
                   <li class="nav-item">
                       <a data-bs-toggle="collapse" href="#banners_list">
                           <i class="fas fa-gear"></i>
