@@ -27,7 +27,8 @@ class DatabaseSeeder extends Seeder
 
          $this->call([
             FormSubmissionSeeder::class,
-            PostSeeder::class
+            PostSeeder::class,
+            VisitorSeeder::class,
         ]);
     }
 }
