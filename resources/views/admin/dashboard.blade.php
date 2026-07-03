@@ -11,23 +11,23 @@
         <div class="col-sm-6 col-md-4">
             <div class="card card-stats card-round">
                 <div class="card-body">
-                 <a href="{{ route('forms.index') }}" class="text-decoration-none text-dark">
-                    <div class="row align-items-center">
+                    <a href="{{ route('forms.index') }}" class="text-decoration-none text-dark">
+                        <div class="row align-items-center">
 
-                        <div class="col-icon">
-                            <div class="icon-big text-center icon-primary bubble-shadow-small">
-                                <i class="fas fa-clipboard-list"></i>
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-primary bubble-shadow-small">
+                                    <i class="fas fa-clipboard-list"></i>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col col-stats ms-3 ms-sm-0">
-                            <div class="numbers">
-                                <p class="card-category">Forms</p>
-                                <h4 class="card-title">{{ $formsCount }}</h4>
+                            <div class="col col-stats ms-3 ms-sm-0">
+                                <div class="numbers">
+                                    <p class="card-category">Forms</p>
+                                    <h4 class="card-title">{{ $formsCount }}</h4>
+                                </div>
                             </div>
+
                         </div>
-                        
-                    </div>
-                </a>
+                    </a>
                 </div>
             </div>
         </div>
@@ -35,19 +35,19 @@
             <div class="card card-stats card-round">
                 <div class="card-body">
                     <a href="{{ route('posts.index') }}" class="text-decoration-none text-dark">
-                    <div class="row align-items-center">
-                        <div class="col-icon">
-                            <div class="icon-big text-center icon-info bubble-shadow-small">
-                                <i class="fas fa-newspaper"></i>
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-info bubble-shadow-small">
+                                    <i class="fas fa-newspaper"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats ms-3 ms-sm-0">
+                                <div class="numbers">
+                                    <p class="card-category">Posts</p>
+                                    <h4 class="card-title">{{ $postsCount }}</h4>
+                                </div>
                             </div>
                         </div>
-                        <div class="col col-stats ms-3 ms-sm-0">
-                            <div class="numbers">
-                                <p class="card-category">Posts</p>
-                                <h4 class="card-title">{{ $postsCount }}</h4>
-                            </div>
-                        </div>
-                    </div>
                     </a>
                 </div>
             </div>
@@ -142,9 +142,8 @@
         <div class="col-md-6">
             <div class="card card-round">
                 <div class="card-header">
-                    <div class="card-head-row">
                         <div class="card-title">Monthly Visitor Statistics</div>
-                    </div>
+                        {{-- <div class="card-category">Total Visitors by Month (Last 12 Months)</div> --}}
                 </div>
                 <div class="card-body">
                     <div class="chart-container" style="min-height: 375px">
@@ -160,7 +159,7 @@
                         <div class="card-title">Daily Traffic Overview (For 30 Days)</div>
 
                         <div class="card-tools">
-                            <select id="monthFilter" class="form-control form-control-sm">
+                            <select id="monthFilter" class="form-select form-control-md">
                                 @foreach ($months as $month)
                                     <option value="{{ $month['value'] }}" {{ $month['selected'] ? 'selected' : '' }}>
                                         {{ $month['label'] }}
@@ -244,9 +243,8 @@
         <div class="col-md-8">
             <div class="card card-round">
                 <div class="card-header">
-                    <div class="card-head-row">
-                        <div class="card-title">Submissions Over Time (Last 12 Months)</div>
-                    </div>
+                    <div class="card-title">Submissions Over Time</div>
+                    <div class="card-category">Monthly Submission Performance (Last 12 Months)</div>
                 </div>
                 <div class="card-body">
                     <div class="chart-container" style="min-height: 375px">
@@ -284,10 +282,6 @@
     <script>
         function loadVisitorsChart(month) {
 
-            // console.log(month);
-            // return ;
-            
-
             $.ajax({
 
                 url: "{{ route('dashboard.visitors-per-day') }}",
@@ -303,7 +297,7 @@
 
                     // console.log(response.labels);
                     // return;
-                    
+
 
                     visitorsDailyChart.data.labels = response.labels;
 
@@ -323,7 +317,7 @@
 
         $("#monthFilter").on("change", function() {
             // console.log($(this).val());
-            
+
             loadVisitorsChart($(this).val());
 
         });
@@ -382,7 +376,7 @@
         // Visitors Daily chart -  Daily Traffic Overview
         var ctx = document.getElementById('visitorsDailyChart').getContext('2d');
 
-      var visitorsDailyChart =  new Chart(ctx, {
+        var visitorsDailyChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: [],
@@ -444,7 +438,7 @@
         ];
 
 
-      var topPagesChart =  new Chart(topPageBar, {
+        var topPagesChart = new Chart(topPageBar, {
             type: 'bar',
             data: {
                 labels: pageLabels,
