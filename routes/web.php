@@ -1,11 +1,13 @@
 <?php
 
 
+
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\HomeHeroController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
@@ -102,6 +104,10 @@ Route::resource('campaigns', CampaignController::class)
     ->except(['show']);
 
 });
+Route::resource('home-hero', HomeHeroController::class)
+    ->parameters(['home-hero' => 'homeHero'])
+    ->names('admin.home-hero')
+    ->except(['show']);
 
 // MIGRATION
 Route::get('/migrate', function () {

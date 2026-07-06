@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\HomeHeroController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CampaignController;
 use App\Http\Controllers\Api\FormApiController;
@@ -34,3 +35,4 @@ Route::prefix('campaigns')->group(function () {
     Route::put('/{campaign}', [CampaignController::class, 'update']);
     Route::delete('/{campaign}', [CampaignController::class, 'destroy']);
 });
+Route::get('home-hero', [HomeHeroController::class, 'active']);
