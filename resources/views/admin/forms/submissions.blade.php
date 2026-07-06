@@ -68,6 +68,9 @@
                                         @endif
                                     @endforeach
                                     <th data-type="date">Submitted At</th>
+                                    <th>
+                                        Actions
+                                    </th>
                                 </tr>
                             </thead>
                             {{-- Column filter row --}}
@@ -79,6 +82,7 @@
                                             <th></th>
                                         @endif
                                     @endforeach
+                                    <th></th>
                                     <th></th>
                                 </tr>
                             </tfoot>
@@ -107,14 +111,15 @@
                                             {{ $submission->created_at->format('d M Y, h:i A') }}
                                         </td>
                                         <td>
-                                      
-                                        <form action="{{ route('forms.submissions.delete', $submission->id) }}" method="POST"
-                                            class="delete-post" style="display:inline-block">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" class="btn btn-danger btn-sm delete-btn">Delete</button>
-                                        </form>
-                                    </td>
+
+                                            <form action="{{ route('forms.submissions.delete', $submission->id) }}"
+                                                method="POST" class="delete-post" style="display:inline-block">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button"
+                                                    class="btn btn-danger btn-sm delete-btn">Delete</button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -129,7 +134,8 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            const dateColumnIndex = $('#submissions-table thead th').length - 1;
+            const dateColumnIndex = $('#submissions-table thead th').length - 2;
+            const actionColumnIndex = $('#submissions-table thead th').length - 1;
 
             // Build per-column filter dropdowns/inputs in the tfoot row
             $('#submissions-table tfoot th').each(function(i) {
@@ -137,7 +143,7 @@
                 const fieldType = headerCell.data('type');
                 const title = headerCell.text();
 
-                if (i === 0 || i === dateColumnIndex) {
+                if (i === 0 || i === dateColumnIndex || i === actionColumnIndex) {
                     // Skip "#" column and date column (handled by date range inputs above)
                     $(this).html('');
                     return;
@@ -146,11 +152,11 @@
                 if (fieldType === 'select' || fieldType === 'checkbox') {
                     $(this).html(
                         '<select class="form-control form-control-sm column-filter"><option value="">All</option></select>'
-                        );
+                    );
                 } else {
                     $(this).html(
                         `<input type="text" class="form-control form-control-sm column-filter" placeholder="Filter ${title}" />`
-                        );
+                    );
                 }
             });
 
@@ -189,7 +195,7 @@
                         select.on('change', function() {
                             const val = $.fn.dataTable.util.escapeRegex($(this).val());
                             column.search(val ? '^' + val + '$' : '', true, false)
-                            .draw();
+                                .draw();
                         });
                     });
 
@@ -233,7 +239,7 @@
         });
     </script>
 
-       <script>
+    <script>
         document.querySelectorAll('.delete-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 const post = btn.closest('.delete-post');

@@ -99,7 +99,7 @@
 
                                 <div class="col-md-12 mb-3">
                                     <label>Site Name</label>
-                                    <input type="text" name="site_name" class="form-control"
+                                    <input type="text" name="site_name" class="form-control" required
                                         value="{{ old('site_name', $setting->site_name ?? null) }}">
                                 </div>
 

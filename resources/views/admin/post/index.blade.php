@@ -4,6 +4,23 @@
 @section('title', 'Posts | Yuukke Dashboard')
 
 @section('content')
+    {{-- Breadcrumb --}}
+    <div class="page-header">
+        <h3 class="fw-bold mb-3">Blogs</h3>
+        <ul class="breadcrumbs mb-3">
+            <li class="nav-home">
+                <a href="{{ url('/') }}">
+                    <i class="icon-home"></i>
+                </a>
+            </li>
+            <li class="separator">
+                <i class="icon-arrow-right"></i>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('posts.index') }}">Blog List</a>
+            </li>
+        </ul>
+    </div>
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -102,11 +119,11 @@
                 if (fieldType === 'select' || fieldType === 'checkbox') {
                     $(this).html(
                         '<select class="form-control form-control-sm column-filter"><option value="">All</option></select>'
-                        );
+                    );
                 } else {
                     $(this).html(
                         `<input type="text" class="form-control form-control-sm column-filter" placeholder="Filter ${title}" />`
-                        );
+                    );
                 }
             });
 
@@ -145,7 +162,7 @@
                         select.on('change', function() {
                             const val = $.fn.dataTable.util.escapeRegex($(this).val());
                             column.search(val ? '^' + val + '$' : '', true, false)
-                            .draw();
+                                .draw();
                         });
                     });
 

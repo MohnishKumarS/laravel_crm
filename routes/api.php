@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CampaignController;
 use App\Http\Controllers\Api\FormApiController;
 use App\Http\Controllers\Api\PostApiController;
+use App\Http\Controllers\VisitorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,13 +19,15 @@ Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logo
 Route::prefix('forms')->group(function () {
     Route::get('/{slug}', [FormApiController::class, 'show']);
     Route::post('/{slug}/submit', [FormApiController::class, 'submit']);
-    
 });
 
 Route::prefix('posts')->group(function () {
     Route::get('/', [PostApiController::class, 'index']);
     Route::get('/{slug}', [PostApiController::class, 'show']);
 });
+
+// Analytics
+Route::post('/visitors',[VisitorController::class,'index']);
 
 Route::prefix('campaigns')->group(function () {
     Route::get('/current', [CampaignController::class, 'current']);   // public
