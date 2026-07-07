@@ -51,7 +51,7 @@ class ForgotPasswordController extends Controller
             session(['reset_email' => $user->email]);
             Log::info('Email send successfully to ' . $user->email);
 
-            return redirect()->route('verify.otp')->with('message', 'OTP sent successfully.')->with('status', 'success');
+            return redirect()->route('verify.otp')->with('message', 'OTP sent successfully! You will receive a password recovery OTP at your email address in a few minutes.')->with('status', 'success');
         } catch (\Exception $e) {
             Log::error('Email sending failed: ' . $e->getMessage());
             return back()->with('message', 'Failed to send OTP')->with('status', 'danger');
