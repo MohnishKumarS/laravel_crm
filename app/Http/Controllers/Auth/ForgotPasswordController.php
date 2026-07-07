@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendOtpMailJob;
 use App\Mail\OtpMail;
 use App\Models\User;
 use Carbon\Carbon;
@@ -40,24 +41,29 @@ class ForgotPasswordController extends Controller
             'otp_expires_at' => now()->addMinutes(10)
         ]);
 
-        try {
+        // JOB & QUEUE for emailOTP
+        SendOtpMailJob::dispatch($user, $otp);
+        session(['reset_email' => $user->email]);
+        return redirect()->route('verify.otp')->with('message', 'OTP sent successfully! You will receive a password recovery OTP at your email address in a few minutes.')->with('status', 'success');
 
-            Mail::send('emails.otp', ['otp' => $otp], function ($mail) use ($user) {
+        // try {
 
-                $mail->to($user->email)
-                    ->subject('Password Reset OTP');
-            });
+        //     Mail::send('emails.otp', ['otp' => $otp], function ($mail) use ($user) {
 
-            session(['reset_email' => $user->email]);
-            Log::info('Email send successfully to ' . $user->email);
+        //         $mail->to($user->email)
+        //             ->subject('Password Reset OTP');
+        //     });
 
-            return redirect()->route('verify.otp')->with('message', 'OTP sent successfully! You will receive a password recovery OTP at your email address in a few minutes.')->with('status', 'success');
-        } catch (\Exception $e) {
-            Log::error('Email sending failed: ' . $e->getMessage());
-            return back()->with('message', 'Failed to send OTP')->with('status', 'danger');
-        }
+        //     session(['reset_email' => $user->email]);
+        //     Log::info('Email send successfully to ' . $user->email);
 
-   
+        //     return redirect()->route('verify.otp')->with('message', 'OTP sent successfully! You will receive a password recovery OTP at your email address in a few minutes.')->with('status', 'success');
+        // } catch (\Exception $e) {
+        //     Log::error('Email sending failed: ' . $e->getMessage());
+        //     return back()->with('message', 'Failed to send OTP')->with('status', 'danger');
+        // }
+
+
     }
 
     public function verifyPage()

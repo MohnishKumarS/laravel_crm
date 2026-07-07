@@ -106,7 +106,7 @@
           
         </div> --}}
             <div class="col-lg-6 d-flex align-items-center justify-content-center">
-                <img src="{{ asset('uploads/pics/forgot-pass.svg') }}" alt="forgot-password">
+                <img src="{{ asset('uploads/pics/forgot-pass.svg') }}" alt="forgot-password" class="img-fluid">
             </div>
 
             <!-- Right Form -->
