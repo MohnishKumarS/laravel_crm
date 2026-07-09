@@ -22,6 +22,6 @@ protected $casts = [
 
     public function submissions()
     {
-        return $this->hasMany(FormSubmission::class);
+        return $this->hasMany(FormSubmission::class)->latest();
     }
 }

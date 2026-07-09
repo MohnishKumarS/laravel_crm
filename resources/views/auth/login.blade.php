@@ -129,7 +129,7 @@
                 </div>
             </div> --}}
              <div class="col-lg-6 d-flex align-items-center justify-content-center">
-                <img src="{{ asset('uploads/pics/p4.svg') }}" alt="forgot-password">
+                <img src="{{ asset('uploads/pics/p4.svg') }}" alt="Yuukke-login" class="img-fluid">
             </div>
 
             <!-- Right Login Section -->

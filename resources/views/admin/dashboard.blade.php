@@ -254,7 +254,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card card-primary card-round">
+            <div class="card card-secondary card-round">
                 <div class="card-header">
                     <div class="card-head-row">
                         <div class="card-title">Today's Submissions</div>
@@ -264,7 +264,7 @@
                 <div class="card-body pb-0">
                     <div class="mb-4 mt-2">
                         <h1>{{ number_format($todaySubmissions) }}</h1>
-                        <p class="text-muted mb-0">submissions received today</p>
+                        <p class="mb-0">submissions received today</p>
                     </div>
                 </div>
             </div>

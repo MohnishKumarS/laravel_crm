@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Models\Visitor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -166,5 +167,13 @@ class DashboardController extends Controller
         ]);
     }
 
-    
+
+    public function markAllRead()
+    {
+        $notify =  Auth::user()
+            ->unreadNotifications
+            ->markAsRead();
+
+        return back();
+    }
 }

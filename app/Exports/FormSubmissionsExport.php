@@ -79,6 +79,8 @@ class FormSubmissionsExport implements FromCollection, WithHeadings, WithMapping
             'B' => 40,
             'C' => 20,
             'D' => 25,
+            'E' => 25,
+            'F' => 25
         ];
     }
 }

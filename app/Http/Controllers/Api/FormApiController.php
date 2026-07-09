@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Mail\FormSubmissionMail;
 use App\Models\Form;
 use App\Models\FormSubmission;
+use App\Models\User;
+use App\Notifications\NewFormSubmissionNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Log;
 
 
 class FormApiController extends Controller
@@ -61,6 +63,16 @@ class FormApiController extends Controller
     if ($form->send_email) {
         $this->sendSubmissionEmails($form, $validated);
     }
+
+    User::where('role','admin')
+        ->get()
+        ->each(function($admin) use($submission,$form){
+
+            $admin->notify(
+                new NewFormSubmissionNotification($submission,$form)
+            );
+
+        });
 
     return response()->json([
         'message' => 'Submitted successfully',

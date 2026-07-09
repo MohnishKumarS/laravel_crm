@@ -68,9 +68,12 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $i = 1;
+                            @endphp
                             @forelse ($form->submissions as $submission)
                                 <tr>
-                                    <td>{{ $submission->id }}</td>
+                                    <td>{{ $i++}}</td>
                                     <td>
                                         <pre class="mb-0">{{ json_encode($submission->data, JSON_PRETTY_PRINT) }}</pre>
                                     </td>

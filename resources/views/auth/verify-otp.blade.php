@@ -90,7 +90,7 @@
 
 <body>
 
-    <div class="container p-0">
+    <div class="container-fluid p-0">
         <div class="row g-0 min-vh-100">
 
             <!-- Left Image -->
@@ -106,7 +106,7 @@
           
         </div> --}}
             <div class="col-lg-6 d-flex align-items-center justify-content-center">
-                <img src="{{ asset('uploads/pics/verify-otp.svg') }}" alt="forgot-password">
+                <img src="{{ asset('uploads/pics/verify-otp.svg') }}" alt="verify-otp" class="img-fluid">
             </div>
 
             <!-- Right Form -->

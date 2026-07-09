@@ -91,7 +91,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // POSTS - BLOGS
     Route::resource('posts', PostController::class); 
     
-    
+    // NOTIFICATION
+    Route::get('notifications/mark-all-read', [DashboardController::class, 'markAllRead'])->name('notifications.markAllRead');
 
     // SETTINGS
     Route::controller(SettingController::class)->group(function(){
