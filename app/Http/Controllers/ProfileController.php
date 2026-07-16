@@ -10,6 +10,7 @@ class ProfileController extends Controller
 {
       public function index()
     {
+        // return Auth::user()->email;
         return view('admin.profile');
     }
 

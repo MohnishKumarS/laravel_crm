@@ -74,14 +74,20 @@
                                     </td>
                                     <td>{{ $post->published_at?->format('d M Y, h:i A') ?? '—' }}</td>
                                     <td>
-                                        <a href="{{ route('posts.show', $post->id) }}" class="btn btn-info btn-sm">View</a>
-                                        <a href="{{ route('posts.edit', $post->id) }}"
-                                            class="btn btn-warning btn-sm">Edit</a>
+                                        <a href="{{ route('posts.show', $post->id) }}" class="btn btn-info btn-sm" title="View">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+
+                                        <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-warning btn-sm" title="Edit">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
                                         <form action="{{ route('posts.destroy', $post->id) }}" method="POST"
                                             class="delete-post" style="display:inline-block">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" class="btn btn-danger btn-sm delete-btn">Delete</button>
+                                            <button type="button" class="btn btn-danger btn-sm delete-btn"  title="Delete">
+                                                  <i class="fas fa-trash"></i> Delete
+                                            </button>
                                         </form>
                                     </td>
                                 </tr>

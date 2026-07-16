@@ -2,6 +2,7 @@
 
 
 
+use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CampaignController;
@@ -68,8 +69,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Route::get('dashboard', function () {
     //     return view('admin.dashboard');
     // })->name('dashboard');
-     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-     Route::get('/dashboard/visitors-per-day', [DashboardController::class, 'visitorsPerDay'])->name('dashboard.visitors-per-day');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/visitors-per-day', [DashboardController::class, 'visitorsPerDay'])->name('dashboard.visitors-per-day');
 
     Route::view('/brands', 'admin.base.view-brand')->name('brands.index');
     Route::view('/add-brands', 'admin.base.add-brand')->name('brands.create');
@@ -81,7 +82,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('forms/{id}/submissions', [FormController::class, 'submissions'])->name('forms.submissions');
     Route::get('forms/{id}/submissions/export', [FormController::class, 'exportSubmissions'])->name('forms.submissions.export');
 
-    Route::delete('submissions/{id}',[FormController::class,'deleteSubmission'])->name('forms.submissions.delete');
+    Route::delete('submissions/{id}', [FormController::class, 'deleteSubmission'])->name('forms.submissions.delete');
 
     // PROFILE
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
@@ -89,22 +90,24 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
     // POSTS - BLOGS
-    Route::resource('posts', PostController::class); 
-    
+    Route::resource('posts', PostController::class);
+
     // NOTIFICATION
     Route::get('notifications/mark-all-read', [DashboardController::class, 'markAllRead'])->name('notifications.markAllRead');
 
     // SETTINGS
-    Route::controller(SettingController::class)->group(function(){
-        Route::get('/settings','index')->name('settings');
-        Route::post('/settings','update')->name('settings.update');
+    Route::controller(SettingController::class)->group(function () {
+        Route::get('/settings', 'index')->name('settings');
+        Route::post('/settings', 'update')->name('settings.update');
     });
-//    Route::resource('campaigns', CampaignController::class);
 
-Route::resource('campaigns', CampaignController::class)
-    ->names('admin.campaigns')
-    ->except(['show']);
+    // ANALYTICS
+    Route::get('analytics/visitors', [AnalyticsController::class, 'visitors'])->name('analytics.visitors');
+    Route::get('/analytics/visitors/export', [AnalyticsController::class, 'exportVisitors'])->name('analytics.visitors.export');
 
+    Route::resource('campaigns', CampaignController::class)
+        ->names('admin.campaigns')
+        ->except(['show']);
 });
 Route::resource('home-hero', HomeHeroController::class)
     ->parameters(['home-hero' => 'homeHero'])

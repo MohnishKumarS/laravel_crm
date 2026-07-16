@@ -142,8 +142,8 @@
         <div class="col-md-6">
             <div class="card card-round">
                 <div class="card-header">
-                        <div class="card-title">Monthly Visitor Statistics</div>
-                        {{-- <div class="card-category">Total Visitors by Month (Last 12 Months)</div> --}}
+                    <div class="card-title">Monthly Visitor Statistics</div>
+                    {{-- <div class="card-category">Total Visitors by Month (Last 12 Months)</div> --}}
                 </div>
                 <div class="card-body">
                     <div class="chart-container" style="min-height: 375px">
@@ -172,6 +172,97 @@
                 <div class="card-body">
                     <div class="chart-container" style="min-height: 375px">
                         <canvas id="visitorsDailyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{--  DEVICE --}}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card card-round">
+                <div class="card-header">
+                    <div class="card-title">
+                        Device Distribution
+                    </div>
+                    <div class="card-category">
+                        Visitors by Device
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="chart-container" style="height:350px;">
+                        <canvas id="deviceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- COUNTRY --}}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-round">
+                <div class="card-header">
+                    <div class="card-head-row card-tools-still-right">
+                        <h4 class="card-title">Users Geolocation</h4>
+                        <div class="card-tools">
+                            {{-- <button class="btn btn-icon btn-link btn-primary btn-xs">
+                                <span class="fa fa-angle-down"></span>
+                            </button> --}}
+                            <button class="btn btn-icon btn-link btn-primary btn-xs btn-refresh-card">
+                                <span class="fa fa-sync-alt"></span>
+                            </button>
+                            <button class="btn btn-icon btn-link btn-primary btn-xs">
+                                <span class="fa fa-times"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="card-category">
+                        Map of the distribution of users around the world
+                    </p>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="table-responsive table-hover table-sales">
+                                <div class="table-scroll">
+                                    <table class="table">
+                                        <tbody>
+                                            @foreach ($countryStats as $country)
+                                                <tr>
+
+                                                    <td>
+                                                        <div class="flag">
+
+                                                            <img src="{{ asset('yuukke/assets/img/flags/' . ($countryCodes[$country->country] ?? 'unknown') . '.png') }}"
+                                                                width="24">
+
+                                                        </div>
+                                                    </td>
+
+                                                    <td>{{ $country->country }}</td>
+
+                                                    <td class="text-end">
+                                                        {{ number_format($country->total) }}
+                                                    </td>
+
+                                                    <td class="text-end">
+                                                        {{ $country->percentage }}%
+                                                    </td>
+
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mapcontainer">
+                                <div id="world-map" class="w-100" style="height: 300px"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -277,6 +368,33 @@
         </div>
     </div>
 @endsection
+
+@push('styles')
+    <style>
+        .table-scroll {
+            max-height: 400px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .table-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .table-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .table-scroll::-webkit-scrollbar-thumb {
+            background: #bbb;
+            border-radius: 4px;
+        }
+
+        .table-scroll::-webkit-scrollbar-thumb:hover {
+            background: #888;
+        }
+    </style>
+@endpush
 
 @push('scripts')
     <script>
@@ -419,6 +537,50 @@
         });
 
 
+
+        // Device Distribution
+        var deviceCtx = document.getElementById("deviceChart").getContext("2d");
+
+        new Chart(deviceCtx, {
+
+            type: "pie",
+
+            data: {
+
+                labels: @json($deviceLabels),
+
+                datasets: [{
+
+                    data: @json($deviceCounts),
+
+                    backgroundColor: [
+                        "#1572E8",
+                        "#31CE36",
+                        "#FFAD46",
+                        "#F25961",
+                        "#6F42C1",
+                        "#20C997",
+                        "#FD7E14"
+                    ],
+
+                    borderWidth: 1
+                }]
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                legend: {
+                    position: "bottom"
+                }
+            }
+
+        });
+
+
         // TOPpages BAR CHART
         var topPageBar = document.getElementById('topPagesChart').getContext('2d');
 
@@ -512,6 +674,25 @@
                         }
                     }]
                 }
+            }
+        });
+
+
+        // Jsvectormap
+        var world_map = new jsVectorMap({
+            selector: "#world-map",
+            map: "world",
+            zoomOnScroll: false,
+            regionStyle: {
+                hover: {
+                    fill: '#1572E8'
+                }
+            },
+            markers: @json($markers),
+            onRegionTooltipShow(event, tooltip) {
+                tooltip.css({
+                    backgroundColor: '#435ebe'
+                })
             }
         });
     </script>

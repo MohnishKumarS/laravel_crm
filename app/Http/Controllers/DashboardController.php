@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class DashboardController extends Controller
 {
@@ -50,7 +51,7 @@ class DashboardController extends Controller
                 ->count();
         }
 
-        // Daily Traffic Overview
+        // ================ Daily Traffic Overview
         $chartPerDayLabels = [];
         $visitorPerDayData = [];
 
@@ -80,7 +81,7 @@ class DashboardController extends Controller
 
         // return $months;
 
-        // TOP Page views
+        // ================  TOP Page views
         $topPages = PageView::select(
             'page_title',
             'page_url',
@@ -92,7 +93,9 @@ class DashboardController extends Controller
             ->get();
         // return $topPages;
 
-        $topPageLabels = $topPages->pluck('page_title')->toArray();
+        $topPageLabels = $topPages->pluck('page_title')
+            ->map(fn($title) => Str::limit($title, 30, '...'))
+            ->toArray();
 
         $topPageViews = $topPages->pluck('total_views')->toArray();
         // return $topPageViews;
@@ -112,7 +115,151 @@ class DashboardController extends Controller
             ->orderByDesc('total_views')
             ->first();
 
-        // return $mostViewedPage;
+        // ============== devices count
+        $deviceStats = Visitor::select(
+            DB::raw("COALESCE(device, 'Unknown') as device"),
+            DB::raw('COUNT(*) as total')
+        )
+            ->groupBy('device')
+            ->get();
+
+        $deviceLabels = $deviceStats->pluck('device')->toArray();
+        $deviceCounts = $deviceStats->pluck('total')->toArray();
+
+        // country count
+        $countryStats = Visitor::select(
+            'country',
+            DB::raw('COUNT(*) as total')
+        )
+            ->whereNotNull('country')
+            ->where('country', '!=', '')
+            ->groupBy('country')
+            ->orderByDesc('total')
+            ->get()
+            ->map(function ($item) use ($totalVisitors) {
+
+                $item->percentage = $totalVisitors > 0
+                    ? round(($item->total / $totalVisitors) * 100, 2)
+                    : 0;
+
+                return $item;
+            });
+
+
+
+        $countryCodes = [
+            'India' => 'in',
+            'United States' => 'us',
+            'USA' => 'us',
+            'China' => 'cn',
+            'Singapore' => 'sg',
+            'South Korea' => 'kr',
+            'The Netherlands' => 'nl',
+            'Brazil' => 'br',
+            'Australia' => 'au',
+            'Paraguay' => 'py',
+            'Germany' => 'de',
+            'Colombia' => 'co',
+            'Venezuela' => 've',
+            'France' => 'fr',
+            'Ukraine' => 'ua',
+            'Nicaragua' => 'ni',
+            'Indonesia' => 'id',
+            'Nigeria' => 'ng',
+            'Türkiye' => 'tr',
+            'Turkey' => 'tr',
+            'Argentina' => 'ar',
+            'Kenya' => 'ke',
+            'Iraq' => 'iq',
+            'Canada' => 'ca',
+            'Russia' => 'ru',
+            'Japan' => 'jp',
+            'Italy' => 'it',
+            'Malaysia' => 'my',
+            'Sri Lanka' => 'lk',
+            'Pakistan' => 'pk',
+            'Nepal' => 'np',
+            'Bangladesh' => 'bd',
+        ];
+
+        $countryCoordinates = [
+            'India' => [20.5937, 78.9629],
+            'United States' => [37.0902, -95.7129],
+            'USA' => [37.0902, -95.7129],
+            'China' => [35.8617, 104.1954],
+            'Singapore' => [1.3521, 103.8198],
+            'South Korea' => [35.9078, 127.7669],
+            'The Netherlands' => [52.1326, 5.2913],
+            'Brazil' => [-14.2350, -51.9253],
+            'Australia' => [-25.2744, 133.7751],
+            'Paraguay' => [-23.4425, -58.4438],
+            'Germany' => [51.1657, 10.4515],
+            'Colombia' => [4.5709, -74.2973],
+            'Venezuela' => [6.4238, -66.5897],
+            'France' => [46.2276, 2.2137],
+            'Ukraine' => [48.3794, 31.1656],
+            'Nicaragua' => [12.8654, -85.2072],
+            'Indonesia' => [-0.7893, 113.9213],
+            'Nigeria' => [9.0820, 8.6753],
+            'Türkiye' => [38.9637, 35.2433],
+            'Turkey' => [38.9637, 35.2433], // Optional alias
+            'Argentina' => [-38.4161, -63.6167],
+            'Kenya' => [-0.0236, 37.9062],
+            'Iraq' => [33.2232, 43.6793],
+            'Canada' => [56.1304, -106.3468],
+            'Russia' => [61.5240, 105.3188],
+            'Japan' => [36.2048, 138.2529],
+            'Italy' => [41.8719, 12.5674],
+            'Malaysia' => [4.2105, 101.9758],
+            'Sri Lanka' => [7.8731, 80.7718],
+            'Pakistan' => [30.3753, 69.3451],
+            'Nepal' => [28.3949, 84.1240],
+            'Bangladesh' => [23.6850, 90.3563],
+        ];
+
+        $markers = [];
+        $colors = [
+            '#1572E8',
+            '#31CE36',
+            '#FFAD46',
+            '#F25961',
+            '#6F42C1',
+            '#20C997',
+            '#FD7E14',
+            '#8b23c7',
+        ];
+
+        $i = 0;
+
+        foreach ($countryStats as $country) {
+
+            if (!isset($countryCoordinates[$country->country])) {
+                continue;
+            }
+            if ($country->total >= 100) {
+                $color = '#1572E8';      // Blue
+            } elseif ($country->total >= 50) {
+                $color = '#31CE36';      // Green
+            } elseif ($country->total >= 25) {
+                $color = '#20C997';      // Orange
+            } elseif ($country->total >= 10) {
+                $color = '#FFAD46';      // Orange
+            } else {
+                $color = '#F25961';      // Red
+            }
+
+            $markers[] = [
+                'name' => $country->country . ' (' . $country->total . ')',
+                'coords' => $countryCoordinates[$country->country],
+                'style' => [
+                    'fill' => $color,
+                ]
+            ];
+        }
+
+
+
+        // return $countryStats;
 
         return view('admin.dashboard', [
             'formsCount'        => $formsCount,
@@ -128,6 +275,11 @@ class DashboardController extends Controller
             'topPageViews'      => $topPageViews,
             'months'            => $months,
             'pageViewsData'     => $pageViewsData,
+            'deviceLabels'      => $deviceLabels,
+            'deviceCounts'      => $deviceCounts,
+            'countryStats'      => $countryStats,
+            'markers'           => $markers,
+            'countryCodes'      => $countryCodes,
             'totalVisitors'     => $totalVisitors,
             'todayVisitors'     => $todayVisitors,
             'activeVisitors'    => $activeVisitors,

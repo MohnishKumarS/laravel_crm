@@ -120,7 +120,7 @@ class VisitorSeeder extends Seeder
         $visitorIds = [];
 
         // 50 Visitors
-        for ($i = 1; $i <= 50; $i++) {
+        for ($i = 1; $i <= 5; $i++) {
 
             $firstVisit = $faker->dateTimeBetween('-30 days', '-2 days');
             $lastVisit = $faker->dateTimeBetween($firstVisit, 'now');

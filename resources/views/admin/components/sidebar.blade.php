@@ -110,48 +110,70 @@
                           </ul>
                       </div>
                   </li>
-                    <li class="nav-item {{ request()->routeIs('admin.campaigns.*') ? 'active' : '' }}">
-                        <a data-bs-toggle="collapse" href="#campaigns_list">
-                            <i class="fas fa-bullhorn"></i>
-                            <p>Campaigns</p>
-                            <span class="caret"></span>
-                        </a>
-                        <div class="collapse  {{ request()->routeIs('admin.campaigns.*') ? 'show' : '' }}" id="campaigns_list">
-                            <ul class="nav nav-collapse" style="list-style: none">
-                                <li>
-                                    <a href="{{ route('admin.campaigns.create') }}">
-                                        <span class="ms-5">Add Campaign</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('admin.campaigns.index') }}">
-                                        <span class="ms-5">View Campaigns</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="nav-item {{ request()->routeIs('admin.home-hero.*') ? 'active' : '' }}">
-                        <a data-bs-toggle="collapse" href="#home_hero_list">
-                            <i class="fas fa-image"></i>
-                            <p>Home Hero</p>
-                            <span class="caret"></span>
-                        </a>
-                        <div class="collapse  {{ request()->routeIs('admin.home-hero.*') ? 'show' : '' }}" id="home_hero_list">
-                            <ul class="nav nav-collapse" style="list-style: none">
-                                <li>
-                                    <a href="{{ route('admin.home-hero.create') }}">
-                                        <span class="ms-5">Add Home Hero</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('admin.home-hero.index') }}">
-                                        <span class="ms-5">View Home Hero</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
+                  <li class="nav-item {{ request()->routeIs('admin.campaigns.*') ? 'active' : '' }}">
+                      <a data-bs-toggle="collapse" href="#campaigns_list">
+                          <i class="fas fa-bullhorn"></i>
+                          <p>Campaigns</p>
+                          <span class="caret"></span>
+                      </a>
+                      <div class="collapse  {{ request()->routeIs('admin.campaigns.*') ? 'show' : '' }}"
+                          id="campaigns_list">
+                          <ul class="nav nav-collapse" style="list-style: none">
+                              <li>
+                                  <a href="{{ route('admin.campaigns.create') }}">
+                                      <span class="ms-5">Add Campaign</span>
+                                  </a>
+                              </li>
+                              <li>
+                                  <a href="{{ route('admin.campaigns.index') }}">
+                                      <span class="ms-5">View Campaigns</span>
+                                  </a>
+                              </li>
+                          </ul>
+                      </div>
+                  </li>
+                  <li class="nav-item {{ request()->routeIs('admin.home-hero.*') ? 'active' : '' }}">
+                      <a data-bs-toggle="collapse" href="#home_hero_list">
+                          <i class="fas fa-image"></i>
+                          <p>Home Hero</p>
+                          <span class="caret"></span>
+                      </a>
+                      <div class="collapse  {{ request()->routeIs('admin.home-hero.*') ? 'show' : '' }}"
+                          id="home_hero_list">
+                          <ul class="nav nav-collapse" style="list-style: none">
+                              <li>
+                                  <a href="{{ route('admin.home-hero.create') }}">
+                                      <span class="ms-5">Add Home Hero</span>
+                                  </a>
+                              </li>
+                              <li>
+                                  <a href="{{ route('admin.home-hero.index') }}">
+                                      <span class="ms-5">View Home Hero</span>
+                                  </a>
+                              </li>
+                          </ul>
+                      </div>
+                  </li>
+                  <li class="nav-item {{ request()->routeIs('analytics.*') ? 'active' : '' }}">
+                      <a data-bs-toggle="collapse" href="#banners_list">
+                          <i class="fas fa-gear"></i>
+                          <p>Analytics</p>
+                          <span class="caret"></span>
+                      </a>
+                      <div class="collapse  {{ request()->routeIs('analytics.*') ? 'show' : '' }}" id="banners_list">
+                          <ul class="nav nav-collapse" style="list-style: none">
+                              <li>
+                                  <a href="{{ route('analytics.visitors') }}">
+                                      <span class="ms-5">View Visitors</span>
+                                  </a>
+                              </li>
+
+
+
+                          </ul>
+
+                      </div>
+                  </li>
                   <li class="nav-item {{ request()->is('settings*') ? 'active' : '' }}">
                       <a data-bs-toggle="collapse" href="#banners_list">
                           <i class="fas fa-gear"></i>
@@ -165,11 +187,11 @@
                                       <span class="ms-5">View Setting</span>
                                   </a>
                               </li>
-                            
+
 
 
                           </ul>
-                         
+
                       </div>
                   </li>
 

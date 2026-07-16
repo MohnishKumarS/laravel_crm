@@ -11,4 +11,10 @@ class Visitor extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+
+    public function pageViews()
+    {
+        return $this->hasMany(PageView::class);
+    }
 }
