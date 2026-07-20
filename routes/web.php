@@ -112,24 +112,26 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('campaigns', CampaignController::class)
         ->names('admin.campaigns')
         ->except(['show']);
+
+    Route::resource('home-hero', HomeHeroController::class)
+        ->parameters(['home-hero' => 'homeHero'])
+        ->names('admin.home-hero')
+        ->except(['show']);
+
+
+
+    // ========================= MARKETPLACE SHOP
+    Route::prefix('shop')->name('shop.')->group(function () {
+        // DASHBOARD
+        Route::get('/', [shopAnalytics::class, 'index'])->name('home');
+        Route::get('visitors-per-day', [shopAnalytics::class, 'visitorsPerDay'])->name('visitors-per-day');
+    });
+
+    // ANALYTICS
+    Route::get('analytics/shop', [shopAnalytics::class, 'shopVisitors'])->name('analytics.shop');
+    Route::get('/analytics/shop/export', [shopAnalytics::class, 'exportShopVisitors'])->name('analytics.shop.export');
 });
-Route::resource('home-hero', HomeHeroController::class)
-    ->parameters(['home-hero' => 'homeHero'])
-    ->names('admin.home-hero')
-    ->except(['show']);
 
-
-
-// ========================= MARKETPLACE SHOP
-Route::prefix('shop')->name('shop.')->group(function () {
-    // DASHBOARD
-    Route::get('/', [shopAnalytics::class, 'index'])->name('home');
-    Route::get('visitors-per-day', [shopAnalytics::class, 'visitorsPerDay'])->name('visitors-per-day');
-});
-
-// ANALYTICS
-Route::get('analytics/shop', [shopAnalytics::class, 'shopVisitors'])->name('analytics.shop');
-Route::get('/analytics/shop/export', [shopAnalytics::class, 'exportShopVisitors'])->name('analytics.shop.export');
 
 // MIGRATION
 Route::get('/migrate', function () {
