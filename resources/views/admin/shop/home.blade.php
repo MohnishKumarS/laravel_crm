@@ -49,7 +49,7 @@
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-icon">
-                                <div class="icon-big text-center icon-danger bubble-shadow-small">
+                                <div class="icon-big text-center icon-success bubble-shadow-small">
                                     <i class="fas fa-heartbeat"></i>
                                 </div>
                             </div>

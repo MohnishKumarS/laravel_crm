@@ -10,6 +10,8 @@ class VisitorLogs extends Model
 
     protected $table = 'visitor_logs';
 
+    protected $guarded = [];
+
     public function pageViews()
     {
         return $this->hasMany(VisitorViews::class, 'visitor_id', 'id');

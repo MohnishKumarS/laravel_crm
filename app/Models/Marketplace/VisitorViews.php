@@ -10,6 +10,8 @@ class VisitorViews extends Model
 
     protected $table = 'visitor_views';
 
+    protected $guarded = [];
+
     public function visitor()
     {
         return $this->belongsTo(VisitorLogs::class, 'visitor_id', 'id');

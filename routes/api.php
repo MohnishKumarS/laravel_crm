@@ -28,6 +28,7 @@ Route::prefix('posts')->group(function () {
 
 // Analytics
 Route::post('/visitors',[VisitorController::class,'index']);
+Route::post('/visitors/shop',[VisitorController::class,'shopVisitors']);
 
 Route::prefix('campaigns')->group(function () {
     Route::get('/current', [CampaignController::class, 'current']);   // public
