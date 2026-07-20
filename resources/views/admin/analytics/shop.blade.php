@@ -4,7 +4,7 @@
     <div class="page-inner">
 
         <div class="page-header">
-            <h4 class="page-title">Yuukke Analytics</h4>
+            <h4 class="page-title">Marketplace Analytics</h4>
 
             <ul class="breadcrumbs">
                 <li class="nav-home">
@@ -18,7 +18,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('analytics.visitors') }}">Analytics</a>
+                    <a href="{{ route('analytics.shop') }}">Analytics</a>
                 </li>
 
                 <li class="separator">
@@ -66,7 +66,7 @@
 
                             </div>
                             <div class="col-6">
-                                <a href="{{ route('analytics.visitors.export', ['month' => $selectedMonth]) }}"
+                                <a href="{{ route('analytics.shop.export', ['month' => $selectedMonth]) }}"
                                     class="btn btn-success btn-sm">
 
                                     <i class="fa fa-file-excel"></i>
@@ -177,7 +177,7 @@
                     <li class="nav-item">
                         <a class="nav-link active" data-bs-toggle="tab" type="button" data-bs-target="#visitors">
                             All Visitors
-                            <span class="badge badge-primary">{{ $totalVisitors }}</span>
+                            <span class="badge badge-primary">{{ $visitors->count() }}</span>
                         </a>
                     </li>
 
@@ -462,7 +462,7 @@
 
                                         <td>{{ $page->visitor->country }}</td>
 
-                                        <td>{{ $page->created_at}} ( {{ $page->created_at->diffForHumans() }} )</td>
+                                        <td>{{ $page->created_at }} ( {{ $page->created_at->diffForHumans() }} )</td>
 
                                     </tr>
                                 @endforeach
@@ -525,7 +525,7 @@
         $("#monthFilter").change(function() {
 
             window.location =
-                "{{ route('analytics.visitors') }}" +
+                "{{ route('analytics.shop') }}" +
                 "?month=" + $(this).val();
 
         });

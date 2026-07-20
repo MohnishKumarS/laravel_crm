@@ -94,6 +94,8 @@ class AnalyticsController extends Controller
                 $query->whereYear('created_at', $date->year)
                     ->whereMonth('created_at', $date->month);
             })
+            ->whereNotNull('page_title')
+            ->where('page_title', '!=', '')
             ->groupBy('page_title', 'page_url')
             ->orderByDesc('total')
             ->get();
@@ -107,7 +109,12 @@ class AnalyticsController extends Controller
             ->orderByDesc('id')
             ->get();
 
-        // return $notFoundPages;
+        //   $products = DB::connection('marketplace')
+        //         ->table('products')
+        //         ->limit(10)
+        //         ->get();
+
+        //     return $products;
 
         return view('admin.analytics.visitors', compact(
             'visitors',
@@ -127,5 +134,36 @@ class AnalyticsController extends Controller
             new VisitorsExport($request->month),
             'visitors-' . $request->month . '.xlsx'
         );
+    }
+
+    public function index()
+    {
+        return view('upload-test');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        $file = $request->file('image');
+
+        $fileName = 'prod_' . $file->getClientOriginalName();
+
+
+        // Change this path to your CodeIgniter uploads folder
+        $destination = '/var/www/sttyyl/assets/uploads';
+
+        if (!file_exists($destination)) {
+            mkdir($destination, 0775, true);
+        }
+
+        $file->move($destination, $fileName);
+
+        return back()->with([
+            'success' => 'Image uploaded successfully!',
+            'filename' => $fileName,
+        ]);
     }
 }

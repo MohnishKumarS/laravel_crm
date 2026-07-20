@@ -9,6 +9,7 @@ use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\HomeHeroController;
+use App\Http\Controllers\Marketplace\AnalyticsController as shopAnalytics;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
@@ -105,6 +106,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('analytics/visitors', [AnalyticsController::class, 'visitors'])->name('analytics.visitors');
     Route::get('/analytics/visitors/export', [AnalyticsController::class, 'exportVisitors'])->name('analytics.visitors.export');
 
+    Route::get('/upload-test', [AnalyticsController::class, 'index']);
+    Route::post('/upload-test', [AnalyticsController::class, 'store'])->name('upload.test');
+
     Route::resource('campaigns', CampaignController::class)
         ->names('admin.campaigns')
         ->except(['show']);
@@ -113,6 +117,19 @@ Route::resource('home-hero', HomeHeroController::class)
     ->parameters(['home-hero' => 'homeHero'])
     ->names('admin.home-hero')
     ->except(['show']);
+
+
+
+// ========================= MARKETPLACE SHOP
+Route::prefix('shop')->name('shop.')->group(function () {
+    // DASHBOARD
+    Route::get('/', [shopAnalytics::class, 'index'])->name('home');
+    Route::get('visitors-per-day', [shopAnalytics::class, 'visitorsPerDay'])->name('visitors-per-day');
+});
+
+// ANALYTICS
+Route::get('analytics/shop', [shopAnalytics::class, 'shopVisitors'])->name('analytics.shop');
+Route::get('/analytics/shop/export', [shopAnalytics::class, 'exportShopVisitors'])->name('analytics.shop.export');
 
 // MIGRATION
 Route::get('/migrate', function () {

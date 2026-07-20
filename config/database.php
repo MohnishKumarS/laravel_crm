@@ -64,6 +64,18 @@ return [
             ]) : [],
         ],
 
+        'marketplace' => [
+            'driver' => 'mysql',
+            'host' => env('MARKETPLACE_DB_HOST'),
+            'port' => env('MARKETPLACE_DB_PORT'),
+            'database' => env('MARKETPLACE_DB_DATABASE'),
+            'username' => env('MARKETPLACE_DB_USERNAME'),
+            'password' => env('MARKETPLACE_DB_PASSWORD'),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => 'sma_',
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),
@@ -149,7 +161,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')).'-database-'),
+            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')) . '-database-'),
             'persistent' => env('REDIS_PERSISTENT', false),
         ],
 

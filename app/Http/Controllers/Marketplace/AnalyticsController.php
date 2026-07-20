@@ -1,70 +1,40 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Marketplace;
 
-use App\Models\Form;
-use App\Models\FormSubmission;
-use App\Models\PageView;
-use App\Models\Post;
-use App\Models\Visitor;
+use App\Exports\ShopVisitorsExport;
+use App\Http\Controllers\Controller;
+use App\Models\Marketplace\VisitorLogs;
+use App\Models\Marketplace\VisitorViews;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
-class DashboardController extends Controller
+class AnalyticsController extends Controller
 {
+
     public function index()
     {
-        $formsCount = Form::count();
-        $postsCount = Post::count();
-        $submissionsCount = FormSubmission::count();
+        $totalVisitors = VisitorLogs::count();
+        $todayVisitors = VisitorLogs::whereDate('last_visit', today())->count();
+        $activeVisitors = VisitorLogs::where('last_visit', '>=', now()->subMinutes(5))->count();
 
-        // return Carbon::today()->subYear(3);
-
-        // Submissions per month for the last 12 months
-        $monthlyCounts = FormSubmission::select(
-            DB::raw("DATE_FORMAT(created_at, '%Y-%m') as ym"),
-            DB::raw('count(*) as total')
-        )
-            ->where('created_at', '>=', now()->subMonths(11)->startOfMonth())
-            ->groupBy('ym')
-            ->orderBy('ym')
-            ->pluck('total', 'ym');
 
         // Build a full 12-month series, filling in zeros for months with no submissions
         $labels = [];
-        $submissionData = [];
         $visitorData = [];
-        $pageViewsData = [];
+        // $pageViewsData = [];
         for ($i = 11; $i >= 0; $i--) {
             $month = now()->subMonths($i);
             $key = $month->format('Y-m');
             $labels[] = $month->format('M y');
             $submissionData[] = $monthlyCounts[$key] ?? 0;
-            $visitorData[] = Visitor::whereYear('first_visit', $month->year)
+            $visitorData[] = VisitorLogs::whereYear('first_visit', $month->year)
                 ->whereMonth('first_visit', $month->month)
                 ->count();
-            $pageViewsData[] = PageView::whereYear('created_at', $month->year)
-                ->whereMonth('created_at', $month->month)
-                ->count();
         }
-
-        // =================== Daily Traffic Overview
-        $chartPerDayLabels = [];
-        $visitorPerDayData = [];
-
-        for ($i = 29; $i >= 0; $i--) {
-
-            $date = Carbon::today()->subDays($i);
-
-            $chartPerDayLabels[] = $date->format('d M');
-
-            $visitorPerDayData[] = Visitor::whereDate('first_visit', $date)
-                ->count();
-        }
-
 
         $months = [];
 
@@ -79,10 +49,20 @@ class DashboardController extends Controller
             ];
         }
 
-        // return $months;
+        // ============== devices count
+        $deviceStats = VisitorLogs::select(
+            DB::raw("COALESCE(device, 'Unknown') as device"),
+            DB::raw('COUNT(*) as total')
+        )
+            ->groupBy('device')
+            ->get();
+
+        $deviceLabels = $deviceStats->pluck('device')->toArray();
+        $deviceCounts = $deviceStats->pluck('total')->toArray();
+
 
         // ================  TOP Page views
-        $topPages = PageView::select(
+        $topPages = VisitorViews::select(
             'page_title',
             'page_url',
             DB::raw('COUNT(*) as total_views')
@@ -100,36 +80,10 @@ class DashboardController extends Controller
             ->toArray();
 
         $topPageViews = $topPages->pluck('total_views')->toArray();
-        // return $topPageViews;
 
-
-        // Today's submissions count, for a "Daily" style stat if needed
-        $todaySubmissions = FormSubmission::whereDate('created_at', today())->count();
-
-        // Analytics
-        $totalVisitors = Visitor::count();
-        $todayVisitors = Visitor::whereDate('last_visit', today())->count();
-        $activeVisitors = Visitor::where('last_visit', '>=', now()->subMinutes(5))->count();
-
-        // Top viewed page
-        $mostViewedPage = PageView::select('page_title', 'page_url', DB::raw('COUNT(*) as total_views'))
-            ->groupBy('page_title', 'page_url')
-            ->orderByDesc('total_views')
-            ->first();
-
-        // ============== devices count
-        $deviceStats = Visitor::select(
-            DB::raw("COALESCE(device, 'Unknown') as device"),
-            DB::raw('COUNT(*) as total')
-        )
-            ->groupBy('device')
-            ->get();
-
-        $deviceLabels = $deviceStats->pluck('device')->toArray();
-        $deviceCounts = $deviceStats->pluck('total')->toArray();
 
         // ============== country count
-        $countryStats = Visitor::select(
+        $countryStats = VisitorLogs::select(
             'country',
             DB::raw('COUNT(*) as total')
         )
@@ -182,6 +136,8 @@ class DashboardController extends Controller
             'Pakistan' => 'pk',
             'Nepal' => 'np',
             'Bangladesh' => 'bd',
+            'United Kingdom' => 'gb',
+            'UK' => 'gb',
         ];
 
         $countryCoordinates = [
@@ -217,6 +173,8 @@ class DashboardController extends Controller
             'Pakistan' => [30.3753, 69.3451],
             'Nepal' => [28.3949, 84.1240],
             'Bangladesh' => [23.6850, 90.3563],
+            'United Kingdom' => [55.3781, -3.4360],
+            'UK' => [55.3781, -3.4360],
         ];
 
         $markers = [];
@@ -261,34 +219,24 @@ class DashboardController extends Controller
 
 
 
-        // return $countryStats;
-
-        return view('admin.dashboard', [
-            'formsCount'        => $formsCount,
-            'postsCount'        => $postsCount,
-            'submissionsCount'  => $submissionsCount,
-            'todaySubmissions'  => $todaySubmissions,
-            'chartLabels'       => $labels,
-            'chartData'         => $submissionData,
-            'visitorData'       => $visitorData,
-            'chartPerDayLabels' => $chartPerDayLabels,
-            'visitorPerDayData' => $visitorPerDayData,
-            'topPageLabels'     => $topPageLabels,
-            'topPageViews'      => $topPageViews,
-            'months'            => $months,
-            'pageViewsData'     => $pageViewsData,
-            'deviceLabels'      => $deviceLabels,
-            'deviceCounts'      => $deviceCounts,
-            'countryStats'      => $countryStats,
-            'markers'           => $markers,
-            'countryCodes'      => $countryCodes,
+        $data = [
             'totalVisitors'     => $totalVisitors,
             'todayVisitors'     => $todayVisitors,
             'activeVisitors'    => $activeVisitors,
-            'mostViewedPage'    => $mostViewedPage
-        ]);
-    }
+            'months'            => $months,
+            'chartLabels'       => $labels,
+            'visitorData'       => $visitorData,
+            'deviceLabels'      => $deviceLabels,
+            'deviceCounts'      => $deviceCounts,
+            'topPageLabels'     => $topPageLabels,
+            'topPageViews'      => $topPageViews,
+            'countryStats'      => $countryStats,
+            'markers'           => $markers,
+            'countryCodes'      => $countryCodes,
+        ];
 
+        return view('admin.shop.home', $data);
+    }
 
     public function visitorsPerDay(Request $request)
     {
@@ -310,7 +258,7 @@ class DashboardController extends Controller
 
             $labels[] = $currentDate->format('d M');
 
-            $data[] = Visitor::whereDate('first_visit', $currentDate)
+            $data[] = VisitorLogs::whereDate('first_visit', $currentDate)
                 ->count();
         }
 
@@ -320,14 +268,109 @@ class DashboardController extends Controller
             'data'   => $data
         ]);
     }
-
-
-    public function markAllRead()
+    public function shopVisitors(Request $request)
     {
-        $notify =  Auth::user()
-            ->unreadNotifications
-            ->markAsRead();
+        $selectedMonth = $request->month ?? now()->format('Y-m');
+        // return $selectedMonth;
 
-        return back();
+        $date = Carbon::createFromFormat('Y-m', $selectedMonth);
+
+        $months = [];
+
+        for ($i = 0; $i < 12; $i++) {
+
+            $month = Carbon::now()->subMonths($i);
+
+            $months[] = [
+                'label' => $month->format('F Y'),
+                'value' => $month->format('Y-m')
+            ];
+        }
+
+
+        $visitorQuery = VisitorLogs::query()
+            ->when($selectedMonth, function ($query) use ($date) {
+                $query->whereYear('first_visit', $date->year)
+                    ->whereMonth('first_visit', $date->month);
+            });
+
+        $pageViewQuery = VisitorViews::query()
+            ->when($selectedMonth, function ($query) use ($date) {
+                $query->whereYear('created_at', $date->year)
+                    ->whereMonth('created_at', $date->month);
+            });
+
+        $visitors = (clone $visitorQuery)->withCount('pageViews')->get();
+        $totalVisitors = $visitors->count();
+
+        // return $visitors->count();
+
+        $countryStats = (clone $visitorQuery)
+            ->select(
+                'country',
+                DB::raw('MAX(state) as state'),
+                DB::raw('MAX(city) as city'),
+                DB::raw('COUNT(*) as total')
+            )
+            ->groupBy('country')
+            ->orderByDesc('total')
+            ->get()
+            ->map(function ($item) use ($totalVisitors) {
+
+                $item->percentage = $totalVisitors > 0
+                    ? round(($item->total / $totalVisitors) * 100, 2)
+                    : 0;
+
+                return $item;
+            });
+
+        $deviceStats = (clone $visitorQuery)
+            ->select(
+                'device',
+                DB::raw('COUNT(*) as total')
+            )
+            ->groupBy('device')
+            ->orderByDesc('total')
+            ->get();
+
+        $topPages = (clone $pageViewQuery)
+            ->select(
+                'page_title',
+                'page_url',
+                DB::raw('COUNT(*) as total')
+            )
+            ->whereNotNull('page_title')
+            ->where('page_title', '!=', '')
+            ->groupBy('page_title', 'page_url')
+            ->orderByDesc('total')
+            ->get();
+
+        $notFoundPages = (clone $pageViewQuery)
+            ->with('visitor')
+            ->where('page_title', 'not-found')
+            ->latest()
+            ->get();
+
+        // return $countryStats;
+
+        return view('admin.analytics.shop', compact(
+            // 'visitors',
+            'months',
+            'selectedMonth',
+            'visitors',
+            'countryStats',
+            'deviceStats',
+            'topPages',
+            'notFoundPages'
+        ));
+    }
+
+
+    public function exportShopVisitors(Request $request)
+    {
+        return Excel::download(
+            new ShopVisitorsExport($request->month),
+            'marketplace-visitors-' . $request->month . '.xlsx'
+        );
     }
 }

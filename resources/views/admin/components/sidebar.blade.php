@@ -156,7 +156,7 @@
                   </li>
                   <li class="nav-item {{ request()->routeIs('analytics.*') ? 'active' : '' }}">
                       <a data-bs-toggle="collapse" href="#banners_list">
-                          <i class="fas fa-gear"></i>
+                          <i class="fas fa-chart-bar"></i>
                           <p>Analytics</p>
                           <span class="caret"></span>
                       </a>
@@ -164,7 +164,12 @@
                           <ul class="nav nav-collapse" style="list-style: none">
                               <li>
                                   <a href="{{ route('analytics.visitors') }}">
-                                      <span class="ms-5">View Visitors</span>
+                                      <span class="ms-5">Yuukke Visitors</span>
+                                  </a>
+                              </li>
+                              <li>
+                                  <a href="{{ route('analytics.shop') }}">
+                                      <span class="ms-5">Marketplace Visitors</span>
                                   </a>
                               </li>
 
@@ -187,11 +192,58 @@
                                       <span class="ms-5">View Setting</span>
                                   </a>
                               </li>
+                          </ul>
+                      </div>
+                  </li>
 
+                  <li class="nav-section">
+                      <span class="sidebar-mini-icon">
+                          <i class="fa fa-ellipsis-h"></i>
+                      </span>
+                      <h4 class="text-section">Shop</h4>
+                  </li>
+
+
+
+                  {{-- MARKETPLACE --}}
+                  <li class="nav-item submenu {{ request()->routeIs('shop.*') ? 'active' : '' }}">
+                      <a data-bs-toggle="collapse" href="#submenu" class="collapsed" aria-expanded="false">
+                          <i class="fas fa-store"></i>
+                          <p>Marketplace</p>
+                          <span class="caret"></span>
+                      </a>
+                      <div class="collapse {{ request()->routeIs('shop.*') ? 'show' : '' }}" id="submenu"
+                          style="">
+                          <ul class="nav nav-collapse">
+                              <li>
+                                  <a href="{{ route('shop.home') }}">
+                                      <span class="sub-item">Dashboard</span>
+                                  </a>
+                              </li>
+                              {{-- <li class="submenu">
+                                  <a data-bs-toggle="collapse" href="#subnav1" class="collapsed"
+                                      aria-expanded="false">
+                                      <span class="sub-item">Level 1</span>
+                                      <span class="caret"></span>
+                                  </a>
+                                  <div class="collapse" id="subnav1" style="">
+                                      <ul class="nav nav-collapse subnav">
+                                          <li>
+                                              <a href="#">
+                                                  <span class="sub-item">Level 2</span>
+                                              </a>
+                                          </li>
+                                          <li>
+                                              <a href="#">
+                                                  <span class="sub-item">Level 2</span>
+                                              </a>
+                                          </li>
+                                      </ul>
+                                  </div>
+                              </li> --}}
 
 
                           </ul>
-
                       </div>
                   </li>
 

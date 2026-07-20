@@ -2,14 +2,14 @@
 
 namespace App\Exports;
 
-use App\Models\Visitor;
+use App\Models\Marketplace\VisitorLogs;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class VisitorsExport implements FromCollection, WithHeadings, WithColumnWidths, WithMapping
+class ShopVisitorsExport implements FromCollection, WithHeadings, WithColumnWidths, WithMapping
 {
     protected $month;
 
@@ -22,7 +22,7 @@ class VisitorsExport implements FromCollection, WithHeadings, WithColumnWidths, 
     {
         $date = Carbon::createFromFormat('Y-m', $this->month);
 
-        return Visitor::withCount('pageViews')
+        return VisitorLogs::withCount('pageViews')
             ->whereYear('first_visit', $date->year)
             ->whereMonth('first_visit', $date->month)
             ->get();
