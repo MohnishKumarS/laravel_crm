@@ -154,6 +154,39 @@
                           </ul>
                       </div>
                   </li>
+                  <li class="nav-item {{ request()->routeIs('affiliates.*') ? 'active' : '' }}">
+    <a data-bs-toggle="collapse" href="#affiliate_program_list">
+        <i class="fas fa-handshake"></i>
+        <p>Affiliate Program</p>
+        <span class="caret"></span>
+    </a>
+    <div class="collapse {{ request()->routeIs('affiliates.*') ? 'show' : '' }}"
+        id="affiliate_program_list">
+        <ul class="nav nav-collapse" style="list-style: none">
+            <li>
+                <a href="{{ route('affiliates.index') }}">
+                    <span class="ms-5">All Affiliates</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('affiliates.commissions') }}">
+                    <span class="ms-5">Commissions</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('affiliates.payouts') }}">
+                    <span class="ms-5">Payouts</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('affiliates.settings.edit') }}">
+                    <span class="ms-5">Settings</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</li>
+                  
                   <li class="nav-item {{ request()->routeIs('analytics.*') ? 'active' : '' }}">
                       <a data-bs-toggle="collapse" href="#banners_list">
                           <i class="fas fa-chart-bar"></i>

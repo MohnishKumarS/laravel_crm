@@ -47,4 +47,8 @@ class User extends Authenticatable
             set: fn ($value) => strtolower($value),
         );
     }
+    public function affiliate()
+   {
+    return $this->hasOne(Affiliate::class);
+   }
 }

@@ -2,6 +2,10 @@
 
 
 
+use App\Http\Controllers\AffiliateCommissionController;
+use App\Http\Controllers\AffiliateController;
+use App\Http\Controllers\AffiliatePayoutController;
+use App\Http\Controllers\AffiliateSettingController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
@@ -131,7 +135,32 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('analytics/shop', [shopAnalytics::class, 'shopVisitors'])->name('analytics.shop');
     Route::get('/analytics/shop/export', [shopAnalytics::class, 'exportShopVisitors'])->name('analytics.shop.export');
 });
+// affiliate admin routes
+Route::controller(AffiliateSettingController::class)->group(function () {
+    Route::get('affiliates/settings', 'edit')->name('affiliates.settings.edit');
+    Route::put('affiliates/settings', 'update')->name('affiliates.settings.update');
+});
 
+Route::controller(AffiliateCommissionController::class)->group(function () {
+    Route::get('affiliates/commissions', 'index')->name('affiliates.commissions');
+    Route::put('affiliates/commissions/bulk-approve', 'bulkApprove')->name('affiliates.commissions.bulk-approve');
+});
+
+Route::controller(AffiliatePayoutController::class)->group(function () {
+    Route::get('affiliates/payouts', 'index')->name('affiliates.payouts');
+    Route::post('affiliates/payouts/create-batch', 'createBatch')->name('affiliates.payouts.create-batch');
+    Route::put('affiliates/payouts/{payout}/mark-paid', 'markPaid')->name('affiliates.payouts.mark-paid');
+});
+
+Route::get('affiliates/create', [AffiliateController::class, 'create'])->name('affiliates.create');
+Route::post('affiliates', [AffiliateController::class, 'store'])->name('affiliates.store');
+
+Route::resource('affiliates', AffiliateController::class)->only(['index', 'show']);
+
+Route::put('affiliates/{affiliate}/approve', [AffiliateController::class, 'approve'])->name('affiliates.approve');
+Route::put('affiliates/{affiliate}/suspend', [AffiliateController::class, 'suspend'])->name('affiliates.suspend');
+Route::put('affiliates/{affiliate}/reject', [AffiliateController::class, 'reject'])->name('affiliates.reject');
+Route::put('affiliates/{affiliate}/rate', [AffiliateController::class, 'updateRate'])->name('affiliates.rate');
 
 // MIGRATION
 Route::get('/migrate', function () {

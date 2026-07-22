@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => App\Http\Middleware\AdminMiddleware::class,
             'check.token' => \App\Http\Middleware\CheckTokenExpiration::class,
+            'affiliate.webhook.secret' => \App\Http\Middleware\VerifyAffiliateWebhookSecret::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
