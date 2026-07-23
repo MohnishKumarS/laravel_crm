@@ -12,11 +12,28 @@ class LoginController extends Controller
 {
     public function index()
     {
+        // Auth::logout();
         //  session()->flush();
 
-        if (Auth::check() && Auth::user()->role === 'admin') {
-            return redirect()->route('dashboard');
+        // if (Auth::check() && Auth::user()->role === 'admin') {
+        //     return redirect()->route('dashboard');
+        // }
+        if (Auth::check()) {
+            $user = Auth::user();
+            return match ($user->role) {
+
+                'admin' => redirect()->route('dashboard'),
+
+                'seller' => redirect()->route('seller.dashboard'),
+
+                'marketer' => redirect()->route('marketer.dashboard'),
+
+                // 'seo' => redirect()->route('seo.dashboard'),
+
+                // default => abort(403, 'Invalid user role'),
+            };
         }
+
         return view('auth.login');
     }
 
@@ -33,9 +50,22 @@ class LoginController extends Controller
 
             $request->session()->regenerate();
 
-            if (Auth::user()->role == 'admin') {
-                return redirect()->route('dashboard');
-            }
+            // if (Auth::user()->role == 'admin') {
+            //     return redirect()->route('dashboard');
+            // }
+            $user = Auth::user();
+            return match ($user->role) {
+
+                'admin' => redirect()->route('dashboard'),
+
+                'seller' => redirect()->route('seller.dashboard'),
+
+                'marketer' => redirect()->route('marketer.dashboard'),
+
+                // 'seo' => redirect()->route('seo.dashboard'),
+
+                // default => abort(403, 'Invalid user role'),
+            };
 
             Auth::logout();
             // $request->session()->invalidate();
@@ -62,17 +92,23 @@ class LoginController extends Controller
 
     public function register(Request $request)
     {
-        $request->validate([
+       $validate = $request->validate([
             'name' => 'required|unique:users,name',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|confirmed|min:6',
+            'user_role' => 'nullable',
         ]);
+
+        // return $request->all();
+
+        $role = $request->role ?? 'user';
+        // return $role;
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'user',
+            'role' => $role,
         ]);
 
         return redirect()->route('login')->with('status', 'success')->with('message', 'Account created successfully.');

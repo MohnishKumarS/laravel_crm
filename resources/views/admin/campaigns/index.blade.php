@@ -44,73 +44,76 @@
                         The site automatically shows whichever campaign below is <strong>Published</strong> and inside its
                         date window. If none matches, it falls back to the campaign marked <strong>Default</strong>.
                     </p>
-
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Status</th>
-                                <th>Window</th>
-                                <th>Theme</th>
-                                <th>Priority</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($campaigns as $campaign)
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        <strong>{{ $campaign->name }}</strong><br>
-                                        <small class="text-muted">/{{ $campaign->slug }}</small>
-                                    </td>
-                                    <td>
-                                        @php
-                                            $badgeClass = match (true) {
-                                                str_starts_with($campaign->status_label, 'Active') => 'badge-success',
-                                                $campaign->status_label === 'Scheduled' => 'badge-info',
-                                                $campaign->status_label === 'Ended' => 'badge-secondary',
-                                                default => 'badge-light',
-                                            };
-                                        @endphp
-                                        <span class="badge {{ $badgeClass }}">{{ $campaign->status_label }}</span>
-                                    </td>
-                                    <td>
-                                        @if ($campaign->start_at || $campaign->end_at)
-                                            {{ optional($campaign->start_at)->format('d M Y') ?? '—' }}
-                                            →
-                                            {{ optional($campaign->end_at)->format('d M Y') ?? '—' }}
-                                        @else
-                                            <span class="text-muted">Always on</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <span title="Gradient / accent"
-                                            style="display:inline-block;width:16px;height:16px;border-radius:3px;background:{{ $campaign->theme_bg_start }};margin-right:2px;"></span>
-                                        <span
-                                            style="display:inline-block;width:16px;height:16px;border-radius:3px;background:{{ $campaign->theme_bg_end }};margin-right:2px;"></span>
-                                        <span
-                                            style="display:inline-block;width:16px;height:16px;border-radius:3px;background:{{ $campaign->accent_color }};"></span>
-                                    </td>
-                                    <td>{{ $campaign->priority }}</td>
-                                    <td class="text-right">
-                                        <a href="{{ route('admin.campaigns.edit', $campaign) }}"
-                                            class="btn btn-sm btn-outline-secondary">Edit</a>
-                                        <form action="{{ route('admin.campaigns.destroy', $campaign) }}" method="POST"
-                                            class="d-inline" onsubmit="return confirm('Delete this campaign?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-                                        </form>
-                                    </td>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th>Window</th>
+                                    <th>Theme</th>
+                                    <th>Priority</th>
+                                    <th></th>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="text-center text-muted">No campaigns yet — create one to get
-                                        started.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @forelse($campaigns as $campaign)
+                                    <tr>
+                                        <td>
+                                            <strong>{{ $campaign->name }}</strong><br>
+                                            <small class="text-muted">/{{ $campaign->slug }}</small>
+                                        </td>
+                                        <td>
+                                            @php
+                                                $badgeClass = match (true) {
+                                                    str_starts_with($campaign->status_label, 'Active')
+                                                        => 'badge-success',
+                                                    $campaign->status_label === 'Scheduled' => 'badge-info',
+                                                    $campaign->status_label === 'Ended' => 'badge-secondary',
+                                                    default => 'badge-light',
+                                                };
+                                            @endphp
+                                            <span class="badge {{ $badgeClass }}">{{ $campaign->status_label }}</span>
+                                        </td>
+                                        <td>
+                                            @if ($campaign->start_at || $campaign->end_at)
+                                                {{ optional($campaign->start_at)->format('d M Y') ?? '—' }}
+                                                →
+                                                {{ optional($campaign->end_at)->format('d M Y') ?? '—' }}
+                                            @else
+                                                <span class="text-muted">Always on</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <span title="Gradient / accent"
+                                                style="display:inline-block;width:16px;height:16px;border-radius:3px;background:{{ $campaign->theme_bg_start }};margin-right:2px;"></span>
+                                            <span
+                                                style="display:inline-block;width:16px;height:16px;border-radius:3px;background:{{ $campaign->theme_bg_end }};margin-right:2px;"></span>
+                                            <span
+                                                style="display:inline-block;width:16px;height:16px;border-radius:3px;background:{{ $campaign->accent_color }};"></span>
+                                        </td>
+                                        <td>{{ $campaign->priority }}</td>
+                                        <td class="text-right">
+                                            <a href="{{ route('admin.campaigns.edit', $campaign) }}"
+                                                class="btn btn-sm btn-outline-secondary">Edit</a>
+                                            <form action="{{ route('admin.campaigns.destroy', $campaign) }}" method="POST"
+                                                class="d-inline" onsubmit="return confirm('Delete this campaign?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">No campaigns yet — create one to
+                                            get
+                                            started.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
 
                 </div>
             </div>

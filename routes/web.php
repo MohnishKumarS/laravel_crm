@@ -9,10 +9,12 @@ use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\HomeHeroController;
+use App\Http\Controllers\Marketer\HomeController;
 use App\Http\Controllers\Marketplace\AnalyticsController as shopAnalytics;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -51,6 +53,9 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::view('/register', 'auth.register')->name('register');
 Route::post('/register', [LoginController::class, 'register'])->name('register.submit');
 
+// REGISTER
+Route::view('marketer/register', 'auth.register.marketer')->name('marketer.register');
+
 // FORGOT PASSWORD
 Route::controller(ForgotPasswordController::class)->group(function () {
 
@@ -65,7 +70,7 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 });
 
 // ADMIN ROUTES
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', 'role:admin,seller'])->group(function () {
 
     // Route::get('dashboard', function () {
     //     return view('admin.dashboard');
@@ -106,8 +111,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('analytics/visitors', [AnalyticsController::class, 'visitors'])->name('analytics.visitors');
     Route::get('/analytics/visitors/export', [AnalyticsController::class, 'exportVisitors'])->name('analytics.visitors.export');
 
-    Route::get('/upload-test', [AnalyticsController::class, 'index']);
-    Route::post('/upload-test', [AnalyticsController::class, 'store'])->name('upload.test');
+    Route::get('/upload-test', [TestController::class, 'index']);
+    Route::post('/upload-test', [TestController::class, 'store'])->name('upload.test');
 
     Route::resource('campaigns', CampaignController::class)
         ->names('admin.campaigns')
@@ -131,6 +136,25 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('analytics/shop', [shopAnalytics::class, 'shopVisitors'])->name('analytics.shop');
     Route::get('/analytics/shop/export', [shopAnalytics::class, 'exportShopVisitors'])->name('analytics.shop.export');
 });
+
+
+
+
+// MARKETER ROLE
+Route::middleware(['auth', 'role:marketer'])->prefix('marketer')->name('marketer.')->group(function () {
+
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+});
+
+// SELLER ROLE
+Route::middleware(['auth', 'role:seller'])
+    ->prefix('seller')
+    ->name('seller.')
+    ->group(function () {
+
+        Route::get('/', [TestController::class, 'sellerIndex'])->name('dashboard');
+    });
+
 
 
 // MIGRATION
