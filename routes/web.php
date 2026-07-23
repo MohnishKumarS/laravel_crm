@@ -1,12 +1,11 @@
 <?php
 
 
-
-use App\Http\Controllers\AffiliateCommissionController;
-use App\Http\Controllers\AffiliateController;
-use App\Http\Controllers\AffiliatePayoutController;
-use App\Http\Controllers\AffiliateSelfController;
-use App\Http\Controllers\AffiliateSettingController;
+use App\Http\Controllers\Affiliate\AffiliateCommissionController;
+use App\Http\Controllers\Affiliate\AffiliateController;
+use App\Http\Controllers\Affiliate\AffiliatePayoutController;
+use App\Http\Controllers\Affiliate\AffiliateSelfController;
+use App\Http\Controllers\Affiliate\AffiliateSettingController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
@@ -59,7 +58,7 @@ Route::view('/register', 'auth.register')->name('register');
 Route::post('/register', [LoginController::class, 'register'])->name('register.submit');
 
 // REGISTER
-Route::view('marketer/register', 'auth.register.marketer')->name('marketer.register');
+Route::view('affiliate/register', 'auth.register.affiliate')->name('affiliate.register');
 
 // FORGOT PASSWORD
 Route::controller(ForgotPasswordController::class)->group(function () {
@@ -75,7 +74,7 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 });
 
 // ADMIN ROUTES
-Route::middleware(['auth', 'role:admin,seller'])->group(function () {
+Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // Route::get('dashboard', function () {
     //     return view('admin.dashboard');
@@ -141,33 +140,45 @@ Route::middleware(['auth', 'role:admin,seller'])->group(function () {
     Route::get('analytics/shop', [shopAnalytics::class, 'shopVisitors'])->name('analytics.shop');
     Route::get('/analytics/shop/export', [shopAnalytics::class, 'exportShopVisitors'])->name('analytics.shop.export');
 });
-// affiliate admin routes
-Route::controller(AffiliateSettingController::class)->group(function () {
-    Route::get('affiliates/settings', 'edit')->name('affiliates.settings.edit');
-    Route::put('affiliates/settings', 'update')->name('affiliates.settings.update');
+
+// Route::resource('affiliates', AffiliateController::class)->only(['index', 'show']);
+// AFFILIATE MODULE
+Route::prefix('affiliates')->name('affiliates.')->group(function () {
+    Route::controller(AffiliateSettingController::class)->group(function () {
+        Route::get('settings', 'edit')->name('settings.edit');
+        Route::put('settings', 'update')->name('settings.update');
+    });
+
+    Route::controller(AffiliateCommissionController::class)->group(function () {
+        Route::get('commissions', 'index')->name('commissions');
+        Route::put('commissions/bulk-approve', 'bulkApprove')->name('commissions.bulk-approve');
+    });
+
+    Route::controller(AffiliatePayoutController::class)->group(function () {
+        Route::get('payouts', 'index')->name('payouts');
+        Route::post('payouts/create-batch', 'createBatch')->name('payouts.create-batch');
+        Route::put('payouts/{payout}/mark-paid', 'markPaid')->name('payouts.mark-paid');
+    });
+
+    Route::controller(AffiliateController::class)->group(function () {
+
+            Route::get('/', 'index')->name('index');
+
+            Route::get('/create', 'create')->name('create');
+
+            Route::post('/', 'store')->name('store');
+
+            Route::get('/{affiliate}', 'show')->name('show');
+
+            Route::put('/{affiliate}/approve', 'approve')->name('approve');
+
+            Route::put('/{affiliate}/suspend', 'suspend')->name('suspend');
+
+            Route::put('/{affiliate}/reject', 'reject')->name('reject');
+
+            Route::put('/{affiliate}/rate', 'updateRate')->name('rate');
+        });
 });
-
-Route::controller(AffiliateCommissionController::class)->group(function () {
-    Route::get('affiliates/commissions', 'index')->name('affiliates.commissions');
-    Route::put('affiliates/commissions/bulk-approve', 'bulkApprove')->name('affiliates.commissions.bulk-approve');
-});
-
-Route::controller(AffiliatePayoutController::class)->group(function () {
-    Route::get('affiliates/payouts', 'index')->name('affiliates.payouts');
-    Route::post('affiliates/payouts/create-batch', 'createBatch')->name('affiliates.payouts.create-batch');
-    Route::put('affiliates/payouts/{payout}/mark-paid', 'markPaid')->name('affiliates.payouts.mark-paid');
-});
-
-Route::get('affiliates/create', [AffiliateController::class, 'create'])->name('affiliates.create');
-Route::post('affiliates', [AffiliateController::class, 'store'])->name('affiliates.store');
-
-Route::resource('affiliates', AffiliateController::class)->only(['index', 'show']);
-
-Route::put('affiliates/{affiliate}/approve', [AffiliateController::class, 'approve'])->name('affiliates.approve');
-Route::put('affiliates/{affiliate}/suspend', [AffiliateController::class, 'suspend'])->name('affiliates.suspend');
-Route::put('affiliates/{affiliate}/reject', [AffiliateController::class, 'reject'])->name('affiliates.reject');
-Route::put('affiliates/{affiliate}/rate', [AffiliateController::class, 'updateRate'])->name('affiliates.rate');
-
 
 
 // MARKETER ROLE
@@ -205,12 +216,14 @@ Route::middleware(['auth', 'role:seller'])
     });
 
 
-
-Route::middleware(['auth', 'affiliate.portal'])->prefix('affiliate-portal')->name('affiliate-portal.')->group(function () {
-    Route::get('/', [AffiliateSelfController::class, 'dashboard'])->name('dashboard');
+// AFFILIATE ROLE - DASHBAORD
+Route::middleware(['auth', 'role:affiliate'])->prefix('affiliate')->name('affiliate.')->group(function () {
+    Route::get('/dashboard', [AffiliateSelfController::class, 'dashboard'])->name('dashboard');
     Route::get('/commissions', [AffiliateSelfController::class, 'commissions'])->name('commissions');
     Route::get('/payouts', [AffiliateSelfController::class, 'payouts'])->name('payouts');
 });
+
+
 // MIGRATION
 Route::get('/migrate', function () {
 

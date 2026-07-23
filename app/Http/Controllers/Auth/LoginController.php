@@ -15,16 +15,30 @@ class LoginController extends Controller
         // Auth::logout();
         //  session()->flush();
 
-    if (Auth::check() && Auth::user()->role === 'admin') {
-        return redirect()->route('dashboard');
-    }
+        // if (Auth::check() && Auth::user()->role === 'admin') {
+        //     return redirect()->route('dashboard');
+        // }
 
-    if (Auth::check() && Auth::user()->role === 'affiliate') {
-        return redirect()->route('affiliate-portal.dashboard');
-    }
+        // if (Auth::check() && Auth::user()->role === 'affiliate') {
+        //     return redirect()->route('affiliate-portal.dashboard');
+        // }
+        if (Auth::check()) {
+            $user = Auth::user();
+
+            return match ($user->role) {
+
+                'admin' => redirect()->route('dashboard'),
+
+                'affiliate' => redirect()->route('affiliate.dashboard'),
+
+                // default => abort(403, 'Invalid user role'),
+
+            };
+        }
 
 
-    return view('auth.login');
+
+        return view('auth.login');
     }
 
     public function authenticate(Request $request)
@@ -38,20 +52,30 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials, $remember)) {
 
-    $request->session()->regenerate();
+            $request->session()->regenerate();
 
-    if (Auth::user()->role == 'admin') {
-        return redirect()->route('dashboard');
-    }
+            // if (Auth::user()->role == 'admin') {
+            //     return redirect()->route('dashboard');
+            // }
 
-    if (Auth::user()->role == 'affiliate') {
-        return redirect()->route('affiliate.self.dashboard');
-    }
+            // if (Auth::user()->role == 'affiliate') {
+            //     return redirect()->route('affiliate.self.dashboard');
+            // }
+            if (Auth::check()) {
+                $user = Auth::user();
 
-    Auth::logout();
+                return match ($user->role) {
+                    'admin' => redirect()->route('dashboard'),
 
-    return redirect()->back()->with('status', 'danger')->with('message', 'You do not have permission to access the admin panel.');
-   }
+                    'affiliate' => redirect()->route('affiliate.dashboard'),
+                };
+            }
+
+
+            Auth::logout();
+
+            return redirect()->back()->with('status', 'danger')->with('message', 'You do not have permission to access the admin panel.');
+        }
 
         return back()->withErrors([
             'name' => 'Invalid credentials! Please try again.',
@@ -71,7 +95,7 @@ class LoginController extends Controller
 
     public function register(Request $request)
     {
-       $validate = $request->validate([
+        $validate = $request->validate([
             'name' => 'required|unique:users,name',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|confirmed|min:6',

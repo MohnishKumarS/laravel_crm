@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Affiliate;
 
 use App\Http\Controllers\Controller;
 use App\Models\Affiliate;
@@ -8,6 +8,7 @@ use App\Models\AffiliateCommission;
 use App\Models\AffiliatePayout;
 use App\Services\AffiliateSettingsService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AffiliatePayoutController extends Controller
@@ -84,7 +85,7 @@ class AffiliatePayoutController extends Controller
                 'method'         => $request->method,
                 'reference'      => $request->reference,
                 'admin_note'     => $request->admin_note,
-                'marked_paid_by' => auth()->id(),
+                'marked_paid_by' => Auth::id(),
                 'paid_at'        => now(),
             ]);
 

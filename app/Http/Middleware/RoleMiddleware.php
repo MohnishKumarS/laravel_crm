@@ -22,7 +22,7 @@ class RoleMiddleware
 
         if (!in_array(Auth::user()->role, $roles)) {
             return redirect('/login')->with('status', 'danger')->with('message', 'You are not authorized to access this page.');
-            abort(403, 'You are not authorized to access this page.');
+            // abort(403, 'You are not authorized to access this page.');
         }
 
         return $next($request);

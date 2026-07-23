@@ -157,61 +157,48 @@
                               </ul>
                           </div>
                       </li>
-                  @if (auth()->user()->role === 'affiliate')
-                     {{-- AFFILIATE-ONLY MENU --}}
-                    <li class="nav-item {{ request()->routeIs('affiliate-portal.dashboard') ? 'active' : '' }}">
-                        <a href="{{ route('affiliate-portal.dashboard') }}"><i class="fas fa-tachometer-alt"></i><p>My Dashboard</p></a>
-                    </li>
-                    <li class="nav-item {{ request()->routeIs('affiliate-portal.commissions') ? 'active' : '' }}">
-                        <a href="{{ route('affiliate-portal.commissions') }}"><i class="fas fa-money-bill"></i><p>My Commissions</p></a>
-                    </li>
-                    <li class="nav-item {{ request()->routeIs('affiliate-portal.payouts') ? 'active' : '' }}">
-                        <a href="{{ route('affiliate-portal.payouts') }}"><i class="fas fa-hand-holding-usd"></i><p>My Payouts</p></a>
-                    </li>
-                   @else
-                       {{-- YOUR EXISTING FULL ADMIN MENU GOES HERE, UNCHANGED --}}
-                       ...
-                   @endif
+            
                       <li class="nav-item {{ request()->routeIs('affiliates.*') ? 'active' : '' }}">
-    <a data-bs-toggle="collapse" href="#affiliate_program_list">
-        <i class="fas fa-handshake"></i>
-        <p>Affiliate Program</p>
-        <span class="caret"></span>
-    </a>
-    <div class="collapse {{ request()->routeIs('affiliates.*') ? 'show' : '' }}"
-        id="affiliate_program_list">
-        <ul class="nav nav-collapse" style="list-style: none">
-            <li>
-                <a href="{{ route('affiliates.index') }}">
-                    <span class="ms-5">All Affiliates</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('affiliates.commissions') }}">
-                    <span class="ms-5">Commissions</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('affiliates.payouts') }}">
-                    <span class="ms-5">Payouts</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('affiliates.settings.edit') }}">
-                    <span class="ms-5">Settings</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-</li>
-                  
-                  <li class="nav-item {{ request()->routeIs('analytics.*') ? 'active' : '' }}">
+                          <a data-bs-toggle="collapse" href="#affiliate_program_list">
+                              <i class="fas fa-handshake"></i>
+                              <p>Affiliate Program</p>
+                              <span class="caret"></span>
+                          </a>
+                          <div class="collapse {{ request()->routeIs('affiliates.*') ? 'show' : '' }}"
+                              id="affiliate_program_list">
+                              <ul class="nav nav-collapse" style="list-style: none">
+                                  <li>
+                                      <a href="{{ route('affiliates.index') }}">
+                                          <span class="ms-5">All Affiliates</span>
+                                      </a>
+                                  </li>
+                                  <li>
+                                      <a href="{{ route('affiliates.commissions') }}">
+                                          <span class="ms-5">Commissions</span>
+                                      </a>
+                                  </li>
+                                  <li>
+                                      <a href="{{ route('affiliates.payouts') }}">
+                                          <span class="ms-5">Payouts</span>
+                                      </a>
+                                  </li>
+                                  <li>
+                                      <a href="{{ route('affiliates.settings.edit') }}">
+                                          <span class="ms-5">Settings</span>
+                                      </a>
+                                  </li>
+                              </ul>
+                          </div>
+                      </li>
+
+                      <li class="nav-item {{ request()->routeIs('analytics.*') ? 'active' : '' }}">
                           <a data-bs-toggle="collapse" href="#analytic_list">
                               <i class="fas fa-chart-bar"></i>
                               <p>Analytics</p>
                               <span class="caret"></span>
                           </a>
-                          <div class="collapse  {{ request()->routeIs('analytics.*') ? 'show' : '' }}" id="analytic_list">
+                          <div class="collapse  {{ request()->routeIs('analytics.*') ? 'show' : '' }}"
+                              id="analytic_list">
                               <ul class="nav nav-collapse" style="list-style: none">
                                   <li>
                                       <a href="{{ route('analytics.visitors') }}">
@@ -317,12 +304,13 @@
           </div>
       @endrole()
 
-      @role('marketer')
+      {{-- AFFILIATE ROLE --}}
+      @role('affiliate')
           <div class="sidebar-wrapper scrollbar scrollbar-inner">
               <div class="sidebar-content">
                   <ul class="nav nav-secondary">
                       <li class="nav-item active">
-                          <a href="{{ route('marketer.dashboard') }}">
+                          <a href="{{ route('affiliate.dashboard') }}">
                               <i class="fas fa-home"></i>
                               <p>Dashboard</p>
                               {{-- <span class="caret"></span> --}}
@@ -344,6 +332,23 @@
                               <i class="fa fa-ellipsis-h"></i>
                           </span>
                           <h4 class="text-section">Components</h4>
+                      </li>
+
+                      {{-- AFFILIATE-ONLY MENU --}}
+                      {{-- <li class="nav-item {{ request()->routeIs('affiliate.dashboard') ? 'active' : '' }}">
+                          <a href="{{ route('affiliate.dashboard') }}"><i class="fas fa-tachometer-alt"></i>
+                              <p>My Dashboard</p>
+                          </a>
+                      </li> --}}
+                      <li class="nav-item {{ request()->routeIs('affiliate.commissions') ? 'active' : '' }}">
+                          <a href="{{ route('affiliate.commissions') }}"><i class="fas fa-money-bill"></i>
+                              <p>My Commissions</p>
+                          </a>
+                      </li>
+                      <li class="nav-item {{ request()->routeIs('affiliate.payouts') ? 'active' : '' }}">
+                          <a href="{{ route('affiliate.payouts') }}"><i class="fas fa-hand-holding-usd"></i>
+                              <p>My Payouts</p>
+                          </a>
                       </li>
 
 

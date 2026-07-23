@@ -171,7 +171,7 @@
                                 placeholder="Confirm Password">
                         </div>
 
-                        <input type="hidden" name="role" value="marketer">
+                        <input type="hidden" name="role" value="affiliate">
 
                         <button type="submit" class="btn btn-auth w-100">
                             Create Account
