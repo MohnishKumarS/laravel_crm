@@ -81,12 +81,14 @@
                                     <td>
                                         <a href="{{ route('affiliates.show', $affiliate) }}" class="btn btn-sm btn-outline-primary">View</a>
 
-                                        @if ($affiliate->status === 'pending')
-                                            <form action="{{ route('affiliates.approve', $affiliate) }}" method="POST" class="d-inline">
-                                                @csrf @method('PUT')
-                                                <button class="btn btn-sm btn-success">Approve</button>
-                                            </form>
-                                        @endif
+                                       @if (in_array($affiliate->status, ['pending', 'suspended', 'rejected']))
+                                        <form action="{{ route('affiliates.approve', $affiliate) }}" method="POST" class="d-inline">
+                                               @csrf @method('PUT')
+                                               <button class="btn btn-sm btn-success">
+                                                   {{ $affiliate->status === 'pending' ? 'Approve' : 'Reactivate' }}
+                                               </button>
+                                           </form>
+                                       @endif
 
                                         @if ($affiliate->status === 'approved')
                                             <form action="{{ route('affiliates.suspend', $affiliate) }}" method="POST" class="d-inline">

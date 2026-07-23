@@ -3,6 +3,15 @@
 @section('title', 'Add Affiliate | Yuukke Dashboard')
 
 @section('content')
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
     <div class="page-header">
         <h3 class="fw-bold mb-3">Add Affiliate</h3>
         <ul class="breadcrumbs mb-3">
@@ -89,11 +98,11 @@
                                 value="{{ old('commission_rate') }}" />
                         </div>
 
-                        <div class="form-group">
-                            <label for="paypal_email">PayPal Email (optional)</label>
+                        {{-- <div class="form-group">
+                            <label for="paypal_email"> Email (optional)</label>
                             <input type="email" name="paypal_email" class="form-control"
                                 value="{{ old('paypal_email') }}" />
-                        </div>
+                        </div> --}}
 
                         <div class="card-action mt-3">
                             <button type="submit" class="btn btn-success">Create Affiliate</button>

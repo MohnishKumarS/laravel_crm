@@ -7,6 +7,7 @@ use App\Models\Affiliate;
 use App\Models\User;
 use App\Services\AffiliateSettingsService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class AffiliateController extends Controller
@@ -75,23 +76,35 @@ class AffiliateController extends Controller
 public function store(Request $request)
 {
     $request->validate([
-        'user_id'         => ['required', 'exists:users,id', 'unique:affiliates,user_id'],
+        'user_mode' => ['required', 'in:existing,new'],
+        'user_id'   => ['required_if:user_mode,existing', 'nullable', 'exists:users,id', 'unique:affiliates,user_id'],
+        'new_name'     => ['required_if:user_mode,new', 'nullable', 'string', 'max:255'],
+        'new_email'    => ['required_if:user_mode,new', 'nullable', 'email', 'unique:users,email'],
+        'new_password' => ['nullable', 'string', 'min:6'],
         'commission_rate' => ['nullable', 'numeric', 'min:0', 'max:100'],
         'paypal_email'    => ['nullable', 'email'],
     ]);
 
-    $user = User::findOrFail($request->user_id);
+    if ($request->user_mode === 'existing') {
+        $user = User::findOrFail($request->user_id);
+    } else {
+        $user = User::create([
+            'name'     => $request->new_name,
+            'email'    => $request->new_email,
+            'password' => Hash::make($request->new_password ?: Str::random(12)),
+            'role'     => 'affiliate',
+        ]);
+    }
 
     Affiliate::create([
         'user_id'         => $user->id,
-        'affiliate_code'  => $this->generateUniqueCode($user->name ?? 'AFF'),
-        'slug'            => Str::slug(($user->name ?? 'affiliate') . '-' . Str::random(4)),
-        'commission_rate' => $request->commission_rate ?? app(AffiliateSettingsService::class)->defaultCommissionRate(),
-        'status'          => 'approved', // admin-created, so approved immediately
+        'affiliate_code'  => $this->generateUniqueCode($user->name),
+        'slug'            => Str::slug($user->name . '-' . Str::random(4)),
+        'commission_rate' => $request->commission_rate ?? $this->settings->defaultCommissionRate(),
+        'status'          => 'approved',
         'approved_at'     => now(),
         'paypal_email'    => $request->paypal_email,
     ]);
-
     return redirect()->route('affiliates.index')->with('success', "Affiliate account created for {$user->name}.");
 }
 
