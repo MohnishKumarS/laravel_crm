@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Affiliate;
 
 use App\Http\Controllers\Controller;
-use App\Models\AffiliateCommission;
+use App\Models\Affiliate\AffiliateCommission;
 use Illuminate\Http\Request;
 
 class AffiliateCommissionController extends Controller

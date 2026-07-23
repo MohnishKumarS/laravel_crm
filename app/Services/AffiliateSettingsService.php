@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\AffiliateSetting;
+use App\Models\Affiliate\AffiliateSetting;
 use Illuminate\Support\Facades\Cache;
 
 class AffiliateSettingsService

@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\Affiliate;
-use App\Models\AffiliateCommission;
-use App\Models\AffiliateReferral;
-use App\Models\Order;
+use App\Models\Affiliate\Affiliate;
+use App\Models\Affiliate\AffiliateCommission;
+use App\Models\Affiliate\AffiliateReferral;
+use App\Models\Marketplace\Order;
 
 /**
  * Creates and later matures/reverses commission records.

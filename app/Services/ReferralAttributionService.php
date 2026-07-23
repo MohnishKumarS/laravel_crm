@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Models\Affiliate;
-use App\Models\AffiliateReferral;
-use App\Models\ReferralClick;
+use App\Models\Affiliate\Affiliate;
+use App\Models\Affiliate\AffiliateReferral;
+use App\Models\Affiliate\ReferralClick;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;

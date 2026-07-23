@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Affiliate;
 
 use App\Http\Controllers\Controller;
-use App\Models\Affiliate;
+use App\Models\Affiliate\Affiliate;
 use App\Models\User;
 use App\Services\AffiliateSettingsService;
 use Illuminate\Http\Request;
