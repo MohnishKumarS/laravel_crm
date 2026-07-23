@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureUserIsAffiliate;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -18,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => App\Http\Middleware\AdminMiddleware::class,
             'check.token' => \App\Http\Middleware\CheckTokenExpiration::class,
             'affiliate.webhook.secret' => \App\Http\Middleware\VerifyAffiliateWebhookSecret::class,
+            'affiliate.portal' => EnsureUserIsAffiliate::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -5,6 +5,7 @@
 use App\Http\Controllers\AffiliateCommissionController;
 use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\AffiliatePayoutController;
+use App\Http\Controllers\AffiliateSelfController;
 use App\Http\Controllers\AffiliateSettingController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -162,6 +163,11 @@ Route::put('affiliates/{affiliate}/suspend', [AffiliateController::class, 'suspe
 Route::put('affiliates/{affiliate}/reject', [AffiliateController::class, 'reject'])->name('affiliates.reject');
 Route::put('affiliates/{affiliate}/rate', [AffiliateController::class, 'updateRate'])->name('affiliates.rate');
 
+Route::middleware(['auth', 'affiliate.portal'])->prefix('affiliate-portal')->name('affiliate-portal.')->group(function () {
+    Route::get('/', [AffiliateSelfController::class, 'dashboard'])->name('dashboard');
+    Route::get('/commissions', [AffiliateSelfController::class, 'commissions'])->name('commissions');
+    Route::get('/payouts', [AffiliateSelfController::class, 'payouts'])->name('payouts');
+});
 // MIGRATION
 Route::get('/migrate', function () {
 

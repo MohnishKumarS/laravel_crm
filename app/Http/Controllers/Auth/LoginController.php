@@ -14,10 +14,16 @@ class LoginController extends Controller
     {
         //  session()->flush();
 
-        if (Auth::check() && Auth::user()->role === 'admin') {
-            return redirect()->route('dashboard');
-        }
-        return view('auth.login');
+    if (Auth::check() && Auth::user()->role === 'admin') {
+        return redirect()->route('dashboard');
+    }
+
+    if (Auth::check() && Auth::user()->role === 'affiliate') {
+        return redirect()->route('affiliate-portal.dashboard');
+    }
+
+
+    return view('auth.login');
     }
 
     public function authenticate(Request $request)
@@ -31,18 +37,20 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials, $remember)) {
 
-            $request->session()->regenerate();
+    $request->session()->regenerate();
 
-            if (Auth::user()->role == 'admin') {
-                return redirect()->route('dashboard');
-            }
+    if (Auth::user()->role == 'admin') {
+        return redirect()->route('dashboard');
+    }
 
-            Auth::logout();
-            // $request->session()->invalidate();
-            // $request->session()->regenerateToken();
+    if (Auth::user()->role == 'affiliate') {
+        return redirect()->route('affiliate.self.dashboard');
+    }
 
-            return redirect()->back()->with('status', 'danger')->with('message', 'You do not have permission to access the admin panel.');
-        }
+    Auth::logout();
+
+    return redirect()->back()->with('status', 'danger')->with('message', 'You do not have permission to access the admin panel.');
+   }
 
         return back()->withErrors([
             'name' => 'Invalid credentials! Please try again.',

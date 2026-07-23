@@ -154,6 +154,21 @@
                           </ul>
                       </div>
                   </li>
+                  @if (auth()->user()->role === 'affiliate')
+                     {{-- AFFILIATE-ONLY MENU --}}
+                    <li class="nav-item {{ request()->routeIs('affiliate-portal.dashboard') ? 'active' : '' }}">
+                        <a href="{{ route('affiliate-portal.dashboard') }}"><i class="fas fa-tachometer-alt"></i><p>My Dashboard</p></a>
+                    </li>
+                    <li class="nav-item {{ request()->routeIs('affiliate-portal.commissions') ? 'active' : '' }}">
+                        <a href="{{ route('affiliate-portal.commissions') }}"><i class="fas fa-money-bill"></i><p>My Commissions</p></a>
+                    </li>
+                    <li class="nav-item {{ request()->routeIs('affiliate-portal.payouts') ? 'active' : '' }}">
+                        <a href="{{ route('affiliate-portal.payouts') }}"><i class="fas fa-hand-holding-usd"></i><p>My Payouts</p></a>
+                    </li>
+                   @else
+                       {{-- YOUR EXISTING FULL ADMIN MENU GOES HERE, UNCHANGED --}}
+                       ...
+                   @endif
                   <li class="nav-item {{ request()->routeIs('affiliates.*') ? 'active' : '' }}">
     <a data-bs-toggle="collapse" href="#affiliate_program_list">
         <i class="fas fa-handshake"></i>
