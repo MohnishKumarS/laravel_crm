@@ -5,6 +5,7 @@
 use App\Http\Controllers\AffiliateCommissionController;
 use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\AffiliatePayoutController;
+use App\Http\Controllers\AffiliateSelfController;
 use App\Http\Controllers\AffiliateSettingController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -186,6 +187,30 @@ Route::middleware(['auth', 'role:seller'])
 
 
 
+
+
+// MARKETER ROLE
+Route::middleware(['auth', 'role:marketer'])->prefix('marketer')->name('marketer.')->group(function () {
+
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+});
+
+// SELLER ROLE
+Route::middleware(['auth', 'role:seller'])
+    ->prefix('seller')
+    ->name('seller.')
+    ->group(function () {
+
+        Route::get('/', [TestController::class, 'sellerIndex'])->name('dashboard');
+    });
+
+
+
+Route::middleware(['auth', 'affiliate.portal'])->prefix('affiliate-portal')->name('affiliate-portal.')->group(function () {
+    Route::get('/', [AffiliateSelfController::class, 'dashboard'])->name('dashboard');
+    Route::get('/commissions', [AffiliateSelfController::class, 'commissions'])->name('commissions');
+    Route::get('/payouts', [AffiliateSelfController::class, 'payouts'])->name('payouts');
+});
 // MIGRATION
 Route::get('/migrate', function () {
 

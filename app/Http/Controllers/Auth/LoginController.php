@@ -15,26 +15,16 @@ class LoginController extends Controller
         // Auth::logout();
         //  session()->flush();
 
-        // if (Auth::check() && Auth::user()->role === 'admin') {
-        //     return redirect()->route('dashboard');
-        // }
-        if (Auth::check()) {
-            $user = Auth::user();
-            return match ($user->role) {
+    if (Auth::check() && Auth::user()->role === 'admin') {
+        return redirect()->route('dashboard');
+    }
 
-                'admin' => redirect()->route('dashboard'),
+    if (Auth::check() && Auth::user()->role === 'affiliate') {
+        return redirect()->route('affiliate-portal.dashboard');
+    }
 
-                'seller' => redirect()->route('seller.dashboard'),
 
-                'marketer' => redirect()->route('marketer.dashboard'),
-
-                // 'seo' => redirect()->route('seo.dashboard'),
-
-                // default => abort(403, 'Invalid user role'),
-            };
-        }
-
-        return view('auth.login');
+    return view('auth.login');
     }
 
     public function authenticate(Request $request)
@@ -48,31 +38,20 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials, $remember)) {
 
-            $request->session()->regenerate();
+    $request->session()->regenerate();
 
-            // if (Auth::user()->role == 'admin') {
-            //     return redirect()->route('dashboard');
-            // }
-            $user = Auth::user();
-            return match ($user->role) {
+    if (Auth::user()->role == 'admin') {
+        return redirect()->route('dashboard');
+    }
 
-                'admin' => redirect()->route('dashboard'),
+    if (Auth::user()->role == 'affiliate') {
+        return redirect()->route('affiliate.self.dashboard');
+    }
 
-                'seller' => redirect()->route('seller.dashboard'),
+    Auth::logout();
 
-                'marketer' => redirect()->route('marketer.dashboard'),
-
-                // 'seo' => redirect()->route('seo.dashboard'),
-
-                // default => abort(403, 'Invalid user role'),
-            };
-
-            Auth::logout();
-            // $request->session()->invalidate();
-            // $request->session()->regenerateToken();
-
-            return redirect()->back()->with('status', 'danger')->with('message', 'You do not have permission to access the admin panel.');
-        }
+    return redirect()->back()->with('status', 'danger')->with('message', 'You do not have permission to access the admin panel.');
+   }
 
         return back()->withErrors([
             'name' => 'Invalid credentials! Please try again.',
