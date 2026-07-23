@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Register | Yuukke</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -47,8 +47,10 @@
 
         .logo {
             width: 100%;
+            max-width: 250px;
             height: auto;
         }
+
 
         .auth-card {
             width: 450px;
@@ -117,17 +119,19 @@
         <div class="row g-0 min-vh-100">
 
             <!-- Left Image Section -->
-            <div class="col-lg-6 d-none d-lg-flex image-section">
+            <div class="col-lg-6 d-flex align-items-center justify-content-center">
+                <img src="{{ asset('uploads/pics/p3.svg') }}" alt="Yuukke-login" class="img-fluid">
+            </div>
+            {{-- <div class="col-lg-6 d-none d-lg-flex image-section">
                 <div class="overlay-content">
 
-                    {{-- <img src="{{ asset('uploads/logo/logo_new.png') }}" class="logo mb-4" alt="Logo"> --}}
                     <h1>Create Your Account</h1>
                     <p>
                         Join the CRM platform and manage customers,
                         sales, leads and reports from a single dashboard.
                     </p>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Right Login Section -->
             <div class="col-lg-6 d-flex align-items-center justify-content-center bg-white">
@@ -138,7 +142,7 @@
                         <img src="{{ asset('uploads/logo/logo_dark.png') }}" class="logo mb-5" alt="Logo">
                     </div>
 
-                    <form action="" method="POST">
+                    <form action="{{route('register.submit')}}" method="POST">
                         @csrf
 
                         @if ($errors->any())

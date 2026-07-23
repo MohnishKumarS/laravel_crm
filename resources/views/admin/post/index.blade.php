@@ -35,69 +35,73 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     @endif
-
-                    <table id="posts-table" class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Image</th>
-                                <th>Title</th>
-                                <th>Slug</th>
-                                <th>Status</th>
-                                <th>Published At</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                $id = 1;
-                            @endphp
-                            @forelse ($posts as $post)
+                    <div class="table-responsive">
+                        <table id="posts-table" class="table table-bordered">
+                            <thead>
                                 <tr>
-                                    <td>{{ $id++ }}</td>
-                                    <td>
-                                        @if ($post->featured_image)
-                                            <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}"
-                                                style="width:60px; height:60px; object-fit:cover; border-radius:6px;" />
-                                        @else
-                                            <span class="text-muted small">No image</span>
-                                        @endif
-                                    </td>
-                                    <td>{{ $post->title }}</td>
-                                    <td><code>{{ $post->slug }}</code></td>
-                                    <td>
-                                        @if ($post->status === 'published')
-                                            <span class="badge badge-success">Published</span>
-                                        @else
-                                            <span class="badge badge-secondary">Draft</span>
-                                        @endif
-                                    </td>
-                                    <td>{{ $post->published_at?->format('d M Y, h:i A') ?? '—' }}</td>
-                                    <td>
-                                        <a href="{{ route('posts.show', $post->id) }}" class="btn btn-info btn-sm" title="View">
-                                            <i class="fas fa-eye"></i> View
-                                        </a>
+                                    <th>#</th>
+                                    <th>Image</th>
+                                    <th>Title</th>
+                                    <th>Slug</th>
+                                    <th>Status</th>
+                                    <th>Published At</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $id = 1;
+                                @endphp
+                                @forelse ($posts as $post)
+                                    <tr>
+                                        <td>{{ $id++ }}</td>
+                                        <td>
+                                            @if ($post->featured_image)
+                                                <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}"
+                                                    style="width:60px; height:60px; object-fit:cover; border-radius:6px;" />
+                                            @else
+                                                <span class="text-muted small">No image</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ $post->title }}</td>
+                                        <td><code>{{ $post->slug }}</code></td>
+                                        <td>
+                                            @if ($post->status === 'published')
+                                                <span class="badge badge-success">Published</span>
+                                            @else
+                                                <span class="badge badge-secondary">Draft</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ $post->published_at?->format('d M Y, h:i A') ?? '—' }}</td>
+                                        <td>
+                                            <a href="{{ route('posts.show', $post->id) }}" class="btn btn-info btn-sm"
+                                                title="View">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
 
-                                        <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-warning btn-sm" title="Edit">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </a>
-                                        <form action="{{ route('posts.destroy', $post->id) }}" method="POST"
-                                            class="delete-post" style="display:inline-block">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" class="btn btn-danger btn-sm delete-btn"  title="Delete">
-                                                  <i class="fas fa-trash"></i> Delete
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="text-center">No posts yet.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                                            <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-warning btn-sm"
+                                                title="Edit">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+                                            <form action="{{ route('posts.destroy', $post->id) }}" method="POST"
+                                                class="delete-post" style="display:inline-block">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="btn btn-danger btn-sm delete-btn"
+                                                    title="Delete">
+                                                    <i class="fas fa-trash"></i> Delete
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="6" class="text-center">No posts yet.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
 
                     {{-- {{ $posts->links() }} --}}
                 </div>

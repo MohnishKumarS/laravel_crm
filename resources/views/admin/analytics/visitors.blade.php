@@ -214,263 +214,263 @@
 
                     {{-- Visitors --}}
                     <div class="tab-pane fade show active" id="visitors">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="visitorTable">
 
-                        <table class="table table-bordered" id="visitorTable">
+                                <thead>
 
-                            <thead>
-
-                                <tr>
-
-                                    <th>#</th>
-
-                                    <th>Visitor ID</th>
-
-                                    <th>Country</th>
-
-                                    <th>State</th>
-
-                                    <th>City</th>
-
-                                    <th>Browser</th>
-
-                                    <th>Device</th>
-
-                                    <th>Visits</th>
-
-                                    <th>First Visit</th>
-
-                                    <th>Last Visit</th>
-
-                                    <th>Page Views</th>
-
-                                    <th>Status</th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                                @foreach ($visitors as $visitor)
                                     <tr>
 
-                                        <td>{{ $loop->iteration }}</td>
+                                        <th>#</th>
 
-                                        <td>{{ $visitor->visitor_id }}</td>
+                                        <th>Visitor ID</th>
 
-                                        <td>{{ $visitor->country ?: '-' }}</td>
+                                        <th>Country</th>
 
-                                        <td>{{ $visitor->state ?: '-' }}</td>
+                                        <th>State</th>
 
-                                        <td>{{ $visitor->city ?: '-' }}</td>
+                                        <th>City</th>
 
-                                        <td>{{ $visitor->browser }}</td>
+                                        <th>Browser</th>
 
-                                        <td>{{ $visitor->device }}</td>
+                                        <th>Device</th>
 
-                                        <td>{{ number_format($visitor->visit_count) }}</td>
+                                        <th>Visits</th>
 
-                                        <td>{{ $visitor->first_visit }}</td>
+                                        <th>First Visit</th>
 
-                                        <td>{{ $visitor->last_visit }}</td>
+                                        <th>Last Visit</th>
 
-                                        <td>{{ number_format($visitor->page_views_count) }}</td>
+                                        <th>Page Views</th>
 
-                                        <td>
-
-                                            @if ($visitor->last_visit >= now()->subMinutes(5))
-                                                <span class="badge badge-success">
-                                                    Active
-                                                </span>
-                                            @else
-                                                <span class="badge badge-secondary">
-                                                    Offline
-                                                </span>
-                                            @endif
-
-                                        </td>
+                                        <th>Status</th>
 
                                     </tr>
-                                @endforeach
 
-                            </tbody>
-                        </table>
+                                </thead>
 
+                                <tbody>
+
+                                    @foreach ($visitors as $visitor)
+                                        <tr>
+
+                                            <td>{{ $loop->iteration }}</td>
+
+                                            <td>{{ $visitor->visitor_id }}</td>
+
+                                            <td>{{ $visitor->country ?: '-' }}</td>
+
+                                            <td>{{ $visitor->state ?: '-' }}</td>
+
+                                            <td>{{ $visitor->city ?: '-' }}</td>
+
+                                            <td>{{ $visitor->browser }}</td>
+
+                                            <td>{{ $visitor->device }}</td>
+
+                                            <td>{{ number_format($visitor->visit_count) }}</td>
+
+                                            <td>{{ $visitor->first_visit }}</td>
+
+                                            <td>{{ $visitor->last_visit }}</td>
+
+                                            <td>{{ number_format($visitor->page_views_count) }}</td>
+
+                                            <td>
+
+                                                @if ($visitor->last_visit >= now()->subMinutes(5))
+                                                    <span class="badge badge-success">
+                                                        Active
+                                                    </span>
+                                                @else
+                                                    <span class="badge badge-secondary">
+                                                        Offline
+                                                    </span>
+                                                @endif
+
+                                            </td>
+
+                                        </tr>
+                                    @endforeach
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     {{-- Countries --}}
                     <div class="tab-pane fade" id="countries">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="countryTable">
 
-                        <table class="table table-bordered" id="countryTable">
+                                <thead>
 
-                            <thead>
-
-                                <tr>
-
-                                    <th>#</th>
-
-                                    <th>Country</th>
-                                    <th>State</th>
-                                    <th>City</th>
-                                    {{-- <th>Country</th> --}}
-
-                                    <th>Visitors</th>
-
-                                    <th>%</th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                                @foreach ($countryStats as $country)
                                     <tr>
 
-                                        <td>{{ $loop->iteration }}</td>
+                                        <th>#</th>
 
-                                        <td>{{ $country->country }}</td>
-                                        <td>{{ $country->state }}</td>
-                                        <td>{{ $country->city }}</td>
+                                        <th>Country</th>
+                                        <th>State</th>
+                                        <th>City</th>
+                                        {{-- <th>Country</th> --}}
 
-                                        <td>{{ number_format($country->total) }}</td>
+                                        <th>Visitors</th>
 
-                                        <td>{{ $country->percentage }}%</td>
+                                        <th>%</th>
 
                                     </tr>
-                                @endforeach
 
-                            </tbody>
+                                </thead>
 
-                        </table>
+                                <tbody>
 
+                                    @foreach ($countryStats as $country)
+                                        <tr>
+
+                                            <td>{{ $loop->iteration }}</td>
+
+                                            <td>{{ $country->country }}</td>
+                                            <td>{{ $country->state }}</td>
+                                            <td>{{ $country->city }}</td>
+
+                                            <td>{{ number_format($country->total) }}</td>
+
+                                            <td>{{ $country->percentage }}%</td>
+
+                                        </tr>
+                                    @endforeach
+
+                                </tbody>
+
+                            </table>
+                        </div>
                     </div>
 
                     {{-- Devices --}}
                     <div class="tab-pane fade" id="devices">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="deviceTable">
 
-                        <table class="table table-bordered" id="deviceTable">
+                                <thead>
 
-                            <thead>
-
-                                <tr>
-
-                                    <th>#</th>
-
-                                    <th>Device</th>
-
-                                    <th>Visitors</th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                                @foreach ($deviceStats as $device)
                                     <tr>
 
-                                        <td>{{ $loop->iteration }}</td>
+                                        <th>#</th>
 
-                                        <td>{{ ucfirst($device->device) }}</td>
+                                        <th>Device</th>
 
-                                        <td>{{ number_format($device->total) }}</td>
+                                        <th>Visitors</th>
 
                                     </tr>
-                                @endforeach
 
-                            </tbody>
+                                </thead>
 
-                        </table>
+                                <tbody>
 
+                                    @foreach ($deviceStats as $device)
+                                        <tr>
+
+                                            <td>{{ $loop->iteration }}</td>
+
+                                            <td>{{ ucfirst($device->device) }}</td>
+
+                                            <td>{{ number_format($device->total) }}</td>
+
+                                        </tr>
+                                    @endforeach
+
+                                </tbody>
+
+                            </table>
+                        </div>
                     </div>
 
                     {{-- Pages --}}
                     <div class="tab-pane fade" id="pages">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="pageTable">
 
-                        <table class="table table-bordered" id="pageTable">
+                                <thead>
 
-                            <thead>
-
-                                <tr>
-
-                                    <th>#</th>
-
-                                    <th>Page Title</th>
-
-                                    <th>Page Url</th>
-
-                                    <th>Views</th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                                @foreach ($topPages as $page)
                                     <tr>
 
-                                        <td>{{ $loop->iteration }}</td>
+                                        <th>#</th>
 
-                                        <td>{{ $page->page_title }}</td>
-                                        <td>{{ $page->page_url }}</td>
+                                        <th>Page Title</th>
 
-                                        <td>{{ number_format($page->total) }}</td>
+                                        <th>Page Url</th>
+
+                                        <th>Views</th>
 
                                     </tr>
-                                @endforeach
 
-                            </tbody>
+                                </thead>
 
-                        </table>
+                                <tbody>
 
+                                    @foreach ($topPages as $page)
+                                        <tr>
+
+                                            <td>{{ $loop->iteration }}</td>
+
+                                            <td>{{ $page->page_title }}</td>
+                                            <td>{{ $page->page_url }}</td>
+
+                                            <td>{{ number_format($page->total) }}</td>
+
+                                        </tr>
+                                    @endforeach
+
+                                </tbody>
+
+                            </table>
+                        </div>
                     </div>
 
                     {{-- Page Not Found --}}
                     <div class="tab-pane fade" id="notfoundpages">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="pageNotFoundTable">
 
-                        <table class="table table-bordered" id="pageNotFoundTable">
+                                <thead>
 
-                            <thead>
-
-                                <tr>
-
-                                    <th>#</th>
-
-                                    <th>Page Title</th>
-
-                                    <th>Page Url</th>
-
-                                    <th>country</th>
-
-                                    <th>Date</th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                                @foreach ($notFoundPages as $page)
                                     <tr>
 
-                                        <td>{{ $loop->iteration }}</td>
+                                        <th>#</th>
 
-                                        <td>{{ $page->page_title }}</td>
-                                        <td>{{ $page->page_url }}</td>
+                                        <th>Page Title</th>
 
-                                        <td>{{ $page->visitor->country }}</td>
+                                        <th>Page Url</th>
 
-                                        <td>{{ $page->created_at}} ( {{ $page->created_at->diffForHumans() }} )</td>
+                                        <th>country</th>
+
+                                        <th>Date</th>
 
                                     </tr>
-                                @endforeach
 
-                            </tbody>
+                                </thead>
 
-                        </table>
+                                <tbody>
 
+                                    @foreach ($notFoundPages as $page)
+                                        <tr>
+
+                                            <td>{{ $loop->iteration }}</td>
+
+                                            <td>{{ $page->page_title }}</td>
+                                            <td>{{ $page->page_url }}</td>
+
+                                            <td>{{ $page->visitor->country }}</td>
+
+                                            <td>{{ $page->created_at }} ( {{ $page->created_at->diffForHumans() }} )</td>
+
+                                        </tr>
+                                    @endforeach
+
+                                </tbody>
+
+                            </table>
+                        </div>
                     </div>
 
                 </div>

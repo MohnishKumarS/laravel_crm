@@ -136,34 +136,4 @@ class AnalyticsController extends Controller
         );
     }
 
-    public function index()
-    {
-        return view('upload-test');
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
-        ]);
-
-        $file = $request->file('image');
-
-        $fileName = 'prod_' . $file->getClientOriginalName();
-
-
-        // Change this path to your CodeIgniter uploads folder
-        $destination = '/var/www/sttyyl/assets/uploads';
-
-        if (!file_exists($destination)) {
-            mkdir($destination, 0775, true);
-        }
-
-        $file->move($destination, $fileName);
-
-        return back()->with([
-            'success' => 'Image uploaded successfully!',
-            'filename' => $fileName,
-        ]);
-    }
 }

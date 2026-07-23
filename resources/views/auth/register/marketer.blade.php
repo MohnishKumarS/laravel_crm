@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Yuukke</title>
+    <title>Register | Yuukke</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -50,6 +50,7 @@
             max-width: 250px;
             height: auto;
         }
+
 
         .auth-card {
             width: 450px;
@@ -118,19 +119,19 @@
         <div class="row g-0 min-vh-100">
 
             <!-- Left Image Section -->
+            <div class="col-lg-6 d-flex align-items-center justify-content-center">
+                <img src="{{ asset('uploads/pics/p3.svg') }}" alt="Yuukke-login" class="img-fluid">
+            </div>
             {{-- <div class="col-lg-6 d-none d-lg-flex image-section">
                 <div class="overlay-content">
 
-                    <h1>Welcome Back!</h1>
+                    <h1>Create Your Account</h1>
                     <p>
-                        Manage your CRM, customers, sales and reports
-                        from one powerful dashboard.
+                        Join the CRM platform and manage customers,
+                        sales, leads and reports from a single dashboard.
                     </p>
                 </div>
             </div> --}}
-             <div class="col-lg-6 d-flex align-items-center justify-content-center">
-                <img src="{{ asset('uploads/pics/p4.svg') }}" alt="Yuukke-login" class="img-fluid">
-            </div>
 
             <!-- Right Login Section -->
             <div class="col-lg-6 d-flex align-items-center justify-content-center bg-white">
@@ -141,58 +142,46 @@
                         <img src="{{ asset('uploads/logo/logo_dark.png') }}" class="logo mb-5" alt="Logo">
                     </div>
 
-                    <form action="{{ route('login.submit') }}" method="POST">
+                    <form action="{{route('register.submit')}}" method="POST">
                         @csrf
-                        {{-- @error('name')
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <strong>{{ $message }}</strong>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @enderror --}}
+
                         @if ($errors->any())
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 <strong>{{ $errors->first() }}</strong>
-
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-                        @if (session('message'))
-                            <div class="alert alert-{{ session('status', 'danger') }} alert-dismissible fade show">
-                                {{ session('message') }}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
                         @endif
+
                         <div class="mb-4">
-                            <input type="name" name="name" value="{{ old('name') }}" class="form-control"
+                            <input type="text" name="name" value="{{ old('name') }}" class="form-control"
                                 placeholder="Username">
+                        </div>
+
+                        <div class="mb-4">
+                            <input type="email" name="email" value="{{ old('email') }}" class="form-control"
+                                placeholder="Email Address">
                         </div>
 
                         <div class="mb-4">
                             <input type="password" name="password" class="form-control" placeholder="Password">
                         </div>
 
-                        <div class="d-flex justify-content-between mb-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="remember" id="remember">
-                                <label class="form-check-label" for="remember">
-                                    Remember Me
-                                </label>
-                            </div>
-
-                            <a href="{{route('forgot.password')}}">Forgot Password?</a>
+                        <div class="mb-4">
+                            <input type="password" name="password_confirmation" class="form-control"
+                                placeholder="Confirm Password">
                         </div>
 
+                        <input type="hidden" name="role" value="marketer">
+
                         <button type="submit" class="btn btn-auth w-100">
-                            Sign In
+                            Create Account
                         </button>
                     </form>
 
-                    {{-- <div class="auth-footer">
-                        Don't have an account?
-                        <a href="#">Sign Up</a>
-                    </div> --}}
+                    <div class="auth-footer">
+                        Already have an account?
+                        <a href="{{ route('login') }}">Sign In</a>
+                    </div>
 
                 </div>
             </div>
