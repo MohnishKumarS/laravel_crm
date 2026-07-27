@@ -207,6 +207,12 @@
                             <span class="badge badge-warning">{{ $notFoundPages->count() }}</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" type="button" data-bs-target="#referal">
+                            Referrals
+                            <span class="badge badge-warning">{{ $referrals->count() }}</span>
+                        </a>
+                    </li>
 
                 </ul>
 
@@ -464,6 +470,40 @@
 
                                             <td>{{ $page->created_at }} ( {{ $page->created_at->diffForHumans() }} )</td>
 
+                                        </tr>
+                                    @endforeach
+
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="referal">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="referralTable">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>#</th>
+
+                                        <th>Page Url</th>
+
+                                        <th>count</th>
+
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    @foreach ($referrals as $page)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{$page->referral_code}}</td>
+                                            <td>{{$page->total}}</td>
                                         </tr>
                                     @endforeach
 

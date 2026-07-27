@@ -45,7 +45,9 @@
                         <label class="mr-2 mb-0">Commission rate</label>
                         <input type="number" step="0.01" name="commission_rate" class="form-control form-control-sm mr-2"
                             style="width: 80px" value="{{ $affiliate->commission_rate }}">
-                        <button class="btn btn-sm btn-outline-primary">Update</button>
+                        <div class="mt-3">
+                            <button class="btn btn-sm btn-outline-primary">Update</button>
+                        </div>
                     </form>
                 </div>
             </div>

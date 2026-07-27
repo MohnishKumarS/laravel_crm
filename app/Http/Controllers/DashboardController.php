@@ -96,7 +96,7 @@ class DashboardController extends Controller
         // return $topPages;
 
         $topPageLabels = $topPages->pluck('page_title')
-            ->map(fn($title) => Str::limit($title, 30, '...'))
+            ->map(fn($title) => Str::limit($title, 35, '...'))
             ->toArray();
 
         $topPageViews = $topPages->pluck('total_views')->toArray();
@@ -182,6 +182,27 @@ class DashboardController extends Controller
             'Pakistan' => 'pk',
             'Nepal' => 'np',
             'Bangladesh' => 'bd',
+            'United Kingdom' => 'gb',
+            'UK' => 'gb',
+            'South Africa' => 'za',
+            'United Arab Emirates' => 'ae',
+            'Mexico' => 'mx',
+            'Ecuador' => 'ec',
+            'Poland' => 'pl',
+            'Uruguay' => 'uy',
+            'Chile' => 'cl',
+            'Philippines' => 'ph',
+            'Israel' => 'il',
+            'Syria' => 'sy',
+            'Egypt' => 'eg',
+            'Uzbekistan' => 'uz',
+            'Switzerland' => 'ch',
+            'Bulgaria' => 'bg',
+            'Peru' => 'pe',
+            'Belarus' => 'by',
+            'Spain' => 'es',
+            'Bolivia' => 'bo',
+
         ];
 
         $countryCoordinates = [
@@ -217,6 +238,26 @@ class DashboardController extends Controller
             'Pakistan' => [30.3753, 69.3451],
             'Nepal' => [28.3949, 84.1240],
             'Bangladesh' => [23.6850, 90.3563],
+            'United Kingdom' => [55.3781, -3.4360],
+            'UK' => [55.3781, -3.4360],
+            'South Africa' => [-30.5595, 22.9375],
+            'United Arab Emirates' => [23.4241, 53.8478],
+            'Mexico' => [23.6345, -102.5528],
+            'Ecuador' => [-1.8312, -78.1834],
+            'Poland' => [51.9194, 19.1451],
+            'Uruguay' => [-32.5228, -55.7658],
+            'Chile' => [-35.6751, -71.5430],
+            'Philippines' => [12.8797, 121.7740],
+            'Israel' => [31.0461, 34.8516],
+            'Syria' => [34.8021, 38.9968],
+            'Egypt' => [26.8206, 30.8025],
+            'Uzbekistan' => [41.3775, 64.5853],
+            'Switzerland' => [46.8182, 8.2275],
+            'Bulgaria' => [42.7339, 25.4858],
+            'Peru' => [-9.1900, -75.0152],
+            'Belarus' => [53.7098, 27.9534],
+            'Spain' => [40.4637, -3.7492],
+            'Bolivia' => [-16.2902, -63.5887],
         ];
 
         $markers = [];

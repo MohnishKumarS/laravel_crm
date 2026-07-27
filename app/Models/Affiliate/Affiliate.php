@@ -2,7 +2,6 @@
 
 namespace App\Models\Affiliate;
 
-use App\Models\ReferralClick;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
