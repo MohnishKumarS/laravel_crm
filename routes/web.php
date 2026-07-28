@@ -15,6 +15,7 @@ use App\Http\Controllers\FormController;
 use App\Http\Controllers\HomeHeroController;
 use App\Http\Controllers\Marketer\HomeController;
 use App\Http\Controllers\Marketplace\AnalyticsController as shopAnalytics;
+use App\Http\Controllers\Marketplace\DynamicPageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
@@ -129,7 +130,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         // DASHBOARD
         Route::get('/', [shopAnalytics::class, 'index'])->name('home');
         Route::get('visitors-per-day', [shopAnalytics::class, 'visitorsPerDay'])->name('visitors-per-day');
+
+        // Dynamic pages
+         Route::resource('dynamic-pages', DynamicPageController::class);
     });
+
+   
 
     // ANALYTICS
     Route::get('analytics/shop', [shopAnalytics::class, 'shopVisitors'])->name('analytics.shop');
@@ -176,7 +182,7 @@ Route::prefix('affiliates')->name('affiliates.')->group(function () {
 });
 
 
-//     // PROFILE
+// USER PROFILE
 Route::middleware(['auth', 'role:affiliate,admin'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
