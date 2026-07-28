@@ -16,12 +16,11 @@ class CampaignController extends Controller
      */
     public function index()
     {
-        $campaigns = Campaign::orderByDesc('priority')
-            ->orderByDesc('start_at')
-            ->get()
-            ->map(fn ($campaign) => $this->formatCampaign($campaign));
+        $campaigns = Campaign::allCurrent();
 
-        return response()->json($campaigns);
+    return response()->json(
+        $campaigns->map(fn ($c) => $this->formatCampaign($c))
+    );
     }
 
     /**
