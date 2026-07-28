@@ -17,13 +17,13 @@
                 <i class="icon-arrow-right"></i>
             </li>
             <li class="nav-item">
-                <a href="{{ route('admin.campaigns.index') }}">Campaigns List</a>
+                <a href="{{ route('admin.campaigns.index') }}">Campaigns</a>
             </li>
             <li class="separator">
                 <i class="icon-arrow-right"></i>
             </li>
             <li class="nav-item">
-                <a href="#">Create</a>
+                <a href="#">List</a>
             </li>
         </ul>
     </div>

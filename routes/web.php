@@ -15,6 +15,7 @@ use App\Http\Controllers\FormController;
 use App\Http\Controllers\HomeHeroController;
 use App\Http\Controllers\Marketer\HomeController;
 use App\Http\Controllers\Marketplace\AnalyticsController as shopAnalytics;
+use App\Http\Controllers\Marketplace\DynamicPageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
@@ -94,11 +95,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::delete('submissions/{id}', [FormController::class, 'deleteSubmission'])->name('forms.submissions.delete');
 
-    // PROFILE
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-    Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
-    Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
-
     // POSTS - BLOGS
     Route::resource('posts', PostController::class);
 
@@ -134,7 +130,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         // DASHBOARD
         Route::get('/', [shopAnalytics::class, 'index'])->name('home');
         Route::get('visitors-per-day', [shopAnalytics::class, 'visitorsPerDay'])->name('visitors-per-day');
+
+        // Dynamic pages
+         Route::resource('dynamic-pages', DynamicPageController::class);
     });
+
+   
 
     // ANALYTICS
     Route::get('analytics/shop', [shopAnalytics::class, 'shopVisitors'])->name('analytics.shop');
@@ -162,49 +163,38 @@ Route::prefix('affiliates')->name('affiliates.')->group(function () {
 
     Route::controller(AffiliateController::class)->group(function () {
 
-            Route::get('/', 'index')->name('index');
+        Route::get('/', 'index')->name('index');
 
-            Route::get('/create', 'create')->name('create');
+        Route::get('/create', 'create')->name('create');
 
-            Route::post('/', 'store')->name('store');
+        Route::post('/', 'store')->name('store');
 
-            Route::get('/{affiliate}', 'show')->name('show');
+        Route::get('/{affiliate}', 'show')->name('show');
 
-            Route::put('/{affiliate}/approve', 'approve')->name('approve');
+        Route::put('/{affiliate}/approve', 'approve')->name('approve');
 
-            Route::put('/{affiliate}/suspend', 'suspend')->name('suspend');
+        Route::put('/{affiliate}/suspend', 'suspend')->name('suspend');
 
-            Route::put('/{affiliate}/reject', 'reject')->name('reject');
+        Route::put('/{affiliate}/reject', 'reject')->name('reject');
 
-            Route::put('/{affiliate}/rate', 'updateRate')->name('rate');
-        });
-});
-
-
-// MARKETER ROLE
-Route::middleware(['auth', 'role:marketer'])->prefix('marketer')->name('marketer.')->group(function () {
-
-    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
-});
-
-// SELLER ROLE
-Route::middleware(['auth', 'role:seller'])
-    ->prefix('seller')
-    ->name('seller.')
-    ->group(function () {
-
-        Route::get('/', [TestController::class, 'sellerIndex'])->name('dashboard');
+        Route::put('/{affiliate}/rate', 'updateRate')->name('rate');
     });
+});
 
 
-
+// USER PROFILE
+Route::middleware(['auth', 'role:affiliate,admin'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+});
 
 
 // MARKETER ROLE
-Route::middleware(['auth', 'role:marketer'])->prefix('marketer')->name('marketer.')->group(function () {
+// Route::middleware(['auth', 'role:marketer'])->prefix('marketer')->name('marketer.')->group(function () {
 
-    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
-});
+//     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+// });
 
 // SELLER ROLE
 Route::middleware(['auth', 'role:seller'])

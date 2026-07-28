@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Affiliate;
 
-use App\Models\Order;
+use App\Models\Affiliate\AffiliatePayout;
+use App\Models\Marketplace\Order;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 

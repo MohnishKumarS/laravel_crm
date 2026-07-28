@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CampaignController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\DynamicPageController;
 use App\Http\Controllers\Api\FormApiController;
 use App\Http\Controllers\Api\HomeHeroController;
 use App\Http\Controllers\Api\PostApiController;
@@ -64,4 +65,15 @@ Route::get('referral/current', [ReferralController::class, 'current']);
 Route::middleware('affiliate.webhook.secret')->group(function () {
     Route::post('affiliate/webhooks/order-paid', [WebhookController::class, 'orderPaid']);
     Route::post('affiliate/webhooks/order-refunded', [WebhookController::class, 'orderRefunded']);
+});
+
+
+// Dynamic pages
+
+Route::prefix('dynamic-pages')->group(function () {
+
+    Route::get('/',[DynamicPageController::class, 'index']);
+
+    Route::get('/show',[DynamicPageController::class, 'show']);
+
 });

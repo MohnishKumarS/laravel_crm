@@ -157,7 +157,7 @@
                               </ul>
                           </div>
                       </li>
-            
+
                       <li class="nav-item {{ request()->routeIs('affiliates.*') ? 'active' : '' }}">
                           <a data-bs-toggle="collapse" href="#affiliate_program_list">
                               <i class="fas fa-handshake"></i>
@@ -256,6 +256,11 @@
                                   <li>
                                       <a href="{{ route('shop.home') }}">
                                           <span class="sub-item">Dashboard</span>
+                                      </a>
+                                  </li>
+                                  <li>
+                                      <a href="{{ route('shop.dynamic-pages.index') }}">
+                                          <span class="sub-item">Dynamic Page</span>
                                       </a>
                                   </li>
                                   {{-- <li class="submenu">

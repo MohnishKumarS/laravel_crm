@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3001'],
+    'allowed_origins' => ['https://yuukkev1.betalearnings.com/'],
 
     'allowed_origins_patterns' => [],
 
