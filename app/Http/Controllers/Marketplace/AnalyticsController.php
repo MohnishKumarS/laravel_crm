@@ -348,6 +348,8 @@ class AnalyticsController extends Controller
                 DB::raw('MAX(city) as city'),
                 DB::raw('COUNT(*) as total')
             )
+            ->whereNotNull('country')
+            ->where('country', '!=', '')
             ->groupBy('country')
             ->orderByDesc('total')
             ->get()

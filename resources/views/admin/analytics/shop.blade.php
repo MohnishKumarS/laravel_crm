@@ -525,33 +525,7 @@
 
 @push('scripts')
     <script>
-        // $('#visitorTable').DataTable({
-
-        //     pageLength: 25,
-
-        //     order: [
-        //         [9, 'desc']
-        //     ],
-
-        //     responsive: true,
-
-        //     dom: 'Bfrtip',
-
-        //     buttons: [
-
-        //         'copy',
-
-        //         'csv',
-
-        //         'excel',
-
-        //         'pdf',
-
-        //         'print'
-
-        //     ]
-
-        // });
+       
 
         $('#visitorTable').DataTable();
 

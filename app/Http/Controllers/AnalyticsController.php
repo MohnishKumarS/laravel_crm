@@ -61,6 +61,8 @@ class AnalyticsController extends Controller
                 $query->whereYear('first_visit', $date->year)
                     ->whereMonth('first_visit', $date->month);
             })
+            ->whereNotNull('country')
+            ->where('country', '!=', '')
             ->groupBy('country')
             ->orderByDesc('total')
             ->get()
