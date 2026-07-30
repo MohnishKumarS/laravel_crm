@@ -19,6 +19,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -186,6 +187,7 @@ Route::middleware(['auth', 'role:marketer'])->prefix('marketer')->name('marketer
 
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 });
+Route::resource('users', UserController::class)->except(['show']);
 
 // SELLER ROLE
 Route::middleware(['auth', 'role:seller'])

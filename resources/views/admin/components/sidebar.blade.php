@@ -190,6 +190,28 @@
                               </ul>
                           </div>
                       </li>
+                      <li class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                          <a data-bs-toggle="collapse" href="#users_list">
+                              <i class="fas fa-users"></i>
+                              <p>Users</p>
+                              <span class="caret"></span>
+                          </a>
+                          <div class="collapse  {{ request()->routeIs('users.*') ? 'show' : '' }}"
+                              id="users_list">
+                              <ul class="nav nav-collapse" style="list-style: none">
+                                  <li>
+                                      <a href="{{ route('users.create') }}">
+                                          <span class="ms-5">Add User</span>
+                                      </a>
+                                  </li>
+                                  <li>
+                                      <a href="{{ route('users.index') }}">
+                                          <span class="ms-5">View Users</span>
+                                      </a>
+                                  </li>
+                              </ul>
+                          </div>
+                      </li>
 
                       <li class="nav-item {{ request()->routeIs('analytics.*') ? 'active' : '' }}">
                           <a data-bs-toggle="collapse" href="#analytic_list">
