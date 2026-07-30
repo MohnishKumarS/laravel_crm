@@ -69,10 +69,10 @@
                                         <a href="{{ route('forms.edit', $form->id) }}"
                                             class="btn btn-warning btn-sm">Edit</a>
                                         <form action="{{ route('forms.destroy', $form->id) }}" method="POST"
-                                            style="display:inline-block" onsubmit="return confirm('Delete this form?')">
+                                            style="display:inline-block" class="delete-form">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            <button type="button" class="btn btn-danger btn-sm delete-btn">Delete</button>
                                         </form>
                                          <a href="{{ route('forms.submissions', $form->id) }}"
                                        class="btn btn-warning btn-sm m-1">Submissions</a>
