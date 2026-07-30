@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -59,6 +60,13 @@ class Campaign extends Model
                 ->first()
             ?? static::where('is_default', true)->where('is_published', true)->first();
     }
+    public static function allCurrent(): Collection
+{
+    return static::active()
+        ->orderByDesc('priority')
+        ->orderByDesc('start_at')
+        ->get();
+}
 
     /** Human status for the admin list (computed, not stored). */
     public function getStatusLabelAttribute(): string

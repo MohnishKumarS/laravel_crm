@@ -6,7 +6,8 @@ use App\Models\Affiliate\Affiliate;
 use App\Models\Affiliate\AffiliateReferral;
 use App\Models\Affiliate\ReferralClick;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cookie;
+// use Illuminate\Support\Facades\Cookie;
+use Symfony\Component\HttpFoundation\Cookie;
 use Illuminate\Support\Str;
 
 /**
@@ -29,7 +30,7 @@ class ReferralAttributionService
      * Record a click coming from a referral link (?ref=CODE or /r/{slug})
      * and set the attribution cookie. Returns the signed cookie payload.
      */
-    public function trackLinkClick(Request $request, string $codeOrSlug): ?string
+    public function trackLinkClick(Request $request, string $codeOrSlug): ?array
     {
         $affiliate = $this->resolveAffiliate($codeOrSlug);
 
@@ -46,14 +47,14 @@ class ReferralAttributionService
             'created_at'   => now(),
         ]);
 
-        return $this->setAttributionCookie($affiliate, 'cookie');
+       return $this->setAttributionCookie($affiliate, 'cookie'); 
     }
 
     /**
      * Handle a code manually entered at checkout. Always wins over an
      * existing cookie for this session.
      */
-    public function applyCode(Request $request, string $code): ?Affiliate
+    public function applyCode(Request $request, string $code): ?array
     {
         $affiliate = Affiliate::where('affiliate_code', $code)->first();
 
@@ -70,9 +71,11 @@ class ReferralAttributionService
             'created_at'   => now(),
         ]);
 
-        $this->setAttributionCookie($affiliate, 'code_entered');
+      
+    $result = $this->setAttributionCookie($affiliate, 'code_entered');
+    $result['affiliate'] = $affiliate; // controller still needs this for the message
 
-        return $affiliate;
+    return $result;
     }
 
     /**
@@ -117,7 +120,7 @@ class ReferralAttributionService
             ->first();
     }
 
-    private function setAttributionCookie(Affiliate $affiliate, string $source): string
+    private function setAttributionCookie(Affiliate $affiliate, string $source): array
     {
         $token = Str::uuid()->toString();
 
@@ -127,19 +130,19 @@ class ReferralAttributionService
             'source'       => $source,
         ]);
 
-        Cookie::queue(
-            self::COOKIE_NAME,
-            encrypt($payload),
-            $this->settings->cookieDurationDays() * 24 * 60,
-            null,
-            null,
-            app()->environment('production'), // secure only in production (HTTPS)
-            true,   // httpOnly - not readable/forgeable from the Next.js client
-            false,
-            'Lax'
-        );
+           $cookie = new Cookie(
+        self::COOKIE_NAME,
+        encrypt($payload),
+        time() + ($this->settings->cookieDurationDays() * 24 * 60 * 60),
+        '/',
+        env('COOKIE_DOMAIN'),
+        app()->environment('production'), // secure
+        true,   // httpOnly
+        false,
+        'Lax'
+    );
 
-        return $token;
+        return ['token' => $token, 'cookie' => $cookie];
     }
 
     private function readAttributionCookie(Request $request): ?array

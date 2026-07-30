@@ -17,39 +17,39 @@ class ReferralController extends Controller
      * server-side so it can't be read or forged by client JS.
      * Body: { "ref": "JOHN10", "landing_url": "https://site.com/..." }
      */
-    public function track(Request $request)
-    {
-        $request->validate(['ref' => ['required', 'string']]);
+   public function track(Request $request)
+{
+    $request->validate(['ref' => ['required', 'string']]);
 
-        $token = $this->attribution->trackLinkClick($request, $request->ref);
+    $result = $this->attribution->trackLinkClick($request, $request->ref);
 
-        if (!$token) {
-            return response()->json(['tracked' => false], 200);
-        }
-
-        return response()->json(['tracked' => true]);
+    if (!$result) {
+        return response()->json(['tracked' => false], 200);
     }
+
+    return response()->json(['tracked' => true])->withCookie($result['cookie']);
+}
 
     /**
      * POST /api/referral/apply-code
      * Called from the checkout page's "Referral code" field.
      * Always overrides any existing cookie (code wins).
      */
-    public function applyCode(Request $request)
-    {
-        $request->validate(['code' => ['required', 'string']]);
+  public function applyCode(Request $request)
+{
+    $request->validate(['code' => ['required', 'string']]);
 
-        $affiliate = $this->attribution->applyCode($request, $request->code);
+    $result = $this->attribution->applyCode($request, $request->code);
 
-        if (!$affiliate) {
-            return response()->json(['valid' => false, 'message' => 'Invalid or inactive code.'], 422);
-        }
-
-        return response()->json([
-            'valid'   => true,
-            'message' => "Code applied — supporting {$affiliate->user->name}.",
-        ]);
+    if (!$result) {
+        return response()->json(['valid' => false, 'message' => 'Invalid or inactive code.'], 422);
     }
+
+    return response()->json([
+        'valid'   => true,
+        'message' => "Code applied — supporting {$result['affiliate']->user->name}.",
+    ])->withCookie($result['cookie']);
+}
     public function current(Request $request)
    {
     $affiliate = $this->attribution->currentAttributedAffiliate($request);
