@@ -296,12 +296,12 @@
                       </li>
                       {{-- Mail Dynamics --}}
                       <li class="nav-item submenu {{ request()->routeIs('emails.*') ? 'active' : '' }}">
-                          <a data-bs-toggle="collapse" href="#submenu" class="collapsed" aria-expanded="false">
+                          <a data-bs-toggle="collapse" href="#mailmenu" class="collapsed" aria-expanded="false">
                               <i class="fas fa-store"></i>
                               <p>Mail Dynamics</p>
                               <span class="caret"></span>
                           </a>
-                          <div class="collapse {{ request()->routeIs('emails.*') ? 'show' : '' }}" id="submenu"
+                          <div class="collapse {{ request()->routeIs('emails.*') ? 'show' : '' }}" id="mailmenu"
                               style="">
                               <ul class="nav nav-collapse">
                                   <li>

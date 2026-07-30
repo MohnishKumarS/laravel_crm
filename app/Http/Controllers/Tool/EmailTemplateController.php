@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tool;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Tool\StoreEmailTemplateRequest;
 use App\Models\Tool\EmailTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,20 +30,11 @@ class EmailTemplateController extends Controller
         );
     }
 
-    public function store(Request $request)
+    public function store(StoreEmailTemplateRequest $request)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'subject' => ['required', 'string', 'max:255'],
-            'category' => ['nullable', 'string', 'max:100'],
-            'description' => ['nullable', 'string'],
-            'body' => ['required', 'string'],
-            'status' => ['required', 'in:active,inactive'],
-        ]);
+         $validated = $request->validated();
 
-        // return $request->all();
-
-
+        // return $validated;
         $validated['created_by'] = Auth::id();
 
         $created = EmailTemplate::create($validated);
