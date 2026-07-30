@@ -60,7 +60,7 @@ class Campaign extends Model
                 ->first()
             ?? static::where('is_default', true)->where('is_published', true)->first();
     }
-    public static function allCurrent(): Collection
+  public static function allCurrent(): Collection
 {
     return static::active()
         ->orderByDesc('priority')

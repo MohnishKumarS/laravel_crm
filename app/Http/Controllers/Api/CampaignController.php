@@ -37,7 +37,15 @@ class CampaignController extends Controller
 
         return response()->json($this->formatCampaign($campaign));
     }
+   public function allCurrent()
+{
+    $campaigns = Campaign::allCurrent();
 
+    return response()->json(
+        $campaigns->map(fn ($c) => $this->formatCampaign($c))->values()
+    );
+}
+      
     /**
      * GET /api/campaigns/{campaign}
      * Admin: single campaign (for the edit form).
