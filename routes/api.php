@@ -35,7 +35,8 @@ Route::post('/visitors',[VisitorController::class,'index']);
 Route::post('/visitors/shop',[VisitorController::class,'shopVisitors']);
 
 Route::prefix('campaigns')->group(function () {
-    Route::get('/current', [CampaignController::class, 'current']);   // public
+    Route::get('/current', [CampaignController::class, 'current']);   
+    Route::get('/all-current', [CampaignController::class, 'allCurrent']); 
     Route::get('/', [CampaignController::class, 'index']);
     Route::get('/{campaign}', [CampaignController::class, 'show']);
     Route::post('/', [CampaignController::class, 'store']);
