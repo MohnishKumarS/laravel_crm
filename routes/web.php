@@ -20,6 +20,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\Tool\EmailTemplateController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -133,6 +134,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
         // Dynamic pages
          Route::resource('dynamic-pages', DynamicPageController::class);
+    });
+
+    // ========================== TOOL MAIL DYNAMICS 
+    Route::prefix('emails')->name('emails.')->group(function () {
+        // Dynamic pages
+         Route::resource('templates', EmailTemplateController::class);
     });
 
    
