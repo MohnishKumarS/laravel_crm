@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Throwable;
 
@@ -79,6 +80,14 @@ class SendBulkEmailJob implements ShouldQueue
         | Success
         |--------------------------------------------------------------------------
         */
+
+            Log::info('Bulk email sent successfully.', [
+                'campaign_id' => $recipient->campaign_id,
+                'recipient_id' => $recipient->id,
+                'email' => $recipient->email,
+                'attempt' => $recipient->attempts,
+            ]);
+
             $recipient->update([
                 'status' => 'sent',
                 'sent_at' => now(),
@@ -95,6 +104,16 @@ class SendBulkEmailJob implements ShouldQueue
 
             $this->updateCampaignStatus($campaign);
         } catch (Throwable $exception) {
+
+            Log::error('Bulk email sending failed.', [
+                'campaign_id' => $recipient->campaign_id,
+                'recipient_id' => $recipient->id,
+                'email' => $recipient->email,
+                'attempt' => $recipient->attempts,
+                'queue' => 'emails',
+                'error' => $exception->getMessage(),
+            ]);
+
             $recipient->update([
                 'status' => 'queued',
                 'error_message' => $exception->getMessage(),
@@ -114,6 +133,15 @@ class SendBulkEmailJob implements ShouldQueue
         if (!$recipient) {
             return;
         }
+
+        Log::error('Bulk email failed function.', [
+            'campaign_id' => $recipient->campaign_id,
+            // 'recipient_id' => $recipient->id,
+            // 'email' => $recipient->email,
+            // 'attempt' => $recipient->attempts,
+            // 'queue' => 'emails',
+            'error' => $exception->getMessage(),
+        ]);
 
         $recipient->update([
             'status' => 'failed',

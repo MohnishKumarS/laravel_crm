@@ -34,7 +34,7 @@
                     </form>
                 @endif
 
-                {{-- @if ($campaign->failed_count > 0)
+                @if ($campaign->failed_count > 0)
                     <form action="{{ route('emails.campaigns.retry', $campaign) }}" method="POST">
                         @csrf
 
@@ -43,7 +43,7 @@
                             Retry Failed
                         </button>
                     </form>
-                @endif --}}
+                @endif
                 <a href="{{ route('emails.campaigns.index') }}" class="btn btn-outline-secondary">
 
                     Back

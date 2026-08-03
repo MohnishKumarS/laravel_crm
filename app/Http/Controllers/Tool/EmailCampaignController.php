@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tool;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\SendBulkEmailJob;
+use App\Models\Marketplace\ShopCustomer;
 use App\Models\Marketplace\ShopUser;
 use App\Models\Tool\EmailCampaign;
 use App\Models\Tool\EmailCampaignRecipient;
@@ -48,8 +49,9 @@ class EmailCampaignController extends Controller
     public function users(Request $request)
     {
 
-        $users = User::query()
+        $users = ShopCustomer::query()
             ->select('id', 'name', 'email')
+            ->whereNotNull('email')
             ->orderBy('name')
             ->get();
 
@@ -165,7 +167,7 @@ class EmailCampaignController extends Controller
             */
 
             if ($validated['recipient_type'] === 'users') {
-                $users = User::query()
+                $users = ShopCustomer::query()
                     ->whereIn('id', $validated['recipient_ids'])
                     ->whereNotNull('email')
                     ->select(['id', 'name', 'email'])
@@ -401,10 +403,7 @@ class EmailCampaignController extends Controller
         $campaign->update(['status' => 'processing']);
 
 
-        return back()->with(
-            'success',
-            'Failed emails have been queued again.'
-        );
+        return back()->with('message','Failed emails have been queued again.')->with('status','success');
     }
 
 
