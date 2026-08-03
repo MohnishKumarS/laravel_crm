@@ -66,7 +66,7 @@ class EmailCampaignController extends Controller
      */
     public function sellers(Request $request)
     {
-        $sellers = ShopUser::select('id', 'username', 'email','first_name')
+        $sellers = ShopUser::select('id', 'username', 'email', 'first_name')
             ->whereNotNull('email')
             ->where('group_id', 4)
             ->get();
@@ -370,7 +370,7 @@ class EmailCampaignController extends Controller
             });
 
 
-        return back()->with('message','Campaign has been queued.')->with('status','success');
+        return back()->with('message', 'Campaign has been queued.')->with('status', 'success');
     }
 
 
@@ -379,6 +379,20 @@ class EmailCampaignController extends Controller
      */
     public function retry(EmailCampaign $campaign)
     {
+
+        $failedCount = $campaign->recipients()
+            ->where('status', 'failed')
+            ->count();
+
+        if ($failedCount === 0) {
+            return back()
+                ->with('status', 'warning')
+                ->with('message', 'No failed recipients available for retry.');
+        }
+
+        $campaign->decrement('failed_count', $failedCount);
+        $campaign->increment('queued_count', $failedCount);
+
         $campaign->recipients()
             ->where('status', 'failed')
             ->update([
@@ -403,7 +417,7 @@ class EmailCampaignController extends Controller
         $campaign->update(['status' => 'processing']);
 
 
-        return back()->with('message','Failed emails have been queued again.')->with('status','success');
+        return back()->with('message', 'Failed emails have been queued again.')->with('status', 'success');
     }
 
 

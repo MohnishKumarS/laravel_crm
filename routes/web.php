@@ -159,46 +159,46 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('analytics/shop', [shopAnalytics::class, 'shopVisitors'])->name('analytics.shop');
     Route::get('/analytics/shop/export', [shopAnalytics::class, 'exportShopVisitors'])->name('analytics.shop.export');
 
-  Route::prefix('affiliates')->name('affiliates.')->group(function () {
-    Route::controller(AffiliateSettingController::class)->group(function () {
-        Route::get('settings', 'edit')->name('settings.edit');
-        Route::put('settings', 'update')->name('settings.update');
-    });
+    Route::prefix('affiliates')->name('affiliates.')->group(function () {
+        Route::controller(AffiliateSettingController::class)->group(function () {
+            Route::get('settings', 'edit')->name('settings.edit');
+            Route::put('settings', 'update')->name('settings.update');
+        });
 
-    Route::controller(AffiliateCommissionController::class)->group(function () {
-        Route::get('commissions', 'index')->name('commissions');
-        Route::put('commissions/bulk-approve', 'bulkApprove')->name('commissions.bulk-approve');
-    });
+        Route::controller(AffiliateCommissionController::class)->group(function () {
+            Route::get('commissions', 'index')->name('commissions');
+            Route::put('commissions/bulk-approve', 'bulkApprove')->name('commissions.bulk-approve');
+        });
 
-    Route::controller(AffiliateSocialSubmissionController::class)->group(function () {
-        Route::get('social-submissions', 'index')->name('social-submissions.index');
-        Route::put('social-submissions/{submission}/review', 'review')->name('social-submissions.review');
-    });
+        Route::controller(AffiliateSocialSubmissionController::class)->group(function () {
+            Route::get('social-submissions', 'index')->name('social-submissions.index');
+            Route::put('social-submissions/{submission}/review', 'review')->name('social-submissions.review');
+        });
 
-    Route::controller(AffiliatePayoutController::class)->group(function () {
-        Route::get('payouts', 'index')->name('payouts');
-        Route::post('payouts/create-batch', 'createBatch')->name('payouts.create-batch');
-        Route::put('payouts/{payout}/mark-paid', 'markPaid')->name('payouts.mark-paid');
-    });
+        Route::controller(AffiliatePayoutController::class)->group(function () {
+            Route::get('payouts', 'index')->name('payouts');
+            Route::post('payouts/create-batch', 'createBatch')->name('payouts.create-batch');
+            Route::put('payouts/{payout}/mark-paid', 'markPaid')->name('payouts.mark-paid');
+        });
 
-    Route::controller(AffiliateController::class)->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/create', 'create')->name('create');
-        Route::post('/', 'store')->name('store');
-        Route::get('/{affiliate}', 'show')->name('show');
-        Route::put('/{affiliate}/approve', 'approve')->name('approve');
-        Route::put('/{affiliate}/suspend', 'suspend')->name('suspend');
-        Route::put('/{affiliate}/reject', 'reject')->name('reject');
-        Route::put('/{affiliate}/rate', 'updateRate')->name('rate');
+        Route::controller(AffiliateController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/', 'store')->name('store');
+            Route::get('/{affiliate}', 'show')->name('show');
+            Route::put('/{affiliate}/approve', 'approve')->name('approve');
+            Route::put('/{affiliate}/suspend', 'suspend')->name('suspend');
+            Route::put('/{affiliate}/reject', 'reject')->name('reject');
+            Route::put('/{affiliate}/rate', 'updateRate')->name('rate');
+        });
     });
-});
 });
 
 // Route::resource('affiliates', AffiliateController::class)->only(['index', 'show']);
 // AFFILIATE MODULE
 
 
- 
+
 // USER PROFILE
 Route::middleware(['auth', 'role:affiliate,admin'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
@@ -209,10 +209,10 @@ Route::middleware(['auth', 'role:affiliate,admin'])->group(function () {
     // Route::get('/products/browse', [AffiliateSelfController::class, 'browseProducts'])->name('products.browse');
     // Route::post('/products', [AffiliateSelfController::class, 'storeProduct'])->name('products.store');
     // Route::delete('/products/{id}', [AffiliateSelfController::class, 'destroyProduct'])->name('products.destroy');
-    
+
     // Route::get('/social-submissions', [AffiliateSelfController::class, 'socialSubmissions'])->name('social-submissions');
     // Route::post('/social-submissions', [AffiliateSelfController::class, 'storeSocialSubmission'])->name('social-submissions.store');
-    });
+});
 Route::resource('users', UserController::class)->except(['show']);
 
 
@@ -269,4 +269,14 @@ Route::get('/clear', function () {
     // Artisan::call('optimize');
 
     return "All caches cleared successfully!..!";
+});
+
+
+Route::get('/force-logout', function () {
+    Auth::logout();
+
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+
+    return redirect('/login');
 });

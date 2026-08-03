@@ -187,12 +187,13 @@
                                           <span class="ms-5">Settings</span>
                                       </a>
                                   </li>
-                                  <li class="nav-item {{ request()->routeIs('affiliates.social-submissions.*') ? 'active' : '' }}">
-    <a href="{{ route('affiliates.social-submissions.index') }}">
-        <i class="fas fa-share-alt"></i>
-        <p>Social Submissions</p>
-    </a>
-</li>
+                                  <li
+                                      class="nav-item {{ request()->routeIs('affiliates.social-submissions.*') ? 'active' : '' }}">
+                                      <a href="{{ route('affiliates.social-submissions.index') }}">
+                                          <i class="fas fa-share-alt"></i>
+                                          <p>Social Submissions</p>
+                                      </a>
+                                  </li>
                               </ul>
                           </div>
                       </li>
@@ -202,8 +203,7 @@
                               <p>Users</p>
                               <span class="caret"></span>
                           </a>
-                          <div class="collapse  {{ request()->routeIs('users.*') ? 'show' : '' }}"
-                              id="users_list">
+                          <div class="collapse  {{ request()->routeIs('users.*') ? 'show' : '' }}" id="users_list">
                               <ul class="nav nav-collapse" style="list-style: none">
                                   <li>
                                       <a href="{{ route('users.create') }}">
@@ -342,7 +342,7 @@
                                           <span class="sub-item">Campaign</span>
                                       </a>
                                   </li>
-                          
+
 
                               </ul>
                           </div>
