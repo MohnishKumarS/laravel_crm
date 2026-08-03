@@ -413,6 +413,18 @@
                               <p>My Payouts</p>
                           </a>
                       </li>
+                      <li class="nav-item {{ request()->routeIs('affiliate.products*') ? 'active' : '' }}">
+                          <a href="{{ route('affiliate.products') }}">
+                              <i class="fas fa-box"></i>
+                              <p>My Products</p>
+                          </a>
+                      </li>
+                      <li class="nav-item {{ request()->routeIs('affiliate.social-submissions') ? 'active' : '' }}">
+                          <a href="{{ route('affiliate.social-submissions') }}">
+                              <i class="fas fa-share-alt"></i>
+                              <p>Social Submissions</p>
+                          </a>
+                      </li>
                       {{-- Add inside your existing admin sidebar, near the other affiliates.* links --}}
 
 

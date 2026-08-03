@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Affiliate;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,14 +17,14 @@ class AffiliateSelectedProduct extends Model
 
     public function affiliate(): BelongsTo
     {
-        return $this->belongsTo(Affiliate::class);
+        return $this->belongsTo(Affiliate::class); // same namespace, no import needed
     }
 
     /**
      * Promo page URL for this specific product, with the affiliate's
-     * referral code embedded. Matches the Next.js route convention
-     * /promo/{product_id}?ref=CODE - adjust the path if your actual
-     * Next.js routing differs.
+     * referral code embedded - matches the Next.js route convention
+     * /promo/{product_id}?ref=CODE. Adjust if your actual Next.js
+     * routing differs.
      */
     public function promoUrl(): string
     {
