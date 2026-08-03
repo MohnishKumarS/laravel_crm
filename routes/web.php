@@ -198,7 +198,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 // AFFILIATE MODULE
 
 
-
+ 
 // USER PROFILE
 Route::middleware(['auth', 'role:affiliate,admin'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
