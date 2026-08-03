@@ -252,8 +252,8 @@
 
                                 <div class="form-check mb-2">
                                     <input type="checkbox" class="form-check-input" id="selectAllUsers">
-                                    <label class="form-check-label" for="selectAllUsers">
-                                        Select All Users
+                                    <label class="form-check-label" for="selectAllUsers" id="selectAllUsersLabel">
+                                        Select All Users (0)
                                     </label>
                                 </div>
 
@@ -271,7 +271,7 @@
 
                                 <div class="form-check mb-2">
                                     <input type="checkbox" class="form-check-input" id="selectAllSellers">
-                                    <label class="form-check-label" for="selectAllSellers">
+                                    <label class="form-check-label" for="selectAllSellers" id="selectAllSellersLabel">
                                         Select All Sellers
                                     </label>
                                 </div>
@@ -484,8 +484,14 @@
                         placeholder: 'Select users',
                         width: '100%'
                     });
+
+                    $('#selectAllUsersLabel').text(
+                        'Select All Users (' + data.data.length + ')'
+                    );
                 }
             });
+
+
 
             $('#selectAllUsers').on('change', function() {
                 if ($(this).is(':checked')) {
@@ -512,7 +518,7 @@
                 type: "GET",
                 dataType: "json",
                 success: function(data) {
-                    console.log(data);
+                    // console.log(data);
 
                     data.data.forEach(function(seller) {
 
@@ -530,6 +536,10 @@
                         placeholder: 'Select sellers',
                         width: '100%'
                     });
+
+                    $('#selectAllSellersLabel').text(
+                        'Select All Sellers (' + data.data.length + ')'
+                    );
                 }
             });
 
