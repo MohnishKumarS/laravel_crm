@@ -5,7 +5,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 @endif
-
+{{-- Errors --}}
 @if ($errors->any())
     <div class="alert alert-danger">
         <strong>Please fix the following:</strong>
@@ -43,4 +43,11 @@
             }
         });
     });
+
+
+    $('#dynamicPagesTable').DataTable({});
 </script>
+
+
+
+

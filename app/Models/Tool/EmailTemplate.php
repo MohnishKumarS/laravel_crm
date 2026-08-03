@@ -22,8 +22,8 @@ class EmailTemplate extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    // public function campaigns()
-    // {
-    //     return $this->hasMany(EmailCampaign::class);
-    // }
+    public function campaigns()
+    {
+        return $this->hasMany(EmailCampaign::class);
+    }
 }

@@ -53,7 +53,7 @@
 
                 <div class="table-responsive">
 
-                    <table class="table table-hover align-middle">
+                    <table class="table table-hover align-middle" id="templatePagesTable">
 
                         <thead>
 
@@ -177,7 +177,7 @@
 
 
                                             {{-- Delete --}}
-                                            <form action="{{ route('emails.templates.destroy', $template) }}"
+                                            <form action="{{ route('emails.templates.destroy', $template->id) }}"
                                                 method="POST" class="d-inline delete-form">
 
                                                 @csrf
@@ -255,6 +255,8 @@
                 }
             });
         });
-    </script>
+
+
+        $('#templatePagesTable').DataTable({});
     </script>
 @endpush

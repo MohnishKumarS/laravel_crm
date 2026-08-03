@@ -297,7 +297,7 @@
                       {{-- Mail Dynamics --}}
                       <li class="nav-item submenu {{ request()->routeIs('emails.*') ? 'active' : '' }}">
                           <a data-bs-toggle="collapse" href="#mailmenu" class="collapsed" aria-expanded="false">
-                              <i class="fas fa-store"></i>
+                              <i class="fas fa-paper-plane"></i>
                               <p>Mail Dynamics</p>
                               <span class="caret"></span>
                           </a>
@@ -307,6 +307,11 @@
                                   <li>
                                       <a href="{{ route('emails.templates.index') }}">
                                           <span class="sub-item">Templates</span>
+                                      </a>
+                                  </li>
+                                  <li>
+                                      <a href="{{ route('emails.campaigns.index') }}">
+                                          <span class="sub-item">Campaign</span>
                                       </a>
                                   </li>
                           
