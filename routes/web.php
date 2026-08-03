@@ -21,6 +21,8 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\Tool\EmailCampaignController;
+use App\Http\Controllers\Tool\EmailTemplateController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -134,10 +136,24 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('visitors-per-day', [shopAnalytics::class, 'visitorsPerDay'])->name('visitors-per-day');
 
         // Dynamic pages
-         Route::resource('dynamic-pages', DynamicPageController::class);
+        Route::resource('dynamic-pages', DynamicPageController::class);
     });
 
-   
+    // ========================== TOOL MAIL DYNAMICS 
+    Route::prefix('emails')->name('emails.')->group(function () {
+        // Dynamic pages
+        Route::resource('templates', EmailTemplateController::class);
+        Route::resource('campaigns', EmailCampaignController::class);
+
+
+        Route::get('recipients/users', [EmailCampaignController::class, 'users'])->name('recipients.users');
+        Route::get('recipients/sellers', [EmailCampaignController::class, 'sellers'])->name('recipients.sellers');
+
+        Route::post('campaigns/{campaign}/send', [EmailCampaignController::class, 'send'])->name('campaigns.send');
+        Route::post('campaigns/{campaign}/retry', [EmailCampaignController::class, 'retry'])->name('campaigns.retry');
+    });
+
+
 
     // ANALYTICS
     Route::get('analytics/shop', [shopAnalytics::class, 'shopVisitors'])->name('analytics.shop');

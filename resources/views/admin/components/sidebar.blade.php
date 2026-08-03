@@ -268,9 +268,6 @@
                           </span>
                           <h4 class="text-section">Shop</h4>
                       </li>
-
-
-
                       {{-- MARKETPLACE --}}
                       <li class="nav-item submenu {{ request()->routeIs('shop.*') ? 'active' : '' }}">
                           <a data-bs-toggle="collapse" href="#submenu" class="collapsed" aria-expanded="false">
@@ -313,6 +310,39 @@
                                   </div>
                               </li> --}}
 
+
+                              </ul>
+                          </div>
+                      </li>
+
+
+                      <li class="nav-section">
+                          <span class="sidebar-mini-icon">
+                              <i class="fa fa-ellipsis-h"></i>
+                          </span>
+                          <h4 class="text-section">Tool</h4>
+                      </li>
+                      {{-- Mail Dynamics --}}
+                      <li class="nav-item submenu {{ request()->routeIs('emails.*') ? 'active' : '' }}">
+                          <a data-bs-toggle="collapse" href="#mailmenu" class="collapsed" aria-expanded="false">
+                              <i class="fas fa-paper-plane"></i>
+                              <p>Mail Dynamics</p>
+                              <span class="caret"></span>
+                          </a>
+                          <div class="collapse {{ request()->routeIs('emails.*') ? 'show' : '' }}" id="mailmenu"
+                              style="">
+                              <ul class="nav nav-collapse">
+                                  <li>
+                                      <a href="{{ route('emails.templates.index') }}">
+                                          <span class="sub-item">Templates</span>
+                                      </a>
+                                  </li>
+                                  <li>
+                                      <a href="{{ route('emails.campaigns.index') }}">
+                                          <span class="sub-item">Campaign</span>
+                                      </a>
+                                  </li>
+                          
 
                               </ul>
                           </div>

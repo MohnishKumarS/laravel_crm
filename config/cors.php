@@ -19,7 +19,10 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://yuukkev1.betalearnings.com/'],
+    'allowed_origins' => [
+        'http://127.0.0.1:8000',
+        'https://shopv1.betalearnings.com',
+    ],
 
     'allowed_origins_patterns' => [],
 
