@@ -6,6 +6,7 @@ use App\Http\Controllers\Affiliate\AffiliateController;
 use App\Http\Controllers\Affiliate\AffiliatePayoutController;
 use App\Http\Controllers\Affiliate\AffiliateSelfController;
 use App\Http\Controllers\Affiliate\AffiliateSettingController;
+use App\Http\Controllers\Affiliate\AffiliateSocialSubmissionController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
@@ -214,6 +215,12 @@ Route::middleware(['auth', 'role:affiliate'])->prefix('affiliate')->name('affili
     Route::get('/commissions', [AffiliateSelfController::class, 'commissions'])->name('commissions');
     Route::get('/payouts', [AffiliateSelfController::class, 'payouts'])->name('payouts');
 });
+
+
+Route::get('affiliates/social-submissions', [AffiliateSocialSubmissionController::class, 'index'])
+    ->name('affiliates.social-submissions.index');
+Route::put('affiliates/social-submissions/{submission}/review', [AffiliateSocialSubmissionController::class, 'review'])
+    ->name('affiliates.social-submissions.review');
 
 
 // MIGRATION

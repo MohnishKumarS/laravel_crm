@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\ProductSelectionController;
+use App\Http\Controllers\Api\SocialSubmissionController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CampaignController;
 use App\Http\Controllers\Api\DashboardController;
@@ -67,6 +69,13 @@ Route::middleware('affiliate.webhook.secret')->group(function () {
     Route::post('affiliate/webhooks/order-paid', [WebhookController::class, 'orderPaid']);
     Route::post('affiliate/webhooks/order-refunded', [WebhookController::class, 'orderRefunded']);
 });
+
+Route::get('products', [ProductSelectionController::class, 'index']);
+Route::post('products', [ProductSelectionController::class, 'store']);
+Route::delete('products/{id}', [ProductSelectionController::class, 'destroy']);
+
+Route::get('social-submissions', [SocialSubmissionController::class, 'index']);
+Route::post('social-submissions', [SocialSubmissionController::class, 'store']);
 
 
 // Dynamic pages

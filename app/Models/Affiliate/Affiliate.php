@@ -2,6 +2,8 @@
 
 namespace App\Models\Affiliate;
 
+use App\Models\AffiliateSelectedProduct;
+use App\Models\AffiliateSocialSubmission;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -70,8 +72,16 @@ class Affiliate extends Model
     {
         return rtrim(config('app.frontend_url', config('app.url')), '/') . '/?ref=' . $this->affiliate_code;
     }
-      public function affiliate()
-  {
+    public function affiliate()
+    {
       return $this->hasOne(Affiliate::class);
-  }
+    }
+    public function selectedProducts(): HasMany
+   {
+       return $this->hasMany(AffiliateSelectedProduct::class);
+   }
+   public function socialSubmissions(): HasMany
+   {
+       return $this->hasMany(AffiliateSocialSubmission::class);
+   }
 }

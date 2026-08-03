@@ -187,6 +187,12 @@
                                           <span class="ms-5">Settings</span>
                                       </a>
                                   </li>
+                                  <li class="nav-item {{ request()->routeIs('affiliates.social-submissions.*') ? 'active' : '' }}">
+    <a href="{{ route('affiliates.social-submissions.index') }}">
+        <i class="fas fa-share-alt"></i>
+        <p>Social Submissions</p>
+    </a>
+</li>
                               </ul>
                           </div>
                       </li>
@@ -377,6 +383,8 @@
                               <p>My Payouts</p>
                           </a>
                       </li>
+                      {{-- Add inside your existing admin sidebar, near the other affiliates.* links --}}
+
 
 
                   </ul>
