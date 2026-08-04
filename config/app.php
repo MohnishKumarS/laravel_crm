@@ -54,6 +54,7 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
     'frontend_url' => env('FRONTEND_URL', 'http://localhost'),
+    'marketplace_asset_url' => env('MARKETPLACE_ASSET_URL'),
 
     /*
     |--------------------------------------------------------------------------

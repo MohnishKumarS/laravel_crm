@@ -24,7 +24,7 @@
                     <div class="col-md-3 mb-3">
                         <div class="card h-100">
                           @if (!empty($product->image))
-                              <img src="{{ rtrim(env('MARKETPLACE_ASSET_URL'), '/') . '/' . $product->image }}" class="card-img-top" style="height:140px;object-fit:cover;">
+                              <img src="{{ rtrim(config('app.marketplace_asset_url'), '/') . '/' . $product->image }}" class="card-img-top" style="height:140px;object-fit:cover;">
                           @endif
                             <div class="card-body d-flex flex-column">
                                 <p class="mb-1">{{ $product->name }}</p>
