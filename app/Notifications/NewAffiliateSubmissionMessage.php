@@ -26,12 +26,13 @@ class NewAffiliateSubmissionMessage extends Notification
 
         return [
             'type'          => 'affiliate_submission_message',
+            'title'         => 'Affiliate Message',
             'submission_id' => $submission->id,
             'sender_role'   => $this->message->sender_role,
             'sender_name'   => $this->message->sender->name,
             'preview'       => \Illuminate\Support\Str::limit($this->message->message, 80),
             'url'           => $this->message->sender_role === 'affiliate'
-                ? route('affiliates.social-submissions') . '?open=' . $submission->id
+                ? route('affiliate.social-submissions') . '?open=' . $submission->id
                 : route('affiliate.social-submissions') . '?open=' . $submission->id,
         ];
     }
