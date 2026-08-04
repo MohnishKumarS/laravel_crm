@@ -62,6 +62,10 @@ class SendBulkEmailJob implements ShouldQueue
             return;
         }
 
+        if ($recipient->campaign->status === 'paused') {
+            return;
+        }
+
         /*
     |--------------------------------------------------------------------------
     | Mark as sending

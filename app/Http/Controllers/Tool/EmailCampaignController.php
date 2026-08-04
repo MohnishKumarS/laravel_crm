@@ -353,6 +353,14 @@ class EmailCampaignController extends Controller
      */
     public function send(EmailCampaign $campaign)
     {
+        $queueCount = $campaign->recipients()
+            ->where('status', 'queued')
+            ->count();
+
+        if ($queueCount === 0) {
+            return back()->with('status', 'warning')->with('message', 'No queued recipients available to send.');
+        }
+
         $campaign->update([
             'status' => 'processing',
             'started_at' => now(),
@@ -370,7 +378,14 @@ class EmailCampaignController extends Controller
             });
 
 
-        return back()->with('message', 'Campaign has been queued.')->with('status', 'success');
+        return back()->with('message', 'Campaign has been queued successfully.')->with('status', 'success');
+    }
+
+
+    public function pause(EmailCampaign $campaign)
+    {
+        $campaign->update(['status' => 'paused']);
+        return back()->with('message', 'Campaign has been paused.')->with('status', 'success');
     }
 
 

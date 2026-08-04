@@ -33,6 +33,27 @@
                         </button>
                     </form>
                 @endif
+                {{-- @if ($campaign->status === 'processing')
+                    <form action="{{ route('emails.campaigns.pause', $campaign) }}" method="POST">
+                        @csrf
+
+                        <button type="submit" class="btn btn-outline-danger">
+                            <i class="fas fa-stop-circle me-1"></i>
+                            Pause Campaign
+                        </button>
+                    </form>
+                @endif
+
+                @if ($campaign->status === 'paused')
+                    <form action="{{ route('emails.campaigns.send', $campaign) }}" method="POST">
+                        @csrf
+
+                        <button class="btn btn-outline-success">
+                            <i class="fas fa-play me-1"></i>
+                            Resume Campaign
+                        </button>
+                    </form>
+                @endif
 
                 @if ($campaign->failed_count > 0)
                     <form action="{{ route('emails.campaigns.retry', $campaign) }}" method="POST">
@@ -43,11 +64,9 @@
                             Retry Failed
                         </button>
                     </form>
-                @endif
+                @endif --}}
                 <a href="{{ route('emails.campaigns.index') }}" class="btn btn-outline-secondary">
-
                     Back
-
                 </a>
             </div>
 

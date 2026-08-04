@@ -150,6 +150,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('recipients/sellers', [EmailCampaignController::class, 'sellers'])->name('recipients.sellers');
 
         Route::post('campaigns/{campaign}/send', [EmailCampaignController::class, 'send'])->name('campaigns.send');
+        Route::post('campaigns/{campaign}/pause',[EmailCampaignController::class, 'pause'])->name('campaigns.pause');
         Route::post('campaigns/{campaign}/retry', [EmailCampaignController::class, 'retry'])->name('campaigns.retry');
     });
 
