@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\AffiliateSelectedProduct;
+use App\Models\Affiliate\AffiliateSelectedProduct;
 use Illuminate\Http\Request;
 
 class ProductSelectionController extends Controller

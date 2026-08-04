@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\AffiliateSocialSubmission;
+use App\Models\Affiliate\AffiliateSocialSubmission;
 use Illuminate\Http\Request;
 
 class SocialSubmissionController extends Controller

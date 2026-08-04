@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Affiliate;
-use App\Models\AffiliateCommission;
+use App\Models\Affiliate\Affiliate;
+use App\Models\Affiliate\AffiliateCommission;
 use App\Services\CommissionCalculator;
 use Illuminate\Http\Request;
 
