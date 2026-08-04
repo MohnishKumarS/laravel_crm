@@ -17,4 +17,9 @@ class Product extends Model
     protected $table = 'products'; // resolves to sma_products via connection prefix
 
     public $timestamps = false;
+
+      public function productVariant()
+    {
+        return $this->hasMany(ProductVariant::class, 'product_id', 'id');
+    }
 }

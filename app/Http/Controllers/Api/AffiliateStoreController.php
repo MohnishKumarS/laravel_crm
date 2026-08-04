@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Affiliate\Affiliate;
+use App\Models\Marketplace\Product;
 
 /**
  * Public, unauthenticated endpoint - a customer clicking an affiliate's
@@ -25,12 +26,29 @@ class AffiliateStoreController extends Controller
             return response()->json(['message' => 'Store not found.'], 404);
         }
 
-        $products = $affiliate->selectedProducts()->latest()->get()->map(function ($p) {
+        $productModels = Product::with('productVariant')
+            ->whereIn('id', $affiliate->selectedProducts->pluck('product_id'))
+            ->get()
+            ->keyBy('id');
+
+        // return $productModels;
+
+        $products = $affiliate->selectedProducts()->latest()->get()->map(function ($p)  use ($productModels) {
+
+            $product = $productModels[$p->product_id] ?? null;
             return [
                 'product_id'    => $p->product_id,
                 'product_name'  => $p->product_name,
                 'product_image' => $p->product_image,
                 'product_price' => (float) $p->product_price,
+
+                'promotion'     => $product?->promotion,
+                'promo_price'   => $product?->promo_price,
+                'start_date'    => $product?->start_date,
+                'end_date'      => $product?->end_date,
+                'offers'        => $product?->offers,
+
+                'variants'      => $product?->productVariant,
             ];
         });
 
