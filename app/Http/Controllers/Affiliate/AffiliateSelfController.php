@@ -5,7 +5,11 @@ namespace App\Http\Controllers\Affiliate;
 use App\Http\Controllers\Controller;
 use App\Models\Affiliate\AffiliateSelectedProduct;
 use App\Models\Affiliate\AffiliateSocialSubmission;
+use App\Models\Affiliate\AffiliateSubmissionMessage;
 use App\Models\Marketplace\Product;
+use App\Models\User;
+use App\Notifications\NewAffiliateSubmissionMessage;
+use DB;
 use Illuminate\Http\Request;
 
 /**
@@ -56,12 +60,21 @@ public function products(Request $request)
 
 public function browseProducts(Request $request)
 {
-    $affiliate = $request->user()->affiliate;
-
+     $affiliate = $request->user()->affiliate;
     $search = $request->get('search');
 
-    $catalog = Product::when($search, fn ($q) => $q->where('name', 'like', "%{$search}%"))
-        ->orderBy('name')
+    $catalog = Product::select('products.*')
+        ->join('warehouses_products', 'warehouses_products.product_id', '=', 'products.id')
+        ->join('warehouses', 'warehouses.id', '=', 'warehouses_products.warehouse_id')
+        ->join('categories', 'categories.id', '=', 'products.category_id')
+        ->join('users', 'users.email', '=', 'warehouses.email')
+        ->where('warehouses.verify', 1)
+        ->where('products.status', 1)
+        ->where('products.site_approved', 1)
+        ->where('products.own_hamper', '!=', 1)
+        ->when($search, fn ($q) => $q->where('products.name', 'like', "%{$search}%"))
+        ->groupBy('products.id')
+        ->orderBy('products.name')
         ->paginate(20);
 
     $selectedIds = $affiliate->selectedProducts()->pluck('product_id')->toArray();
@@ -71,17 +84,17 @@ public function browseProducts(Request $request)
 
 public function storeProduct(Request $request)
 {
-    $affiliate = $request->user()->affiliate;
+     $affiliate = $request->user()->affiliate;
 
     $request->validate(['product_id' => ['required', 'integer']]);
 
-    $product = Product::find($request->product_id);
+    $product = DB::connection('marketplace')->table('products')->find($request->product_id);
 
-    AffiliateSelectedProduct::firstOrCreate(
+    \App\Models\Affiliate\AffiliateSelectedProduct::firstOrCreate(
         ['affiliate_id' => $affiliate->id, 'product_id' => $request->product_id],
         [
             'product_name'  => $product->name ?? null,
-            'product_image' => $product->image ?? null,
+            'product_image' => $product->image ?? null, // filename only, prefix applied at display time
             'product_price' => $product->price ?? null,
         ]
     );
@@ -98,15 +111,6 @@ public function destroyProduct(Request $request, int $id)
     return back()->with('success', 'Product removed.');
 }
 
-public function socialSubmissions(Request $request)
-{
-    $affiliate = $request->user()->affiliate;
-
-    $submissions = $affiliate->socialSubmissions()->latest()->paginate(20);
-    $products = $affiliate->selectedProducts()->get(); // for the dropdown in the submission form
-
-    return view('admin.affiliate-portal.social-submissions', compact('affiliate', 'submissions', 'products'));
-}
 
 public function storeSocialSubmission(Request $request)
 {
@@ -127,5 +131,47 @@ public function storeSocialSubmission(Request $request)
     ]);
 
     return back()->with('success', 'Your post was submitted for review.');
+}
+
+public function sendSubmissionMessage(Request $request, AffiliateSocialSubmission $submission)
+{
+    $affiliate = $request->user()->affiliate;
+
+    // Guard: affiliates can only message on their own submissions
+    abort_unless($submission->affiliate_id === $affiliate->id, 403);
+
+    $request->validate(['message' => ['required', 'string', 'max:2000']]);
+
+    $message = AffiliateSubmissionMessage::create([
+        'submission_id'   => $submission->id,
+        'sender_user_id'  => $request->user()->id,
+        'sender_role'     => 'affiliate',
+        'message'         => $request->message,
+    ]);
+
+    // Notify every admin user - adjust this query if you want a specific
+    // admin instead of broadcasting to all of them
+    User::where('role', 'admin')->get()->each(
+        fn ($admin) => $admin->notify(new NewAffiliateSubmissionMessage($message))
+    );
+
+    return back()->with('success', 'Message sent to admin.');
+}
+
+
+public function socialSubmissions(Request $request)
+{
+    $affiliate = $request->user()->affiliate;
+
+    $submissions = $affiliate->socialSubmissions()->with('messages.sender')->latest()->paginate(20);
+    $products = $affiliate->selectedProducts()->get();
+
+    // Mark admin-sent messages as read now that the affiliate is viewing this page
+    AffiliateSubmissionMessage::whereIn('submission_id', $affiliate->socialSubmissions()->pluck('id'))
+        ->where('sender_role', 'admin')
+        ->whereNull('read_at')
+        ->update(['read_at' => now()]);
+
+    return view('admin.affiliate-portal.social-submissions', compact('affiliate', 'submissions', 'products'));
 }
 }

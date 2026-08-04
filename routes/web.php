@@ -173,6 +173,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::controller(AffiliateSocialSubmissionController::class)->group(function () {
         Route::get('social-submissions', 'index')->name('social-submissions.index');
         Route::put('social-submissions/{submission}/review', 'review')->name('social-submissions.review');
+        Route::post('social-submissions/{submission}/message', 'sendMessage')->name('social-submissions.message');
+        Route::post('social-submissions/{submission}/mark-read', 'markThreadRead')->name('social-submissions.mark-read');
     });
 
     Route::controller(AffiliatePayoutController::class)->group(function () {
@@ -191,6 +193,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::put('/{affiliate}/reject', 'reject')->name('reject');
         Route::put('/{affiliate}/rate', 'updateRate')->name('rate');
     });
+    
 });
 });
 
@@ -205,13 +208,7 @@ Route::middleware(['auth', 'role:affiliate,admin'])->group(function () {
     Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
-    // Route::get('/products', [AffiliateSelfController::class, 'products'])->name('products');
-    // Route::get('/products/browse', [AffiliateSelfController::class, 'browseProducts'])->name('products.browse');
-    // Route::post('/products', [AffiliateSelfController::class, 'storeProduct'])->name('products.store');
-    // Route::delete('/products/{id}', [AffiliateSelfController::class, 'destroyProduct'])->name('products.destroy');
     
-    // Route::get('/social-submissions', [AffiliateSelfController::class, 'socialSubmissions'])->name('social-submissions');
-    // Route::post('/social-submissions', [AffiliateSelfController::class, 'storeSocialSubmission'])->name('social-submissions.store');
     });
 Route::resource('users', UserController::class)->except(['show']);
 
@@ -237,6 +234,17 @@ Route::middleware(['auth', 'role:affiliate'])->prefix('affiliate')->name('affili
     Route::get('/dashboard', [AffiliateSelfController::class, 'dashboard'])->name('dashboard');
     Route::get('/commissions', [AffiliateSelfController::class, 'commissions'])->name('commissions');
     Route::get('/payouts', [AffiliateSelfController::class, 'payouts'])->name('payouts');
+
+    Route::get('/products', [AffiliateSelfController::class, 'products'])->name('products');
+    Route::get('/products/browse', [AffiliateSelfController::class, 'browseProducts'])->name('products.browse');
+    Route::post('/products', [AffiliateSelfController::class, 'storeProduct'])->name('products.store');
+    Route::delete('/products/{id}', [AffiliateSelfController::class, 'destroyProduct'])->name('products.destroy');
+    
+    Route::get('/social-submissions', [AffiliateSelfController::class, 'socialSubmissions'])->name('social-submissions');
+    Route::post('/social-submissions', [AffiliateSelfController::class, 'storeSocialSubmission'])->name('social-submissions.store');
+    Route::post('/social-submissions/{submission}/message', [AffiliateSelfController::class, 'sendSubmissionMessage'])
+    ->name('social-submissions.message');
+    
 });
 
 

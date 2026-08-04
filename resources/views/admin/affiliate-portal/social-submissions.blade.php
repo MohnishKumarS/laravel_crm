@@ -84,7 +84,21 @@
                                         </td>
                                         <td>{{ $submission->admin_note ?? '—' }}</td>
                                         <td>{{ $submission->created_at->format('Y-m-d') }}</td>
+                                         <td>
+        <button class="btn btn-sm btn-outline-secondary"
+            onclick="document.getElementById('thread-{{ $submission->id }}').classList.toggle('d-none')">
+            Messages
+        </button>
+    </td>
                                     </tr>
+                                    <tr id="thread-{{ $submission->id }}" class="d-none">
+    <td colspan="6">
+        @include('admin.affiliates._message_thread', [
+            'submission' => $submission,
+            'sendRoute'  => route('affiliate.social-submissions.message', $submission),
+        ])
+    </td>
+</tr>
                                 @empty
                                     <tr><td colspan="5" class="text-muted">No submissions yet.</td></tr>
                                 @endforelse
