@@ -42,6 +42,7 @@
                             <th>Status</th>
                             <th>Submitted</th>
                             <th>Review</th>
+                            <th>Messages</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -67,7 +68,8 @@
                                     @if ($submission->status === 'pending')
                                         <form method="POST" action="{{ route('affiliates.social-submissions.review', $submission) }}" class="d-flex gap-1">
                                             @csrf @method('PUT')
-                                            <input type="text" name="admin_note" class="form-control form-control-sm" placeholder="Note (optional)" style="max-width: 150px">
+                                           
+                                            {{-- <input type="text" name="admin_note" class="form-control form-control-sm" placeholder="Note (optional)" style="max-width: 150px"> --}}
                                             <button type="submit" name="status" value="approved" class="btn btn-sm btn-success">Approve</button>
                                             <button type="submit" name="status" value="rejected" class="btn btn-sm btn-danger">Reject</button>
                                         </form>
@@ -76,6 +78,23 @@
                                             Reviewed {{ $submission->reviewed_at?->format('Y-m-d') }}
                                         </span>
                                     @endif
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                                        onclick="document.getElementById('thread-{{ $submission->id }}').classList.toggle('d-none')">
+                                        Messages
+                                        @if ($submission->unread_count > 0)
+                                            <span class="badge bg-danger">{{ $submission->unread_count }}</span>
+                                        @endif
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr id="thread-{{ $submission->id }}" class="d-none">
+                                <td colspan="7">
+                                    @include('admin.affiliates._message_thread', [
+                                        'submission' => $submission,
+                                        'sendRoute'  => route('affiliates.social-submissions.message', $submission),
+                                    ])
                                 </td>
                             </tr>
                         @endforeach

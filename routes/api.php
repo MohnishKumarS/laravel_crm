@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\ProductSelectionController;
-use App\Http\Controllers\Api\SocialSubmissionController;
+use App\Http\Controllers\Api\AffiliateStoreController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CampaignController;
 use App\Http\Controllers\Api\DashboardController;
@@ -9,7 +8,9 @@ use App\Http\Controllers\Api\DynamicPageController;
 use App\Http\Controllers\Api\FormApiController;
 use App\Http\Controllers\Api\HomeHeroController;
 use App\Http\Controllers\Api\PostApiController;
+use App\Http\Controllers\Api\ProductSelectionController;
 use App\Http\Controllers\Api\ReferralController;
+use App\Http\Controllers\Api\SocialSubmissionController;
 use App\Http\Controllers\Api\WebhookController;
 use App\Http\Controllers\VisitorController;
 use Illuminate\Http\Request;
@@ -76,7 +77,7 @@ Route::delete('products/{id}', [ProductSelectionController::class, 'destroy']);
 
 Route::get('social-submissions', [SocialSubmissionController::class, 'index']);
 Route::post('social-submissions', [SocialSubmissionController::class, 'store']);
-
+Route::get('affiliate-store/{code}', [AffiliateStoreController::class, 'show']);
 
 // Dynamic pages
 
