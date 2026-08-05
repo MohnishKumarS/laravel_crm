@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class EmailCampaignController extends Controller
 {
@@ -182,6 +183,7 @@ class EmailCampaignController extends Controller
                         'email' => $user->email,
                         'sender_email' => $validated['sender_email'],
                         'status' => 'queued',
+                        'tracking_token' => Str::uuid(),
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
@@ -211,6 +213,7 @@ class EmailCampaignController extends Controller
                         'email' => $seller->email,
                         'sender_email' => $validated['sender_email'],
                         'status' => 'queued',
+                        'tracking_token' => Str::uuid(),
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
@@ -262,6 +265,7 @@ class EmailCampaignController extends Controller
                         'email' => $email,
                         'sender_email' => $validated['sender_email'],
                         'status' => 'queued',
+                        'tracking_token' => Str::uuid(),
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
