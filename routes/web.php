@@ -1,12 +1,14 @@
 <?php
 
-
 use App\Http\Controllers\Affiliate\AffiliateCommissionController;
 use App\Http\Controllers\Affiliate\AffiliateController;
+use App\Http\Controllers\Affiliate\AffiliateKycController;
 use App\Http\Controllers\Affiliate\AffiliatePayoutController;
 use App\Http\Controllers\Affiliate\AffiliateSelfController;
 use App\Http\Controllers\Affiliate\AffiliateSettingController;
 use App\Http\Controllers\Affiliate\AffiliateSocialSubmissionController;
+use App\Http\Controllers\Affiliate\TrainingContentController;
+use App\Http\Controllers\Affiliate\TrainingProgressController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
@@ -29,7 +31,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
-
 
 // Route::get('/', function () {
 //     return view('admin.dashboard');
@@ -54,7 +55,7 @@ Route::get('/test-mail', function () {
     return 'Mail sent';
 });
 
-// ADMIN LOGIN 
+// ADMIN LOGIN
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'authenticate'])->name('login.submit');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -127,8 +128,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ->names('admin.home-hero')
         ->except(['show']);
 
-
-
     // ========================= MARKETPLACE SHOP
     Route::prefix('shop')->name('shop.')->group(function () {
         // DASHBOARD
@@ -139,22 +138,19 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::resource('dynamic-pages', DynamicPageController::class);
     });
 
-    // ========================== TOOL MAIL DYNAMICS 
+    // ========================== TOOL MAIL DYNAMICS
     Route::prefix('emails')->name('emails.')->group(function () {
         // Dynamic pages
         Route::resource('templates', EmailTemplateController::class);
         Route::resource('campaigns', EmailCampaignController::class);
 
-
         Route::get('recipients/users', [EmailCampaignController::class, 'users'])->name('recipients.users');
         Route::get('recipients/sellers', [EmailCampaignController::class, 'sellers'])->name('recipients.sellers');
 
         Route::post('campaigns/{campaign}/send', [EmailCampaignController::class, 'send'])->name('campaigns.send');
-        Route::post('campaigns/{campaign}/pause',[EmailCampaignController::class, 'pause'])->name('campaigns.pause');
+        Route::post('campaigns/{campaign}/pause', [EmailCampaignController::class, 'pause'])->name('campaigns.pause');
         Route::post('campaigns/{campaign}/retry', [EmailCampaignController::class, 'retry'])->name('campaigns.retry');
     });
-
-
 
     // ANALYTICS
     Route::get('analytics/shop', [shopAnalytics::class, 'shopVisitors'])->name('analytics.shop');
@@ -183,6 +179,25 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
             Route::post('payouts/create-batch', 'createBatch')->name('payouts.create-batch');
             Route::put('payouts/{payout}/mark-paid', 'markPaid')->name('payouts.mark-paid');
         });
+          Route::controller(AffiliateKycController::class)->group(function () {
+        Route::get('kyc', 'index')->name('kyc');
+        Route::put('kyc/{document}/review', 'review')->name('kyc.review');
+        Route::get('kyc/{document}/download', 'download')->name('kyc.download');
+    });
+    Route::controller(TrainingProgressController::class)->prefix('training-progress')->name('training-progress.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/{affiliate}', 'show')->name('show');
+});
+
+    Route::controller(TrainingContentController::class)->prefix('training')->name('training.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('lessons', 'storeLesson')->name('lessons.store');
+        Route::put('lessons/{lesson}/toggle', 'toggleLesson')->name('lessons.toggle');
+        Route::delete('lessons/{lesson}', 'destroyLesson')->name('lessons.destroy');
+        Route::post('questions', 'storeQuestion')->name('questions.store');
+        Route::put('questions/{question}/toggle', 'toggleQuestion')->name('questions.toggle');
+        Route::delete('questions/{question}', 'destroyQuestion')->name('questions.destroy');
+    });
 
         Route::controller(AffiliateController::class)->group(function () {
             Route::get('/', 'index')->name('index');
@@ -194,13 +209,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
             Route::put('/{affiliate}/reject', 'reject')->name('reject');
             Route::put('/{affiliate}/rate', 'updateRate')->name('rate');
         });
+      
     });
+   
 });
 
 // Route::resource('affiliates', AffiliateController::class)->only(['index', 'show']);
 // AFFILIATE MODULE
-
-
 
 // USER PROFILE
 Route::middleware(['auth', 'role:affiliate,admin'])->group(function () {
@@ -209,7 +224,6 @@ Route::middleware(['auth', 'role:affiliate,admin'])->group(function () {
     Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 });
 Route::resource('users', UserController::class)->except(['show']);
-
 
 // MARKETER ROLE
 // Route::middleware(['auth', 'role:marketer'])->prefix('marketer')->name('marketer.')->group(function () {
@@ -226,54 +240,50 @@ Route::middleware(['auth', 'role:seller'])
         Route::get('/', [TestController::class, 'sellerIndex'])->name('dashboard');
     });
 
-
 // AFFILIATE ROLE - DASHBAORD
 Route::middleware(['auth', 'role:affiliate'])->prefix('affiliate')->name('affiliate.')->group(function () {
     Route::controller(AffiliateSelfController::class)->group(function () {
 
         Route::get('/dashboard', 'dashboard')->name('dashboard');
 
-        Route::get('/commissions', 'commissions')->name('commissions');
+        Route::middleware('affiliate.onboarded')->group(function () {
+            Route::get('/products', 'products')->name('products');
+            Route::get('/payouts', 'payouts')->name('payouts');
+            Route::get('/commissions', 'commissions')->name('commissions');
+            Route::get('/products/browse', 'browseProducts')->name('products.browse');
+            Route::post('/products', 'storeProduct')->name('products.store');
+            Route::delete('/products/{id}', 'destroyProduct')->name('products.destroy');
 
-        Route::get('/payouts', 'payouts')->name('payouts');
-
-        Route::get('/products', 'products')->name('products');
-
-        Route::get('/products/browse', 'browseProducts')->name('products.browse');
-
-        Route::post('/products', 'storeProduct')->name('products.store');
-
-        Route::delete('/products/{id}', 'destroyProduct')->name('products.destroy');
-
-        Route::get('/social-submissions', 'socialSubmissions')->name('social-submissions');
-
-        Route::post('/social-submissions', 'storeSocialSubmission')->name('social-submissions.store');
-
-        Route::post('/social-submissions/{submission}/message', 'sendSubmissionMessage')
-            ->name('social-submissions.message');
+            Route::get('/social-submissions', 'socialSubmissions')->name('social-submissions');
+            Route::post('/social-submissions', 'storeSocialSubmission')->name('social-submissions.store');
+            Route::post('/social-submissions/{submission}/message', 'sendSubmissionMessage')
+                ->name('social-submissions.message');
+        });
     });
+
+    Route::get('/onboarding', [AffiliateSelfController::class, 'onboarding'])->name('onboarding');
+    Route::post('/kyc/upload', [AffiliateSelfController::class, 'uploadKyc'])->name('kyc.upload');
+    Route::get('/training', [AffiliateSelfController::class, 'training'])->name('training');
+    Route::get('/quiz', [AffiliateSelfController::class, 'quiz'])->name('quiz');
+    Route::post('/quiz', [AffiliateSelfController::class, 'submitQuiz'])->name('quiz.submit');
+    Route::post('/training/{lesson}/watched', [AffiliateSelfController::class, 'markLessonWatched'])
+    ->name('training.watched');
 });
-
-
-
-
 
 // MIGRATION
 Route::get('/migrate', function () {
 
     $exitCode = Artisan::call('migrate', ['--force' => true]);
-    Log::info('Migration process: ' . Artisan::output());
+    Log::info('Migration process: '.Artisan::output());
 
     return 'Migration completed successfully.';
 });
-
-
 
 Route::fallback(function () {
     return view('errors.404');
 });
 
-## cache clear
+// # cache clear
 Route::get('/clear', function () {
 
     Artisan::call('route:clear');
@@ -283,9 +293,8 @@ Route::get('/clear', function () {
     Artisan::call('config:cache');
     // Artisan::call('optimize');
 
-    return "All caches cleared successfully!..!";
+    return 'All caches cleared successfully!..!';
 });
-
 
 Route::get('/force-logout', function () {
     Auth::logout();

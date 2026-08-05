@@ -1,0 +1,8 @@
+[90m= [39m[34;4mApp\Models\Affiliate\TrainingLesson[39;24m {#8898
+    [34mtitle[39m: [32m"[39m[32mWelcome to the Affiliate Program[39m[32m"[39m,
+    [34mvideo_url[39m: [32m"[39m[32mhttps://www.youtube.com/embed/dQw4w9WgXcQ[39m[32m"[39m,
+    [34msort_order[39m: [35m1[39m,
+    [34mupdated_at[39m: [32m"[39m[32m2026-08-05 06:40:01[39m[32m"[39m,
+    [34mcreated_at[39m: [32m"[39m[32m2026-08-05 06:40:01[39m[32m"[39m,
+    [34mid[39m: [35m1[39m,
+  }

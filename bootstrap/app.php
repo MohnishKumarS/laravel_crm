@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureAffiliateOnboarded;
 use App\Http\Middleware\EnsureUserIsAffiliate;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Auth\AuthenticationException;
@@ -22,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
              'role' => RoleMiddleware::class,
             'affiliate.webhook.secret' => \App\Http\Middleware\VerifyAffiliateWebhookSecret::class,
             'affiliate.portal' => EnsureUserIsAffiliate::class,
+            'affiliate.onboarded'=>EnsureAffiliateOnboarded::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

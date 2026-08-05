@@ -187,108 +187,123 @@
                                           <span class="ms-5">Settings</span>
                                       </a>
                                   </li>
-                                  <li
-                                      class="nav-item {{ request()->routeIs('affiliates.social-submissions.*') ? 'active' : '' }}">
+                                  <li>
                                       <a href="{{ route('affiliates.social-submissions.index') }}">
-                                          <i class="fas fa-share-alt"></i>
-                                          <p>Social Submissions</p>
+
+                                          <span class="ms-5">Social Submissions</p>
                                       </a>
                                   </li>
-                              </ul>
-                          </div>
+                                   <li>
+                                      <a href="{{ route('affiliates.kyc') }}">
+                                          <span class="ms-5">kyc Review</span>
+                                      </a>
+
+                                  </li>
+                                  <li>
+                                      <a href="{{ route('affiliates.training.index') }}">
+                                          <span class="ms-5">Training Content</span>
+                                      </a>
+
+                                  </li>
+                                 <li>
+                                     <a href="{{ route('affiliates.training-progress.index') }}">
+                                         <span class="ms-5">Training Progress</span>
+                                     </a>
+                                 </li>
                       </li>
-                      <li class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
-                          <a data-bs-toggle="collapse" href="#users_list">
-                              <i class="fas fa-users"></i>
-                              <p>Users</p>
-                              <span class="caret"></span>
-                          </a>
-                          <div class="collapse  {{ request()->routeIs('users.*') ? 'show' : '' }}" id="users_list">
-                              <ul class="nav nav-collapse" style="list-style: none">
-                                  <li>
-                                      <a href="{{ route('users.create') }}">
-                                          <span class="ms-5">Add User</span>
-                                      </a>
-                                  </li>
-                                  <li>
-                                      <a href="{{ route('users.index') }}">
-                                          <span class="ms-5">View Users</span>
-                                      </a>
-                                  </li>
-                              </ul>
-                          </div>
-                      </li>
+                  </ul>
+              </div>
+              </li>
+              <li class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                  <a data-bs-toggle="collapse" href="#users_list">
+                      <i class="fas fa-users"></i>
+                      <p>Users</p>
+                      <span class="caret"></span>
+                  </a>
+                  <div class="collapse  {{ request()->routeIs('users.*') ? 'show' : '' }}" id="users_list">
+                      <ul class="nav nav-collapse" style="list-style: none">
+                          <li>
+                              <a href="{{ route('users.create') }}">
+                                  <span class="ms-5">Add User</span>
+                              </a>
+                          </li>
+                          <li>
+                              <a href="{{ route('users.index') }}">
+                                  <span class="ms-5">View Users</span>
+                              </a>
+                          </li>
+                      </ul>
+                  </div>
+              </li>
 
-                      <li class="nav-item {{ request()->routeIs('analytics.*') ? 'active' : '' }}">
-                          <a data-bs-toggle="collapse" href="#analytic_list">
-                              <i class="fas fa-chart-bar"></i>
-                              <p>Analytics</p>
-                              <span class="caret"></span>
-                          </a>
-                          <div class="collapse  {{ request()->routeIs('analytics.*') ? 'show' : '' }}"
-                              id="analytic_list">
-                              <ul class="nav nav-collapse" style="list-style: none">
-                                  <li>
-                                      <a href="{{ route('analytics.visitors') }}">
-                                          <span class="ms-5">Yuukke Visitors</span>
-                                      </a>
-                                  </li>
-                                  <li>
-                                      <a href="{{ route('analytics.shop') }}">
-                                          <span class="ms-5">Marketplace Visitors</span>
-                                      </a>
-                                  </li>
+              <li class="nav-item {{ request()->routeIs('analytics.*') ? 'active' : '' }}">
+                  <a data-bs-toggle="collapse" href="#analytic_list">
+                      <i class="fas fa-chart-bar"></i>
+                      <p>Analytics</p>
+                      <span class="caret"></span>
+                  </a>
+                  <div class="collapse  {{ request()->routeIs('analytics.*') ? 'show' : '' }}" id="analytic_list">
+                      <ul class="nav nav-collapse" style="list-style: none">
+                          <li>
+                              <a href="{{ route('analytics.visitors') }}">
+                                  <span class="ms-5">Yuukke Visitors</span>
+                              </a>
+                          </li>
+                          <li>
+                              <a href="{{ route('analytics.shop') }}">
+                                  <span class="ms-5">Marketplace Visitors</span>
+                              </a>
+                          </li>
 
 
 
-                              </ul>
+                      </ul>
 
-                          </div>
-                      </li>
-                      <li class="nav-item {{ request()->is('settings*') ? 'active' : '' }}">
-                          <a data-bs-toggle="collapse" href="#settings_list">
-                              <i class="fas fa-gear"></i>
-                              <p>Settings</p>
-                              <span class="caret"></span>
-                          </a>
-                          <div class="collapse  {{ request()->is('settings*') ? 'show' : '' }}" id="settings_list">
-                              <ul class="nav nav-collapse" style="list-style: none">
-                                  <li>
-                                      <a href="{{ route('settings') }}">
-                                          <span class="ms-5">View Setting</span>
-                                      </a>
-                                  </li>
-                              </ul>
-                          </div>
-                      </li>
+                  </div>
+              </li>
+              <li class="nav-item {{ request()->is('settings*') ? 'active' : '' }}">
+                  <a data-bs-toggle="collapse" href="#settings_list">
+                      <i class="fas fa-gear"></i>
+                      <p>Settings</p>
+                      <span class="caret"></span>
+                  </a>
+                  <div class="collapse  {{ request()->is('settings*') ? 'show' : '' }}" id="settings_list">
+                      <ul class="nav nav-collapse" style="list-style: none">
+                          <li>
+                              <a href="{{ route('settings') }}">
+                                  <span class="ms-5">View Setting</span>
+                              </a>
+                          </li>
+                      </ul>
+                  </div>
+              </li>
 
-                      <li class="nav-section">
-                          <span class="sidebar-mini-icon">
-                              <i class="fa fa-ellipsis-h"></i>
-                          </span>
-                          <h4 class="text-section">Shop</h4>
-                      </li>
-                      {{-- MARKETPLACE --}}
-                      <li class="nav-item submenu {{ request()->routeIs('shop.*') ? 'active' : '' }}">
-                          <a data-bs-toggle="collapse" href="#submenu" class="collapsed" aria-expanded="false">
-                              <i class="fas fa-store"></i>
-                              <p>Marketplace</p>
-                              <span class="caret"></span>
-                          </a>
-                          <div class="collapse {{ request()->routeIs('shop.*') ? 'show' : '' }}" id="submenu"
-                              style="">
-                              <ul class="nav nav-collapse">
-                                  <li>
-                                      <a href="{{ route('shop.home') }}">
-                                          <span class="sub-item">Dashboard</span>
-                                      </a>
-                                  </li>
-                                  <li>
-                                      <a href="{{ route('shop.dynamic-pages.index') }}">
-                                          <span class="sub-item">Dynamic Page</span>
-                                      </a>
-                                  </li>
-                                  {{-- <li class="submenu">
+              <li class="nav-section">
+                  <span class="sidebar-mini-icon">
+                      <i class="fa fa-ellipsis-h"></i>
+                  </span>
+                  <h4 class="text-section">Shop</h4>
+              </li>
+              {{-- MARKETPLACE --}}
+              <li class="nav-item submenu {{ request()->routeIs('shop.*') ? 'active' : '' }}">
+                  <a data-bs-toggle="collapse" href="#submenu" class="collapsed" aria-expanded="false">
+                      <i class="fas fa-store"></i>
+                      <p>Marketplace</p>
+                      <span class="caret"></span>
+                  </a>
+                  <div class="collapse {{ request()->routeIs('shop.*') ? 'show' : '' }}" id="submenu" style="">
+                      <ul class="nav nav-collapse">
+                          <li>
+                              <a href="{{ route('shop.home') }}">
+                                  <span class="sub-item">Dashboard</span>
+                              </a>
+                          </li>
+                          <li>
+                              <a href="{{ route('shop.dynamic-pages.index') }}">
+                                  <span class="sub-item">Dynamic Page</span>
+                              </a>
+                          </li>
+                          {{-- <li class="submenu">
                                   <a data-bs-toggle="collapse" href="#subnav1" class="collapsed"
                                       aria-expanded="false">
                                       <span class="sub-item">Level 1</span>
@@ -311,47 +326,47 @@
                               </li> --}}
 
 
-                              </ul>
-                          </div>
-                      </li>
+                      </ul>
+                  </div>
+              </li>
 
 
-                      <li class="nav-section">
-                          <span class="sidebar-mini-icon">
-                              <i class="fa fa-ellipsis-h"></i>
-                          </span>
-                          <h4 class="text-section">Tool</h4>
-                      </li>
-                      {{-- Mail Dynamics --}}
-                      <li class="nav-item submenu {{ request()->routeIs('emails.*') ? 'active' : '' }}">
-                          <a data-bs-toggle="collapse" href="#mailmenu" class="collapsed" aria-expanded="false">
-                              <i class="fas fa-paper-plane"></i>
-                              <p>Mail Dynamics</p>
-                              <span class="caret"></span>
-                          </a>
-                          <div class="collapse {{ request()->routeIs('emails.*') ? 'show' : '' }}" id="mailmenu"
-                              style="">
-                              <ul class="nav nav-collapse">
-                                  <li>
-                                      <a href="{{ route('emails.templates.index') }}">
-                                          <span class="sub-item">Templates</span>
-                                      </a>
-                                  </li>
-                                  <li>
-                                      <a href="{{ route('emails.campaigns.index') }}">
-                                          <span class="sub-item">Campaign</span>
-                                      </a>
-                                  </li>
+              <li class="nav-section">
+                  <span class="sidebar-mini-icon">
+                      <i class="fa fa-ellipsis-h"></i>
+                  </span>
+                  <h4 class="text-section">Tool</h4>
+              </li>
+              {{-- Mail Dynamics --}}
+              <li class="nav-item submenu {{ request()->routeIs('emails.*') ? 'active' : '' }}">
+                  <a data-bs-toggle="collapse" href="#mailmenu" class="collapsed" aria-expanded="false">
+                      <i class="fas fa-paper-plane"></i>
+                      <p>Mail Dynamics</p>
+                      <span class="caret"></span>
+                  </a>
+                  <div class="collapse {{ request()->routeIs('emails.*') ? 'show' : '' }}" id="mailmenu"
+                      style="">
+                      <ul class="nav nav-collapse">
+                          <li>
+                              <a href="{{ route('emails.templates.index') }}">
+                                  <span class="sub-item">Templates</span>
+                              </a>
+                          </li>
+                          <li>
+                              <a href="{{ route('emails.campaigns.index') }}">
+                                  <span class="sub-item">Campaign</span>
+                              </a>
+                          </li>
 
 
-                              </ul>
-                          </div>
-                      </li>
+                      </ul>
+                  </div>
+              </li>
 
 
 
 
-                      {{-- @role(['admin'])
+              {{-- @role(['admin'])
                       <h1>Welcome Admin</h1>
                        @else
                        <h1>Welocme</h1>
@@ -362,23 +377,23 @@
 
 
 
-                  </ul>
-              </div>
+              </ul>
           </div>
-      @endrole()
+      </div>
+  @endrole()
 
-      {{-- AFFILIATE ROLE --}}
-      @role('affiliate')
-          <div class="sidebar-wrapper scrollbar scrollbar-inner">
-              <div class="sidebar-content">
-                  <ul class="nav nav-secondary">
-                      <li class="nav-item active">
-                          <a href="{{ route('affiliate.dashboard') }}">
-                              <i class="fas fa-home"></i>
-                              <p>Dashboard</p>
-                              {{-- <span class="caret"></span> --}}
-                          </a>
-                          {{-- <div class="collapse" id="dashboard">
+  {{-- AFFILIATE ROLE --}}
+  @role('affiliate')
+      <div class="sidebar-wrapper scrollbar scrollbar-inner">
+          <div class="sidebar-content">
+              <ul class="nav nav-secondary">
+                  <li class="nav-item active">
+                      <a href="{{ route('affiliate.dashboard') }}">
+                          <i class="fas fa-home"></i>
+                          <p>Dashboard</p>
+                          {{-- <span class="caret"></span> --}}
+                      </a>
+                      {{-- <div class="collapse" id="dashboard">
                                 <ul class="nav nav-collapse">
                                     <li>
                                         <a href="../demo1/index.html">
@@ -387,51 +402,51 @@
                                     </li>
                                 </ul>
                             </div> --}}
-                      </li>
+                  </li>
 
 
-                      <li class="nav-section">
-                          <span class="sidebar-mini-icon">
-                              <i class="fa fa-ellipsis-h"></i>
-                          </span>
-                          <h4 class="text-section">Components</h4>
-                      </li>
+                  <li class="nav-section">
+                      <span class="sidebar-mini-icon">
+                          <i class="fa fa-ellipsis-h"></i>
+                      </span>
+                      <h4 class="text-section">Components</h4>
+                  </li>
 
-                      {{-- AFFILIATE-ONLY MENU --}}
-                      {{-- <li class="nav-item {{ request()->routeIs('affiliate.dashboard') ? 'active' : '' }}">
+                  {{-- AFFILIATE-ONLY MENU --}}
+                  {{-- <li class="nav-item {{ request()->routeIs('affiliate.dashboard') ? 'active' : '' }}">
                           <a href="{{ route('affiliate.dashboard') }}"><i class="fas fa-tachometer-alt"></i>
                               <p>My Dashboard</p>
                           </a>
                       </li> --}}
-                      <li class="nav-item {{ request()->routeIs('affiliate.commissions') ? 'active' : '' }}">
-                          <a href="{{ route('affiliate.commissions') }}"><i class="fas fa-money-bill"></i>
-                              <p>My Commissions</p>
-                          </a>
-                      </li>
-                      <li class="nav-item {{ request()->routeIs('affiliate.payouts') ? 'active' : '' }}">
-                          <a href="{{ route('affiliate.payouts') }}"><i class="fas fa-hand-holding-usd"></i>
-                              <p>My Payouts</p>
-                          </a>
-                      </li>
-                      <li class="nav-item {{ request()->routeIs('affiliate.products*') ? 'active' : '' }}">
-                          <a href="{{ route('affiliate.products') }}">
-                              <i class="fas fa-box"></i>
-                              <p>My Products</p>
-                          </a>
-                      </li>
-                      <li class="nav-item {{ request()->routeIs('affiliate.social-submissions') ? 'active' : '' }}">
-                          <a href="{{ route('affiliate.social-submissions') }}">
-                              <i class="fas fa-share-alt"></i>
-                              <p>Social Submissions</p>
-                          </a>
-                      </li>
-                      {{-- Add inside your existing admin sidebar, near the other affiliates.* links --}}
+                  <li class="nav-item {{ request()->routeIs('affiliate.commissions') ? 'active' : '' }}">
+                      <a href="{{ route('affiliate.commissions') }}"><i class="fas fa-money-bill"></i>
+                          <p>My Commissions</p>
+                      </a>
+                  </li>
+                  <li class="nav-item {{ request()->routeIs('affiliate.payouts') ? 'active' : '' }}">
+                      <a href="{{ route('affiliate.payouts') }}"><i class="fas fa-hand-holding-usd"></i>
+                          <p>My Payouts</p>
+                      </a>
+                  </li>
+                  <li class="nav-item {{ request()->routeIs('affiliate.products*') ? 'active' : '' }}">
+                      <a href="{{ route('affiliate.products') }}">
+                          <i class="fas fa-box"></i>
+                          <p>My Products</p>
+                      </a>
+                  </li>
+                  <li class="nav-item {{ request()->routeIs('affiliate.social-submissions') ? 'active' : '' }}">
+                      <a href="{{ route('affiliate.social-submissions') }}">
+                          <i class="fas fa-share-alt"></i>
+                          <p>Social Submissions</p>
+                      </a>
+                  </li>
+                  {{-- Add inside your existing admin sidebar, near the other affiliates.* links --}}
 
 
 
-                  </ul>
-              </div>
+              </ul>
           </div>
-      @endrole
+      </div>
+  @endrole
   </div>
   <!-- End Sidebar -->

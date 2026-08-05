@@ -19,6 +19,62 @@
     @endif
 
     <div class="row">
+        <div class="card mt-3">
+    <div class="card-header"><div class="card-title">Training Progress</div></div>
+    <div class="card-body">
+        <h6>Lessons Watched</h6>
+        <ul class="list-unstyled">
+            @foreach ($allLessons as $lesson)
+                <li>
+                    @if ($affiliate->lessonProgress->firstWhere('lesson_id', $lesson->id))
+                        ✅ {{ $lesson->title }}
+                        <small class="text-muted">
+                            ({{ $affiliate->lessonProgress->firstWhere('lesson_id', $lesson->id)->watched_at->format('Y-m-d H:i') }})
+                        </small>
+                    @else
+                        ⬜ {{ $lesson->title }} <small class="text-muted">(not watched)</small>
+                    @endif
+                </li>
+            @endforeach
+        </ul>
+
+        <hr>
+
+        <h6>Quiz Attempts</h6>
+        @forelse ($affiliate->quizAttempts as $attempt)
+            <div class="border rounded p-2 mb-2">
+                <p class="mb-1">
+                    <strong>{{ $attempt->score }}/{{ $attempt->total_questions }}</strong>
+                    <span class="badge badge-{{ $attempt->passed ? 'success' : 'danger' }}">
+                        {{ $attempt->passed ? 'Passed' : 'Failed' }}
+                    </span>
+                    <small class="text-muted">— {{ $attempt->attempted_at->format('Y-m-d H:i') }}</small>
+                </p>
+
+                @if ($attempt->answers)
+                    <table class="table table-sm mb-0">
+                        <thead><tr><th>Question</th><th>Answered</th><th>Correct</th><th></th></tr></thead>
+                        <tbody>
+                            @foreach ($attempt->answers as $questionId => $selected)
+                                @php $q = $allQuestions->get($questionId); @endphp
+                                @if ($q)
+                                    <tr>
+                                        <td>{{ $q->question }}</td>
+                                        <td>{{ $q->{"option_$selected"} ?? $selected }}</td>
+                                        <td>{{ $q->{"option_{$q->correct_option}"} }}</td>
+                                        <td>{{ $selected === $q->correct_option ? '✅' : '❌' }}</td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
+            </div>
+        @empty
+            <p class="text-muted">No quiz attempts yet.</p>
+        @endforelse
+    </div>
+</div>
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header"><div class="card-title">Overview</div></div>

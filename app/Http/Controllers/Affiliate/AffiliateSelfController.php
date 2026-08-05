@@ -3,13 +3,19 @@
 namespace App\Http\Controllers\Affiliate;
 
 use App\Http\Controllers\Controller;
+use App\Models\Affiliate\AffiliateKycDocument;
+use App\Models\Affiliate\AffiliateLessonProgress;
+use App\Models\Affiliate\AffiliateQuizAttempt;
 use App\Models\Affiliate\AffiliateSelectedProduct;
 use App\Models\Affiliate\AffiliateSocialSubmission;
 use App\Models\Affiliate\AffiliateSubmissionMessage;
+use App\Models\Affiliate\TrainingLesson;
+use App\Models\Affiliate\TrainingQuestion;
 use App\Models\Marketplace\Product;
 use App\Models\User;
 use App\Notifications\NewAffiliateSubmissionMessage;
 use DB;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 
 /**
@@ -173,5 +179,120 @@ public function socialSubmissions(Request $request)
         ->update(['read_at' => now()]);
 
     return view('admin.affiliate-portal.social-submissions', compact('affiliate', 'submissions', 'products'));
+}
+public function onboarding(Request $request)
+{
+    $affiliate = $request->user()->affiliate;
+    $kycDocuments = $affiliate->kycDocuments()->latest()->get();
+    $latestAttempt = $affiliate->quizAttempts()->latest('attempted_at')->first();
+
+    return view('admin.affiliate-portal.onboarding', compact('affiliate', 'kycDocuments', 'latestAttempt'));
+}
+
+public function uploadKyc(Request $request)
+{
+    $affiliate = $request->user()->affiliate;
+
+    // Block resubmission while a document is already pending review
+    if ($affiliate->kyc_status === 'pending') {
+        return back()->with('error', 'You already have a document under review. Please wait for admin review before submitting another.');
+    }
+
+    // Block resubmission if already approved
+    if ($affiliate->kyc_status === 'approved') {
+        return back()->with('error', 'Your KYC is already approved.');
+    }
+
+    $request->validate([
+        'document_type' => ['required', 'in:id_proof,address_proof,other'],
+        'file'          => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
+    ]);
+
+    $path = $request->file('file')->store('kyc-documents/' . $affiliate->id, 'private');
+
+    AffiliateKycDocument::create([
+        'affiliate_id'  => $affiliate->id,
+        'document_type' => $request->document_type,
+        'file_path'     => $path,
+        'status'        => 'pending',
+    ]);
+
+    $affiliate->update([
+        'kyc_status'       => 'pending',
+        'kyc_submitted_at' => now(),
+    ]);
+
+    return back()->with('success', 'Document uploaded and submitted for review.');
+}
+
+public function training(Request $request)
+{
+    $affiliate = $request->user()->affiliate;
+    $lessons = TrainingLesson::where('is_active', true)->orderBy('sort_order')->get();
+    $watchedLessonIds = $affiliate->lessonProgress()->pluck('lesson_id')->toArray();
+
+    return view('admin.affiliate-portal.training', compact('affiliate', 'lessons', 'watchedLessonIds'));
+}
+
+public function quiz(Request $request)
+{
+    $affiliate = $request->user()->affiliate;
+    $questions = TrainingQuestion::where('is_active', true)->inRandomOrder()->get();
+
+    return view('admin.affiliate-portal.quiz', compact('affiliate', 'questions'));
+}
+
+public function submitQuiz(Request $request)
+{
+    $affiliate = $request->user()->affiliate;
+
+    $questions = TrainingQuestion::where('is_active', true)->get();
+    $answers = $request->input('answers', []);
+
+    $score = 0;
+    foreach ($questions as $q) {
+        if (($answers[$q->id] ?? null) === $q->correct_option) {
+            $score++;
+        }
+    }
+
+    $total = $questions->count();
+    $passPercent = 70;
+    $passed = $total > 0 && (($score / $total) * 100) >= $passPercent;
+
+    AffiliateQuizAttempt::create([
+        'affiliate_id'     => $affiliate->id,
+        'score'            => $score,
+        'total_questions'  => $total,
+        'passed'           => $passed,
+        'answers'          => $answers, // NEW - stored for admin review
+        'attempted_at'     => now(),
+    ]);
+
+    if ($passed) {
+        $affiliate->update(['training_completed_at' => now()]);
+    }
+
+    return redirect()->route('affiliate.onboarding')->with(
+        $passed ? 'success' : 'error',
+        $passed
+            ? "You passed! Score: {$score}/{$total}."
+            : "You scored {$score}/{$total} — need {$passPercent}% to pass. Review the training and try again."
+    );
+}
+public function markLessonWatched(Request $request, int $lessonId)
+{
+    $affiliate = $request->user()->affiliate;
+
+    AffiliateLessonProgress::firstOrCreate(
+        ['affiliate_id' => $affiliate->id, 'lesson_id' => $lessonId],
+        ['watched_at' => now()]
+    );
+
+    return back()->with('success', 'Marked as watched.');
+}
+ public function lessonProgress(): HasMany
+ {
+      return $this->hasMany(AffiliateLessonProgress::class);
 }
 }

@@ -18,6 +18,7 @@ class Affiliate extends Model
         'user_id', 'affiliate_code', 'slug', 'commission_rate',
         'status', 'paypal_email', 'payout_notes',
         'lifetime_earnings', 'lifetime_paid', 'approved_at',
+        'kyc_status', 'kyc_submitted_at', 'kyc_reviewed_at', 'training_completed_at'
     ];
 
     protected $casts = [
@@ -26,6 +27,7 @@ class Affiliate extends Model
         'lifetime_paid'     => 'decimal:2',
         'approved_at'       => 'datetime',
         'payout_notes'      => 'encrypted',
+        'training_completed_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
@@ -89,5 +91,36 @@ class Affiliate extends Model
     $frontend = rtrim(config('app.frontend_url', config('app.url')), '/');
 
     return "{$frontend}/partner-store/{$this->affiliate_code}";
+}
+public function kycDocuments(): HasMany
+{
+    return $this->hasMany(AffiliateKycDocument::class);
+}
+
+public function quizAttempts(): HasMany
+{
+    return $this->hasMany(AffiliateQuizAttempt::class);
+}
+
+public function isKycApproved(): bool
+{
+    return $this->kyc_status === 'approved';
+}
+
+public function isTrainingCompleted(): bool
+{
+    return !is_null($this->training_completed_at);
+}
+
+// Gate used by the EnsureAffiliateOnboarded middleware. Change this
+// single method if you ever want to loosen/tighten what counts as
+// "fully onboarded" - everything else reads through this one place.
+public function isFullyOnboarded(): bool
+{
+    return $this->isApproved() && $this->isKycApproved() && $this->isTrainingCompleted();
+}
+public function lessonProgress(): HasMany
+{
+    return $this->hasMany(AffiliateLessonProgress::class);
 }
 }

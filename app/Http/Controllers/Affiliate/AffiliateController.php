@@ -27,11 +27,19 @@ class AffiliateController extends Controller
         return view('admin.affiliates.index', compact('affiliates'));
     }
 
-    public function show(Affiliate $affiliate)
+     public function show(Affiliate $affiliate)
     {
-        $affiliate->load(['commissions.order', 'payouts', 'clicks' => fn($q) => $q->latest()->limit(50)]);
+        $affiliate->load([
+            'commissions.order', 'payouts',
+            'clicks' => fn ($q) => $q->latest()->limit(50),
+            'quizAttempts' => fn ($q) => $q->latest('attempted_at'),
+            'lessonProgress.lesson',
+        ]);
 
-        return view('admin.affiliates.show', compact('affiliate'));
+        $allLessons = \App\Models\Affiliate\TrainingLesson::where('is_active', true)->orderBy('sort_order')->get();
+        $allQuestions = \App\Models\Affiliate\TrainingQuestion::where('is_active', true)->get()->keyBy('id');
+
+        return view('admin.affiliates.show', compact('affiliate', 'allLessons', 'allQuestions'));
     }
 
     public function approve(Affiliate $affiliate)
@@ -127,4 +135,5 @@ class AffiliateController extends Controller
 
         return $code;
     }
+    
 }
