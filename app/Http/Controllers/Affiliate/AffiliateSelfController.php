@@ -102,6 +102,7 @@ public function storeProduct(Request $request)
             'product_name'  => $product->name ?? null,
             'product_image' => $product->image ?? null, // filename only, prefix applied at display time
             'product_price' => $product->price ?? null,
+            'product_slug' => $product->slug ?? null,
         ]
     );
 

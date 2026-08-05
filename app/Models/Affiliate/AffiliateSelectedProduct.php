@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class AffiliateSelectedProduct extends Model
 {
     protected $fillable = [
-        'affiliate_id', 'product_id', 'product_name', 'product_image', 'product_price',
+        'affiliate_id', 'product_id', 'product_name', 'product_image', 'product_price','product_slug'
     ];
 
     protected $casts = [
@@ -31,6 +31,6 @@ class AffiliateSelectedProduct extends Model
         $affiliate = $this->affiliate;
         $frontend = rtrim(config('app.frontend_url', config('app.url')), '/');
 
-        return "{$frontend}/promo/{$this->product_id}?ref={$affiliate->affiliate_code}";
+        return "{$frontend}/promo/{$this->product_slug}?ref={$affiliate->affiliate_code}";
     }
 }

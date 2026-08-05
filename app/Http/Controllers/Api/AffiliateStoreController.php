@@ -47,6 +47,7 @@ class AffiliateStoreController extends Controller
                 'start_date'    => $product?->start_date,
                 'end_date'      => $product?->end_date,
                 'offers'        => $product?->offers,
+                'slug'          => $product?->slug,
 
                 'variants'      => $product?->productVariant,
             ];
