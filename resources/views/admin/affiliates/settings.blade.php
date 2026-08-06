@@ -1,10 +1,10 @@
 @extends('admin.layouts.main')
 
-@section('title', 'Affiliate Settings | Yuukke Dashboard')
+@section('title', 'Partner Settings | Yuukke Dashboard')
 
 @section('content')
     <div class="page-header">
-        <h3 class="fw-bold mb-3">Affiliate Settings</h3>
+        <h3 class="fw-bold mb-3">Partner Settings</h3>
         <ul class="breadcrumbs mb-3">
             <li class="nav-home">
                 <a href="{{ route('dashboard') }}">
@@ -15,7 +15,7 @@
                 <i class="icon-arrow-right"></i>
             </li>
             <li class="nav-item">
-                <a href="{{ route('affiliates.index') }}">Affiliate Program</a>
+                <a href="{{ route('affiliates.index') }}">Partner Program</a>
             </li>
             <li class="separator">
                 <i class="icon-arrow-right"></i>

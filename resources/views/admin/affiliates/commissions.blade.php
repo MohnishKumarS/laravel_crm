@@ -1,14 +1,14 @@
 @extends('admin.layouts.main')
 
-@section('title', 'Affiliate Commissions | Yuukke Dashboard')
+@section('title', 'Partner Commissions | Yuukke Dashboard')
 
 @section('content')
     <div class="page-header">
-        <h3 class="fw-bold mb-3">Affiliate Commissions</h3>
+        <h3 class="fw-bold mb-3">Partner Commissions</h3>
         <ul class="breadcrumbs mb-3">
             <li class="nav-home"><a href="{{ route('dashboard') }}"><i class="icon-home"></i></a></li>
             <li class="separator"><i class="icon-arrow-right"></i></li>
-            <li class="nav-item"><a href="{{ route('affiliates.index') }}">Affiliate Program</a></li>
+            <li class="nav-item"><a href="{{ route('affiliates.index') }}">Partner Program</a></li>
             <li class="separator"><i class="icon-arrow-right"></i></li>
             <li class="nav-item"><a href="#">Commissions</a></li>
         </ul>
@@ -31,7 +31,7 @@
                                 <thead>
                                     <tr>
                                         <th><input type="checkbox" onclick="document.querySelectorAll('.row-check').forEach(c => c.checked = this.checked)"></th>
-                                        <th>Affiliate</th>
+                                        <th>Partner</th>
                                         <th>Order Ref</th>
                                         <th>Order Date</th>
                                         <th>Customer</th>

@@ -1,14 +1,14 @@
 @extends('admin.layouts.main')
 
-@section('title', 'Affiliate Payouts | Yuukke Dashboard')
+@section('title', 'Partner Payouts | Yuukke Dashboard')
 
 @section('content')
     <div class="page-header">
-        <h3 class="fw-bold mb-3">Affiliate Payouts</h3>
+        <h3 class="fw-bold mb-3">Partner Payouts</h3>
         <ul class="breadcrumbs mb-3">
             <li class="nav-home"><a href="{{ route('dashboard') }}"><i class="icon-home"></i></a></li>
             <li class="separator"><i class="icon-arrow-right"></i></li>
-            <li class="nav-item"><a href="{{ route('affiliates.index') }}">Affiliate Program</a></li>
+            <li class="nav-item"><a href="{{ route('affiliates.index') }}">Partner Program</a></li>
             <li class="separator"><i class="icon-arrow-right"></i></li>
             <li class="nav-item"><a href="#">Payouts</a></li>
         </ul>

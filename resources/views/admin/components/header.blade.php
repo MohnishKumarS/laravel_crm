@@ -47,7 +47,7 @@
                         </form>
                     </ul>
                 </li>
-                {{-- <li class="nav-item topbar-icon dropdown hidden-caret">
+                <li class="nav-item topbar-icon dropdown hidden-caret">
                     <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-envelope"></i>
@@ -115,7 +115,7 @@
                             </a>
                         </li>
                     </ul>
-                </li> --}}
+                </li>
                 <li class="nav-item topbar-icon dropdown hidden-caret">
                     <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

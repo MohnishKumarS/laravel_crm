@@ -8,18 +8,18 @@
         <ul class="breadcrumbs mb-3">
             <li class="nav-home"><a href="{{ route('dashboard') }}"><i class="icon-home"></i></a></li>
             <li class="separator"><i class="icon-arrow-right"></i></li>
-            <li class="nav-item"><a href="{{ route('affiliates.index') }}">Affiliate Program</a></li>
+            <li class="nav-item"><a href="{{ route('affiliates.index') }}">Partner Program</a></li>
             <li class="separator"><i class="icon-arrow-right"></i></li>
             <li class="nav-item"><a href="#">Training Progress</a></li>
         </ul>
     </div>
 
     <div class="card">
-        <div class="card-header"><div class="card-title">All Affiliates — Training Overview</div></div>
+        <div class="card-header"><div class="card-title">All Partner — Training Overview</div></div>
         <div class="card-body">
             <form method="GET" class="d-flex align-items-center gap-2 mb-3">
                 <select name="status" class="form-control" style="max-width: 200px" onchange="this.form.submit()">
-                    <option value="">All affiliates</option>
+                    <option value="">All partner</option>
                     <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>Training completed</option>
                     <option value="not_completed" {{ request('status') === 'not_completed' ? 'selected' : '' }}>Not completed</option>
                 </select>
@@ -29,7 +29,7 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Affiliate</th>
+                            <th>Partner</th>
                             <th>Lessons Watched</th>
                             <th>Latest Quiz Score</th>
                             <th>Training Status</th>

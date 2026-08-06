@@ -161,7 +161,7 @@
                       <li class="nav-item {{ request()->routeIs('affiliates.*') ? 'active' : '' }}">
                           <a data-bs-toggle="collapse" href="#affiliate_program_list">
                               <i class="fas fa-handshake"></i>
-                              <p>Affiliate Program</p>
+                              <p>Partner Program</p>
                               <span class="caret"></span>
                           </a>
                           <div class="collapse {{ request()->routeIs('affiliates.*') ? 'show' : '' }}"
@@ -169,7 +169,7 @@
                               <ul class="nav nav-collapse" style="list-style: none">
                                   <li>
                                       <a href="{{ route('affiliates.index') }}">
-                                          <span class="ms-5">All Affiliates</span>
+                                          <span class="ms-5">All Partners</span>
                                       </a>
                                   </li>
                                   <li>
@@ -182,20 +182,16 @@
                                           <span class="ms-5">Payouts</span>
                                       </a>
                                   </li>
-                                  <li>
-                                      <a href="{{ route('affiliates.settings.edit') }}">
-                                          <span class="ms-5">Settings</span>
-                                      </a>
-                                  </li>
+
                                   <li>
                                       <a href="{{ route('affiliates.social-submissions.index') }}">
 
                                           <span class="ms-5">Social Submissions</p>
                                       </a>
                                   </li>
-                                   <li>
+                                  <li>
                                       <a href="{{ route('affiliates.kyc') }}">
-                                          <span class="ms-5">kyc Review</span>
+                                          <span class="ms-5">KYC Review</span>
                                       </a>
 
                                   </li>
@@ -205,11 +201,16 @@
                                       </a>
 
                                   </li>
-                                 <li>
-                                     <a href="{{ route('affiliates.training-progress.index') }}">
-                                         <span class="ms-5">Training Progress</span>
-                                     </a>
-                                 </li>
+                                  <li>
+                                      <a href="{{ route('affiliates.training-progress.index') }}">
+                                          <span class="ms-5">Training Progress</span>
+                                      </a>
+                                  </li>
+                                  <li>
+                                      <a href="{{ route('affiliates.settings.edit') }}">
+                                          <span class="ms-5">Settings</span>
+                                      </a>
+                                  </li>
                       </li>
                   </ul>
               </div>

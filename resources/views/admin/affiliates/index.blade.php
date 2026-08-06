@@ -1,10 +1,10 @@
 @extends('admin.layouts.main')
 
-@section('title', 'Affiliates | Yuukke Dashboard')
+@section('title', 'Partners | Yuukke Dashboard')
 
 @section('content')
     <div class="page-header">
-        <h3 class="fw-bold mb-3">Affiliates</h3>
+        <h3 class="fw-bold mb-3">Partners</h3>
         <ul class="breadcrumbs mb-3">
             <li class="nav-home">
                 <a href="{{ route('dashboard') }}">
@@ -15,7 +15,7 @@
                 <i class="icon-arrow-right"></i>
             </li>
             <li class="nav-item">
-                <a href="#">Affiliate Program</a>
+                <a href="#">Partner Program</a>
             </li>
         </ul>
     </div>
@@ -24,9 +24,9 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
-                    <div class="card-title mb-0">All Affiliates</div>
+                    <div class="card-title mb-0">All Partners</div>
                     <div class="d-flex gap-2">
-                        <a href="{{ route('affiliates.create') }}" class="btn btn-primary btn-sm">Add Affiliate</a>
+                        <a href="{{ route('affiliates.create') }}" class="btn btn-primary btn-sm">Add Partner</a>
                         <a href="{{ route('affiliates.commissions') }}" class="btn btn-outline-secondary btn-sm">Commissions</a>
                         <a href="{{ route('affiliates.payouts') }}" class="btn btn-outline-secondary btn-sm">Payouts</a>
                         <a href="{{ route('affiliates.settings.edit') }}" class="btn btn-outline-secondary btn-sm">Settings</a>

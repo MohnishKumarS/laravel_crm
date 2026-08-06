@@ -8,7 +8,7 @@
         <ul class="breadcrumbs mb-3">
             <li class="nav-home"><a href="{{ route('dashboard') }}"><i class="icon-home"></i></a></li>
             <li class="separator"><i class="icon-arrow-right"></i></li>
-            <li class="nav-item"><a href="{{ route('affiliates.index') }}">Affiliate Program</a></li>
+            <li class="nav-item"><a href="{{ route('affiliates.index') }}">Partner Program</a></li>
             <li class="separator"><i class="icon-arrow-right"></i></li>
             <li class="nav-item"><a href="{{ route('affiliates.training-progress.index') }}">Training Progress</a></li>
             <li class="separator"><i class="icon-arrow-right"></i></li>

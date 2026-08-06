@@ -1,6 +1,6 @@
 @extends('admin.layouts.main')
 
-@section('title', 'Add Affiliate | Yuukke Dashboard')
+@section('title', 'Add Partner | Yuukke Dashboard')
 
 @section('content')
 @if ($errors->any())
@@ -13,11 +13,11 @@
     </div>
 @endif
     <div class="page-header">
-        <h3 class="fw-bold mb-3">Add Affiliate</h3>
+        <h3 class="fw-bold mb-3">Add Partner</h3>
         <ul class="breadcrumbs mb-3">
             <li class="nav-home"><a href="{{ route('dashboard') }}"><i class="icon-home"></i></a></li>
             <li class="separator"><i class="icon-arrow-right"></i></li>
-            <li class="nav-item"><a href="{{ route('affiliates.index') }}">Affiliate Program</a></li>
+            <li class="nav-item"><a href="{{ route('affiliates.index') }}">Partner Program</a></li>
             <li class="separator"><i class="icon-arrow-right"></i></li>
             <li class="nav-item"><a href="#">Add</a></li>
         </ul>
@@ -26,7 +26,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header"><div class="card-title">Create Affiliate Account</div></div>
+                <div class="card-header"><div class="card-title">Create Partner Account</div></div>
                 <div class="card-body">
                     @if (session('success'))
                         <h5 class="alert alert-success">{{ session('success') }}</h5>
@@ -105,7 +105,7 @@
                         </div> --}}
 
                         <div class="card-action mt-3">
-                            <button type="submit" class="btn btn-success">Create Affiliate</button>
+                            <button type="submit" class="btn btn-success">Create Partner</button>
                         </div>
                     </form>
                 </div>

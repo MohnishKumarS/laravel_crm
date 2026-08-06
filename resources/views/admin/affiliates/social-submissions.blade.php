@@ -1,6 +1,6 @@
 @extends('admin.layouts.main')
 
-@section('title', 'Affiliate Social Submissions | Yuukke Dashboard')
+@section('title', 'Partner Social Submissions | Yuukke Dashboard')
 
 @section('content')
     <div class="page-header">
@@ -8,7 +8,7 @@
         <ul class="breadcrumbs mb-3">
             <li class="nav-home"><a href="{{ route('dashboard') }}"><i class="icon-home"></i></a></li>
             <li class="separator"><i class="icon-arrow-right"></i></li>
-            <li class="nav-item"><a href="{{ route('affiliates.index') }}">Affiliate Program</a></li>
+            <li class="nav-item"><a href="{{ route('affiliates.index') }}">Partner Program</a></li>
             <li class="separator"><i class="icon-arrow-right"></i></li>
             <li class="nav-item"><a href="#">Social Submissions</a></li>
         </ul>
@@ -36,7 +36,7 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Affiliate</th>
+                            <th>Partner</th>
                             <th>Platform</th>
                             <th>Post Link</th>
                             <th>Status</th>

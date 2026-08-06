@@ -1,6 +1,6 @@
 @extends('admin.layouts.main')
 
-@section('title', 'Affiliate Detail | Yuukke Dashboard')
+@section('title', 'Partner Detail | Yuukke Dashboard')
 
 @section('content')
     <div class="page-header">

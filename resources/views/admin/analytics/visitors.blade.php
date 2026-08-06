@@ -82,102 +82,13 @@
 
             </div>
 
-            {{-- <div class="card-body">
-
-                <div class="table-responsive">
-
-                    <table class="table table-striped table-bordered" id="visitorTable">
-
-                        <thead>
-
-                            <tr>
-
-                                <th>#</th>
-
-                                <th>Visitor ID</th>
-
-                                <th>Country</th>
-
-                                <th>State</th>
-
-                                <th>City</th>
-
-                                <th>Browser</th>
-
-                                <th>Device</th>
-
-                                <th>Visits</th>
-
-                                <th>First Visit</th>
-
-                                <th>Last Visit</th>
-
-                                <th>Page Views</th>
-
-                                <th>Status</th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            @foreach ($visitors as $visitor)
-                                <tr>
-
-                                    <td>{{ $loop->iteration }}</td>
-
-                                    <td>{{ $visitor->visitor_id }}</td>
-
-                                    <td>{{ $visitor->country ?: '-' }}</td>
-
-                                    <td>{{ $visitor->state ?: '-' }}</td>
-
-                                    <td>{{ $visitor->city ?: '-' }}</td>
-
-                                    <td>{{ $visitor->browser }}</td>
-
-                                    <td>{{ $visitor->device }}</td>
-
-                                    <td>{{ number_format($visitor->visit_count) }}</td>
-
-                                    <td>{{ $visitor->first_visit }}</td>
-
-                                    <td>{{ $visitor->last_visit }}</td>
-
-                                    <td>{{ number_format($visitor->page_views_count) }}</td>
-
-                                    <td>
-
-                                        @if ($visitor->last_visit >= now()->subMinutes(5))
-                                            <span class="badge badge-success">
-                                                Active
-                                            </span>
-                                        @else
-                                            <span class="badge badge-secondary">
-                                                Offline
-                                            </span>
-                                        @endif
-
-                                    </td>
-
-                                </tr>
-                            @endforeach
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div> --}}
             <div class="card-body">
                 <ul class="nav nav-tabs mb-4" id="analyticsTabs">
 
-                    <li class="nav-item">
-                        <a class="nav-link active" data-bs-toggle="tab" type="button" data-bs-target="#visitors">
-                            All Visitors
-                            <span class="badge badge-primary">{{ $totalVisitors }}</span>
+                     <li class="nav-item ">
+                        <a class="nav-link active" data-bs-toggle="tab" type="button" data-bs-target="#pages">
+                            Top Pages
+                            <span class="badge badge-warning">{{ $topPages->count() }}</span>
                         </a>
                     </li>
 
@@ -195,10 +106,11 @@
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" type="button" data-bs-target="#pages">
-                            Top Pages
-                            <span class="badge badge-warning">{{ $topPages->count() }}</span>
+                  
+                     <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" type="button" data-bs-target="#visitors">
+                            All Visitors
+                            <span class="badge badge-primary">{{ $totalVisitors }}</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -213,7 +125,7 @@
                 <div class="tab-content">
 
                     {{-- Visitors --}}
-                    <div class="tab-pane fade show active" id="visitors">
+                    <div class="tab-pane fade " id="visitors">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="visitorTable">
 
@@ -386,7 +298,7 @@
                     </div>
 
                     {{-- Pages --}}
-                    <div class="tab-pane fade" id="pages">
+                    <div class="tab-pane fade show active" id="pages">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="pageTable">
 
@@ -438,7 +350,7 @@
 
                                         <th>#</th>
 
-                                        <th>Page Title</th>
+                                        {{-- <th>Page Title</th> --}}
 
                                         <th>Page Url</th>
 
@@ -457,7 +369,7 @@
 
                                             <td>{{ $loop->iteration }}</td>
 
-                                            <td>{{ $page->page_title }}</td>
+                                            {{-- <td>{{ $page->page_title }}</td> --}}
                                             <td>{{ $page->page_url }}</td>
 
                                             <td>{{ $page->visitor->country }}</td>
