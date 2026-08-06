@@ -33,6 +33,11 @@ class BulkMarketingMail extends Mailable
     |--------------------------------------------------------------------------
     */
 
+        $pixel = sprintf(
+            '<img src="%s" width="1" height="1" style="display:none;" alt="">',
+            route('emails.track.open', $this->recipient->tracking_token)
+        );
+
         $body = $template->body;
 
         $body = str_replace(
@@ -40,14 +45,17 @@ class BulkMarketingMail extends Mailable
                 '{{name}}',
                 '{{email}}',
                 '{{company_name}}',
+                '{{tracking_pixel}}',
             ],
             [
                 $this->recipient->name ?? '',
                 $this->recipient->email,
                 config('app.name'),
+                $pixel,
             ],
             $body
         );
+
 
         $subject = $template->subject;
 

@@ -79,6 +79,8 @@ Route::controller(ForgotPasswordController::class)->group(function () {
     Route::post('/reset-password', 'resetPassword')->name('reset.password.submit');
 });
 
+ Route::get('emails/track/open/{token}', [EmailTemplateController::class, 'mailOpen'])->name('emails.track.open');
+
 // ADMIN ROUTES
 Route::middleware(['auth', 'role:admin'])->group(function () {
 
@@ -150,6 +152,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('campaigns/{campaign}/send', [EmailCampaignController::class, 'send'])->name('campaigns.send');
         Route::post('campaigns/{campaign}/pause', [EmailCampaignController::class, 'pause'])->name('campaigns.pause');
         Route::post('campaigns/{campaign}/retry', [EmailCampaignController::class, 'retry'])->name('campaigns.retry');
+
+       
     });
 
     // ANALYTICS
