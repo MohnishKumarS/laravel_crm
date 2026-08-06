@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 
 class AffiliateController extends Controller
 {
+    public function __construct(private AffiliateSettingsService $settings) {}
     public function index(Request $request)
     {
         $affiliates = Affiliate::with('user')
