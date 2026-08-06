@@ -12,7 +12,7 @@
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
-                        <tr><th>Affiliate</th><th>Type</th><th>File</th><th>Status</th><th>Review</th></tr>
+                        <tr><th>Affiliate</th><th>Type</th><th>File</th><th>Status</th><th>Bank Details</th><th>Review</th></tr>
                     </thead>
                     <tbody>
                         @foreach ($documents as $doc)
@@ -25,6 +25,14 @@
                                         {{ ucfirst($doc->status) }}
                                     </span>
                                 </td>
+                                  <td>
+        <small>
+            {{ $doc->affiliate->bank_account_holder ?? '—' }}<br>
+            {{ $doc->affiliate->bank_name ?? '—' }}<br>
+            A/C: {{ $doc->affiliate->maskedBankAccountNumber() ?? '—' }}<br>
+            IFSC: {{ $doc->affiliate->bank_ifsc ?? '—' }}
+        </small>
+    </td>
                                 <td>
                                     @if ($doc->status === 'pending')
                                         <div class="d-flex flex-column gap-1" style="min-width: 100px;">

@@ -194,19 +194,21 @@ public function uploadKyc(Request $request)
 {
     $affiliate = $request->user()->affiliate;
 
-    // Block resubmission while a document is already pending review
     if ($affiliate->kyc_status === 'pending') {
         return back()->with('error', 'You already have a document under review. Please wait for admin review before submitting another.');
     }
 
-    // Block resubmission if already approved
     if ($affiliate->kyc_status === 'approved') {
         return back()->with('error', 'Your KYC is already approved.');
     }
 
     $request->validate([
-        'document_type' => ['required', 'in:id_proof,address_proof,other'],
-        'file'          => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
+        'document_type'        => ['required', 'in:id_proof,address_proof,other'],
+        'file'                 => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
+        'bank_account_holder'  => ['required', 'string', 'max:255'],
+        'bank_account_number'  => ['required', 'string', 'max:34'], // IBAN max length as a safe upper bound
+        'bank_name'            => ['required', 'string', 'max:255'],
+        'bank_ifsc'            => ['required', 'string', 'max:20'],
     ]);
 
     $path = $request->file('file')->store('kyc-documents/' . $affiliate->id, 'private');
@@ -219,11 +221,15 @@ public function uploadKyc(Request $request)
     ]);
 
     $affiliate->update([
-        'kyc_status'       => 'pending',
-        'kyc_submitted_at' => now(),
+        'kyc_status'           => 'pending',
+        'kyc_submitted_at'     => now(),
+        'bank_account_holder'  => $request->bank_account_holder,
+        'bank_account_number'  => $request->bank_account_number, // encrypted automatically via model cast
+        'bank_name'            => $request->bank_name,
+        'bank_ifsc'            => $request->bank_ifsc,
     ]);
 
-    return back()->with('success', 'Document uploaded and submitted for review.');
+    return back()->with('success', 'Document and bank details submitted for review.');
 }
 
 public function training(Request $request)

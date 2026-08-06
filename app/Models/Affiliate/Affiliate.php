@@ -18,7 +18,8 @@ class Affiliate extends Model
         'user_id', 'affiliate_code', 'slug', 'commission_rate',
         'status', 'paypal_email', 'payout_notes',
         'lifetime_earnings', 'lifetime_paid', 'approved_at',
-        'kyc_status', 'kyc_submitted_at', 'kyc_reviewed_at', 'training_completed_at'
+        'kyc_status', 'kyc_submitted_at', 'kyc_reviewed_at', 'training_completed_at',
+        'bank_account_holder', 'bank_account_number', 'bank_name', 'bank_ifsc'
     ];
 
     protected $casts = [
@@ -28,6 +29,7 @@ class Affiliate extends Model
         'approved_at'       => 'datetime',
         'payout_notes'      => 'encrypted',
         'training_completed_at' => 'datetime',
+        'bank_account_number' => 'encrypted',
     ];
 
     public function user(): BelongsTo
@@ -122,5 +124,14 @@ public function isFullyOnboarded(): bool
 public function lessonProgress(): HasMany
 {
     return $this->hasMany(AffiliateLessonProgress::class);
+}
+public function maskedBankAccountNumber(): ?string
+{
+        if (!$this->bank_account_number) {
+            return null;
+        }
+
+        $number = $this->bank_account_number;
+        return str_repeat('*', max(0, strlen($number) - 4)) . substr($number, -4);
 }
 }
