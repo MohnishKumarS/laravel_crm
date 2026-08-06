@@ -17,6 +17,10 @@ class EmailCampaignRecipient extends Model
         'error_message',
         'sent_at',
         'attempts',
+        'open_count',
+        'opened_at',
+        'click_count',
+        'clicked_at',
     ];
 
     protected $casts = [
@@ -25,6 +29,6 @@ class EmailCampaignRecipient extends Model
 
     public function campaign()
     {
-        return $this->belongsTo(EmailCampaign::class,'campaign_id');
+        return $this->belongsTo(EmailCampaign::class, 'campaign_id');
     }
 }
