@@ -75,7 +75,7 @@
                                                 action="{{ route('affiliates.payouts.mark-paid', $payout) }}" style="display:none" class="mt-2">
                                                 @csrf @method('PUT')
                                                 <select name="method" class="form-control form-control-sm mb-1">
-                                                    <option value="paypal">PayPal</option>
+                                                    <option value="UPI">UPI</option>
                                                     <option value="bank_transfer">Bank Transfer</option>
                                                     <option value="other">Other</option>
                                                 </select>

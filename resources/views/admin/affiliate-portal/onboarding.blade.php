@@ -41,27 +41,41 @@
                     @if (in_array($affiliate->kyc_status, ['not_submitted', 'rejected']))
                         <form method="POST" action="{{ route('affiliate.kyc.upload') }}" enctype="multipart/form-data" class="mt-3">
                             @csrf
+
+                            <label class="small text-muted">Bank Account Holder Name</label>
+                            <input type="text" name="bank_account_holder" class="form-control form-control-sm mb-2"
+                                value="{{ old('bank_account_holder', $affiliate->bank_account_holder) }}" required>
+
+                            <label class="small text-muted">Bank Account Number</label>
+                            <input type="text" name="bank_account_number" class="form-control form-control-sm mb-2" required>
+                            {{-- Intentionally NOT pre-filled with old() or the existing value -
+                                 this is sensitive data, don't echo a decrypted account number
+                                 back into an HTML form field. --}}
+
+                            <label class="small text-muted">Bank Name</label>
+                            <input type="text" name="bank_name" class="form-control form-control-sm mb-2"
+                                value="{{ old('bank_name', $affiliate->bank_name) }}" required>
+
+                            <label class="small text-muted">IFSC Code</label>
+                            <input type="text" name="bank_ifsc" class="form-control form-control-sm mb-2"
+                                value="{{ old('bank_ifsc', $affiliate->bank_ifsc) }}" required>
+
+                            <hr>
+
+                            <label class="small text-muted">Document Type</label>
                             <select name="document_type" class="form-control form-control-sm mb-2" required>
                                 <option value="id_proof">ID Proof</option>
                                 <option value="address_proof">Address Proof</option>
                                 <option value="other">Other</option>
                             </select>
+
+                            <label class="small text-muted">Upload Document</label>
                             <input type="file" name="file" class="form-control form-control-sm mb-2" accept=".jpg,.jpeg,.png,.pdf" required>
-                            <button class="btn btn-sm btn-primary w-100">Upload Document</button>
+
+                            <button class="btn btn-sm btn-primary w-100">Submit for Review</button>
                         </form>
                     @elseif ($affiliate->kyc_status === 'pending')
                         <p class="text-muted mt-2 mb-0">Under review — check back soon.</p>
-                    @endif
-
-                    @if ($kycDocuments->isNotEmpty())
-                        <hr>
-                        <small class="text-muted d-block mb-1">Submitted documents:</small>
-                        @foreach ($kycDocuments as $doc)
-                            <div class="small">{{ ucfirst(str_replace('_', ' ', $doc->document_type)) }} —
-                                <span class="badge badge-{{ $doc->status === 'approved' ? 'success' : ($doc->status === 'pending' ? 'warning' : 'danger') }}">{{ ucfirst($doc->status) }}</span>
-                                @if ($doc->admin_note)<br><em class="text-muted">{{ $doc->admin_note }}</em>@endif
-                            </div>
-                        @endforeach
                     @endif
                 </div>
             </div>
@@ -90,6 +104,8 @@
                 </div>
             </div>
         </div>
+
+        
     </div>
 
     @if ($affiliate->isFullyOnboarded())
