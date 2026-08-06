@@ -17,7 +17,7 @@
                     <tbody>
                         @forelse ($payouts as $payout)
                             <tr>
-                                <td>{{ $payout->id }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ number_format($payout->amount, 2) }}</td>
                                 <td>{{ $payout->paid_at ? 'Paid ' . $payout->paid_at->format('Y-m-d') : 'Awaiting payment' }}</td>
                                 <td>{{ $payout->reference ?? '—' }}</td>
