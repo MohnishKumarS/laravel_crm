@@ -366,7 +366,19 @@ class DashboardController extends Controller
     public function markAllRead()
     {
         $notify =  Auth::user()
-            ->unreadNotifications
+            ->unreadNotifications()
+            ->where('data->type', '!=', 'partner_chat')
+            ->get()
+            ->markAsRead();
+
+        return back();
+    }
+    public function messageMarkAllRead()
+    {
+        $notify =  Auth::user()
+            ->unreadNotifications()
+            ->where('data->type', 'partner_chat')
+            ->get()
             ->markAsRead();
 
         return back();

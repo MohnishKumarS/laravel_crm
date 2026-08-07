@@ -9,7 +9,7 @@
     @forelse ($submission->messages as $msg)
         <div class="mb-2 {{ $msg->sender_role === 'admin' ? 'text-end' : '' }}">
             <div class="d-inline-block px-2 py-1 rounded {{ $msg->sender_role === 'admin' ? 'bg-primary text-white' : 'bg-white border' }}" style="max-width: 80%;">
-                <small class="d-block fw-bold">{{ $msg->sender->name }} ({{ ucfirst($msg->sender_role) }})</small>
+                <small class="d-block fw-bold">{{ $msg->sender->name }} ({{ $msg->sender_role == 'affiliate' ? 'Partner' : ucfirst($msg->sender_role) }})</small>
                 {{ $msg->message }}
                 <small class="d-block text-muted" style="font-size: 10px;">{{ $msg->created_at->format('Y-m-d H:i') }}</small>
             </div>

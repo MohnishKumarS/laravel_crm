@@ -51,17 +51,47 @@
                     <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-envelope"></i>
+                        @if ($partnerCount)
+                            <span class="notification">{{ $partnerCount }}</span>
+                        @endif
                     </a>
                     <ul class="dropdown-menu messages-notif-box animated fadeIn" aria-labelledby="messageDropdown">
                         <li>
                             <div class="dropdown-title d-flex justify-content-between align-items-center">
                                 Messages
-                                <a href="#" class="small">Mark all as read</a>
+                                <a href="{{route('message.markAllRead')}}" class="small">Mark all as read</a>
                             </div>
                         </li>
                         <li>
                             <div class="message-notif-scroll scrollbar-outer">
                                 <div class="notif-center">
+                                    @forelse($partnerMessages as $notification)
+                                        <a href="{{ $notification->data['url'] }}">
+                                            <div class="notif-img">
+                                                <img src="{{ asset('yuukke/assets/img/jm_denis.jpg') }}" alt="Profile">
+                                            </div>
+
+                                            <div class="notif-content">
+                                                <span class="subject">
+                                                    {{ $notification->data['sender_name'] }}
+                                                </span>
+
+                                                <span class="block">
+                                                    {{ $notification->data['preview'] }}
+                                                </span>
+
+                                                <span class="time">
+                                                    {{ $notification->created_at->diffForHumans() }}
+                                                </span>
+                                            </div>
+                                        </a>
+                                    @empty
+                                        <div class="text-center py-3 text-muted">
+                                            No messages found.
+                                        </div>
+                                    @endforelse
+                                </div>
+                                {{-- <div class="notif-center">
                                     <a href="#">
                                         <div class="notif-img">
                                             <img src="{{ asset('yuukke/assets/img/jm_denis.jpg') }}"
@@ -106,21 +136,23 @@
                                             <span class="time">17 minutes ago</span>
                                         </div>
                                     </a>
-                                </div>
+                                </div> --}}
                             </div>
                         </li>
-                        <li>
+                        {{-- <li>
                             <a class="see-all" href="javascript:void(0);">See all messages<i
                                     class="fa fa-angle-right"></i>
                             </a>
-                        </li>
+                        </li> --}}
                     </ul>
                 </li>
                 <li class="nav-item topbar-icon dropdown hidden-caret">
                     <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-bell"></i>
-                        <span class="notification">{{ $notificationCount }}</span>
+                        @if ($notificationCount)
+                            <span class="notification">{{ $notificationCount }}</span>
+                        @endif
                     </a>
                     <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
                         <li>
@@ -132,8 +164,7 @@
                             <div class="notif-scroll scrollbar-outer">
                                 <div class="notif-center">
                                     @forelse($notifications as $notification)
-                                        <a
-                                            href="{{ $notification->data['url'] ?? "" }}">
+                                        <a href="{{ $notification->data['url'] ?? '' }}">
                                             <div class="notif-icon notif-primary">
                                                 <i class="fa fa-file-alt"></i>
                                             </div>
@@ -162,8 +193,8 @@
                             </div>
                         </li>
                         <li>
-                            <a class="see-all text-primary" href="{{route('notifications.markAllRead')}}">Mark all as read<i
-                                    class="fa fa-angle-right"></i>
+                            <a class="see-all text-primary" href="{{ route('notifications.markAllRead') }}">Mark all as
+                                read<i class="fa fa-angle-right"></i>
                             </a>
                         </li>
                     </ul>
@@ -251,8 +282,8 @@
                             <li>
                                 <div class="user-box">
                                     <div class="avatar-lg">
-                                        <img src="{{ asset('uploads/favicon/favicon-32x32.png') }}" alt="image profile"
-                                            class="avatar-img rounded" />
+                                        <img src="{{ asset('uploads/favicon/favicon-32x32.png') }}"
+                                            alt="image profile" class="avatar-img rounded" />
                                     </div>
                                     <div class="u-text">
                                         <h4>{{ Auth::user()->name }}</h4>

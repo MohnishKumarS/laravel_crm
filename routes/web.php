@@ -79,7 +79,7 @@ Route::controller(ForgotPasswordController::class)->group(function () {
     Route::post('/reset-password', 'resetPassword')->name('reset.password.submit');
 });
 
- Route::get('emails/track/open/{token}', [EmailTemplateController::class, 'mailOpen'])->name('emails.track.open');
+Route::get('emails/track/open/{token}', [EmailTemplateController::class, 'mailOpen'])->name('emails.track.open');
 
 // ADMIN ROUTES
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -105,8 +105,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // POSTS - BLOGS
     Route::resource('posts', PostController::class);
 
-    // NOTIFICATION
-    Route::get('notifications/mark-all-read', [DashboardController::class, 'markAllRead'])->name('notifications.markAllRead');
+
 
     // SETTINGS
     Route::controller(SettingController::class)->group(function () {
@@ -152,8 +151,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('campaigns/{campaign}/send', [EmailCampaignController::class, 'send'])->name('campaigns.send');
         Route::post('campaigns/{campaign}/pause', [EmailCampaignController::class, 'pause'])->name('campaigns.pause');
         Route::post('campaigns/{campaign}/retry', [EmailCampaignController::class, 'retry'])->name('campaigns.retry');
-
-       
     });
 
     // ANALYTICS
@@ -183,25 +180,25 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
             Route::post('payouts/create-batch', 'createBatch')->name('payouts.create-batch');
             Route::put('payouts/{payout}/mark-paid', 'markPaid')->name('payouts.mark-paid');
         });
-          Route::controller(AffiliateKycController::class)->group(function () {
-        Route::get('kyc', 'index')->name('kyc');
-        Route::put('kyc/{document}/review', 'review')->name('kyc.review');
-        Route::get('kyc/{document}/download', 'download')->name('kyc.download');
-    });
-    Route::controller(TrainingProgressController::class)->prefix('training-progress')->name('training-progress.')->group(function () {
-    Route::get('/', 'index')->name('index');
-    Route::get('/{affiliate}', 'show')->name('show');
-});
+        Route::controller(AffiliateKycController::class)->group(function () {
+            Route::get('kyc', 'index')->name('kyc');
+            Route::put('kyc/{document}/review', 'review')->name('kyc.review');
+            Route::get('kyc/{document}/download', 'download')->name('kyc.download');
+        });
+        Route::controller(TrainingProgressController::class)->prefix('training-progress')->name('training-progress.')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/{affiliate}', 'show')->name('show');
+        });
 
-    Route::controller(TrainingContentController::class)->prefix('training')->name('training.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::post('lessons', 'storeLesson')->name('lessons.store');
-        Route::put('lessons/{lesson}/toggle', 'toggleLesson')->name('lessons.toggle');
-        Route::delete('lessons/{lesson}', 'destroyLesson')->name('lessons.destroy');
-        Route::post('questions', 'storeQuestion')->name('questions.store');
-        Route::put('questions/{question}/toggle', 'toggleQuestion')->name('questions.toggle');
-        Route::delete('questions/{question}', 'destroyQuestion')->name('questions.destroy');
-    });
+        Route::controller(TrainingContentController::class)->prefix('training')->name('training.')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::post('lessons', 'storeLesson')->name('lessons.store');
+            Route::put('lessons/{lesson}/toggle', 'toggleLesson')->name('lessons.toggle');
+            Route::delete('lessons/{lesson}', 'destroyLesson')->name('lessons.destroy');
+            Route::post('questions', 'storeQuestion')->name('questions.store');
+            Route::put('questions/{question}/toggle', 'toggleQuestion')->name('questions.toggle');
+            Route::delete('questions/{question}', 'destroyQuestion')->name('questions.destroy');
+        });
 
         Route::controller(AffiliateController::class)->group(function () {
             Route::get('/', 'index')->name('index');
@@ -213,9 +210,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
             Route::put('/{affiliate}/reject', 'reject')->name('reject');
             Route::put('/{affiliate}/rate', 'updateRate')->name('rate');
         });
-      
     });
-   
 });
 
 // Route::resource('affiliates', AffiliateController::class)->only(['index', 'show']);
@@ -226,6 +221,10 @@ Route::middleware(['auth', 'role:affiliate,admin'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+
+    // NOTIFICATION
+    Route::get('notifications/mark-all-read', [DashboardController::class, 'markAllRead'])->name('notifications.markAllRead');
+    Route::get('message/mark-all-read', [DashboardController::class, 'messageMarkAllRead'])->name('message.markAllRead');
 });
 Route::resource('users', UserController::class)->except(['show']);
 
@@ -236,13 +235,9 @@ Route::resource('users', UserController::class)->except(['show']);
 // });
 
 // SELLER ROLE
-Route::middleware(['auth', 'role:seller'])
-    ->prefix('seller')
-    ->name('seller.')
-    ->group(function () {
-
-        Route::get('/', [TestController::class, 'sellerIndex'])->name('dashboard');
-    });
+Route::middleware(['auth', 'role:seller'])->prefix('seller')->name('seller.')->group(function () {
+    Route::get('/', [TestController::class, 'sellerIndex'])->name('dashboard');
+});
 
 // AFFILIATE ROLE - DASHBAORD
 Route::middleware(['auth', 'role:affiliate'])->prefix('affiliate')->name('affiliate.')->group(function () {
@@ -271,14 +266,14 @@ Route::middleware(['auth', 'role:affiliate'])->prefix('affiliate')->name('affili
     Route::get('/quiz', [AffiliateSelfController::class, 'quiz'])->name('quiz');
     Route::post('/quiz', [AffiliateSelfController::class, 'submitQuiz'])->name('quiz.submit');
     Route::post('/training/{lesson}/watched', [AffiliateSelfController::class, 'markLessonWatched'])
-    ->name('training.watched');
+        ->name('training.watched');
 });
 
 // MIGRATION
 Route::get('/migrate', function () {
 
     $exitCode = Artisan::call('migrate', ['--force' => true]);
-    Log::info('Migration process: '.Artisan::output());
+    Log::info('Migration process: ' . Artisan::output());
 
     return 'Migration completed successfully.';
 });

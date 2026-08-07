@@ -20,10 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => App\Http\Middleware\AdminMiddleware::class,
             'check.token' => \App\Http\Middleware\CheckTokenExpiration::class,
-             'role' => RoleMiddleware::class,
+            'role' => RoleMiddleware::class,
             'affiliate.webhook.secret' => \App\Http\Middleware\VerifyAffiliateWebhookSecret::class,
             'affiliate.portal' => EnsureUserIsAffiliate::class,
-            'affiliate.onboarded'=>EnsureAffiliateOnboarded::class,
+            'affiliate.onboarded' => EnsureAffiliateOnboarded::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

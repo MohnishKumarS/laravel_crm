@@ -1,11 +1,11 @@
 
 @extends('admin.layouts.main')
 
-@section('title', 'My Affiliate Dashboard')
+@section('title', 'My Partner Dashboard | Yuukke')
 
 @section('content')
     <div class="page-header">
-        <h3 class="fw-bold mb-3">My Affiliate Dashboard</h3>
+        <h3 class="fw-bold mb-3">My Partner Dashboard</h3>
     </div>
 
     <div class="row">

@@ -8,9 +8,11 @@
                 <li class="nav-item">
                     <a class="nav-link text-primary" href="https://gift.yuukke.com/" target="_blank"> Gift </a>
                 </li>
+                @role('admin')
                 <li class="nav-item">
                     <a class="nav-link text-primary" href="https://marketplace.yuukke.com/admin/login" target="_blank"> Marketplace Admin </a>
                 </li>
+                @endrole
             </ul>
         </nav>
         <div class="copyright">

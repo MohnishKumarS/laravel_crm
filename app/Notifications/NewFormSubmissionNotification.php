@@ -37,6 +37,7 @@ class NewFormSubmissionNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
+            'type' => 'form_submission',
 
             'title' => 'New Submission Received - ' . ucwords($this->form->title),
 

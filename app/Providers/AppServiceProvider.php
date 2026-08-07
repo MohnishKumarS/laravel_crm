@@ -28,21 +28,42 @@ class AppServiceProvider extends ServiceProvider
             $notifications = collect();
             $notificationCount = 0;
 
+            $partnerMessages = collect();
+            $partnerCount = 0;
+
             if (Auth::check()) {
+                // Bell
                 $notifications = Auth::user()
                     ->unreadNotifications()
+                    ->where('data->type', '!=', 'partner_chat')
                     ->latest()
                     ->take(5)
                     ->get();
 
                 $notificationCount = Auth::user()
                     ->unreadNotifications()
+                    ->where('data->type', '!=', 'partner_chat')
+                    ->count();
+
+                // Messages
+                $partnerMessages = Auth::user()
+                    ->unreadNotifications()
+                    ->where('data->type', 'partner_chat')
+                    ->latest()
+                    ->take(10)
+                    ->get();
+                $partnerCount = Auth::user()
+                    ->unreadNotifications()
+                    ->where('data->type', 'partner_chat')
                     ->count();
             }
 
             $view->with([
                 'notifications' => $notifications,
                 'notificationCount' => $notificationCount,
+                'partnerMessages' => $partnerMessages,
+                'partnerCount' => $partnerCount
+
             ]);
         });
 
