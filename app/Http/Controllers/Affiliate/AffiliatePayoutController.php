@@ -75,7 +75,7 @@ class AffiliatePayoutController extends Controller
     public function markPaid(Request $request, AffiliatePayout $payout)
     {
         $request->validate([
-            'method'     => ['required', 'in:paypal,bank_transfer,other'],
+            'method'     => ['required', 'in:UPI,bank_transfer,other'],
             'reference'  => ['nullable', 'string', 'max:255'],
             'admin_note' => ['nullable', 'string'],
         ]);
