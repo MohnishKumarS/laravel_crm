@@ -54,7 +54,7 @@
                         <tbody>
                             @foreach ($payouts as $payout)
                                 <tr>
-                                    <td>{{ $payout->id }}</td>
+                                    <td>{{ $loop->iteration }}</td>
                                     <td>{{ $payout->affiliate->affiliate_code }}</td>
                                     <td>{{ number_format($payout->amount, 2) }}</td>
                                     <td>
