@@ -81,6 +81,18 @@
                 <div class="card-body">
                     <p><strong>Name:</strong> {{ $affiliate->user->name ?? '—' }}</p>
                     <p><strong>Email:</strong> {{ $affiliate->user->email ?? '—' }}</p>
+                       <hr>
+                    <p class="mb-1"><strong>Bank Details:</strong></p>
+                    @if ($affiliate->bank_account_number)
+                        <p class="mb-1 small">
+                            {{ $affiliate->bank_account_holder }}<br>
+                            {{ $affiliate->bank_name }}<br>
+                            A/C: {{ $affiliate->maskedBankAccountNumber() }}<br>
+                            IFSC: {{ $affiliate->bank_ifsc }}
+                        </p>
+                    @else
+                        <p class="text-muted small mb-1">Not provided yet.</p>
+                    @endif
                     <p>
                         <strong>Status:</strong>
                         <span class="badge badge-{{ $affiliate->status === 'approved' ? 'success' : ($affiliate->status === 'pending' ? 'warning' : 'secondary') }}">

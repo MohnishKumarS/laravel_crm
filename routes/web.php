@@ -189,6 +189,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/{affiliate}', 'show')->name('show');
         });
+        
 
         Route::controller(TrainingContentController::class)->prefix('training')->name('training.')->group(function () {
             Route::get('/', 'index')->name('index');
@@ -267,6 +268,8 @@ Route::middleware(['auth', 'role:affiliate'])->prefix('affiliate')->name('affili
     Route::post('/quiz', [AffiliateSelfController::class, 'submitQuiz'])->name('quiz.submit');
     Route::post('/training/{lesson}/watched', [AffiliateSelfController::class, 'markLessonWatched'])
         ->name('training.watched');
+    Route::post('/payouts/bank-details', [AffiliateSelfController::class, 'saveBankDetails'])
+    ->name('payouts.bank-details');
 });
 
 // MIGRATION

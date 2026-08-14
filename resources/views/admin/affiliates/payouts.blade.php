@@ -26,16 +26,27 @@
             <div class="card">
                 <div class="card-header"><div class="card-title">Ready to Pay Out</div></div>
                 <div class="card-body">
-                    @forelse ($eligible as $row)
-                        <form method="POST" action="{{ route('affiliates.payouts.create-batch') }}" class="d-flex justify-content-between align-items-center border-bottom py-2">
-                            @csrf
-                            <input type="hidden" name="affiliate_id" value="{{ $row['affiliate']->id }}">
-                            <span>{{ $row['affiliate']->affiliate_code }} — {{ number_format($row['balance'], 2) }}</span>
-                            <button class="btn btn-sm btn-primary">Create Payout Batch</button>
-                        </form>
-                    @empty
-                        <p class="text-muted">No affiliates currently above the minimum payout threshold.</p>
-                    @endforelse
+                  @forelse ($eligible as $row)
+        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+            <span>
+                {{ $row['affiliate']->affiliate_code }} — {{ number_format($row['balance'], 2) }}
+                @unless ($row['has_bank_details'])
+                    <br><small class="text-danger">⚠ No bank details on file</small>
+                @endunless
+            </span>
+            @if ($row['has_bank_details'])
+                <form method="POST" action="{{ route('affiliates.payouts.create-batch') }}">
+                    @csrf
+                    <input type="hidden" name="affiliate_id" value="{{ $row['affiliate']->id }}">
+                    <button class="btn btn-sm btn-primary">Create Payout Batch</button>
+                </form>
+            @else
+                <button class="btn btn-sm btn-secondary" disabled>Missing Bank Details</button>
+            @endif
+        </div>
+    @empty
+        <p class="text-muted">No affiliates currently above the minimum payout threshold.</p>
+    @endforelse
                 </div>
             </div>
         </div>

@@ -82,43 +82,30 @@ class AffiliateController extends Controller
         return view('admin.affiliates.create', compact('users'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'user_mode' => ['required', 'in:existing,new'],
-            'user_id'   => ['required_if:user_mode,existing', 'nullable', 'exists:users,id', 'unique:affiliates,user_id'],
-            'new_name'     => ['required_if:user_mode,new', 'nullable', 'string', 'max:255'],
-            'new_email'    => ['required_if:user_mode,new', 'nullable', 'email', 'unique:users,email'],
-            'new_password' => ['nullable', 'string', 'min:6'],
-            'commission_rate' => ['nullable', 'numeric', 'min:0', 'max:100'],
-            'paypal_email'    => ['nullable', 'email'],
-        ]);
+  public function storeProduct(Request $request)
+{
+    $affiliate = $request->user()->affiliate;
 
-        if ($request->user_mode === 'existing') {
-            $user = User::findOrFail($request->user_id);
-            $user->update([
-                'role' => 'affiliate',
-            ]);
-        } else {
-            $user = User::create([
-                'name'     => $request->new_name,
-                'email'    => $request->new_email,
-                'password' => Hash::make($request->new_password ?: Str::random(12)),
-                'role'     => 'affiliate',
-            ]);
-        }
+    $request->validate(['product_id' => ['required', 'integer']]);
 
-        Affiliate::create([
-            'user_id'         => $user->id,
-            'affiliate_code'  => $this->generateUniqueCode($user->name),
-            'slug'            => Str::slug($user->name . '-' . Str::random(4)),
-            'commission_rate' => $request->commission_rate ?? $this->settings->defaultCommissionRate(),
-            'status'          => 'approved',
-            'approved_at'     => now(),
-            'paypal_email'    => $request->paypal_email,
-        ]);
-        return redirect()->route('affiliates.index')->with('success', "Affiliate account created for {$user->name}.");
+    $product = DB::connection('marketplace')->table('products')->find($request->product_id);
+
+    \App\Models\Affiliate\AffiliateSelectedProduct::firstOrCreate(
+        ['affiliate_id' => $affiliate->id, 'product_id' => $request->product_id],
+        [
+            'product_name'  => $product->name ?? null,
+            'product_image' => $product->image ?? null,
+            'product_price' => $product->price ?? null,
+            'product_slug'  => $product->slug ?? null,
+        ]
+    );
+
+    if ($request->wantsJson()) {
+        return response()->json(['status' => true, 'message' => 'Added to your promotion list.']);
     }
+
+    return back()->with('success', 'Product added to your promotion list.');
+}
 
     private function generateUniqueCode(string $seed): string
     {

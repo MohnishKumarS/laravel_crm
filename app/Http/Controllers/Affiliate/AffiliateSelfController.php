@@ -88,9 +88,9 @@ public function browseProducts(Request $request)
     return view('admin.affiliate-portal.browse-products', compact('affiliate', 'catalog', 'selectedIds', 'search'));
 }
 
-public function storeProduct(Request $request)
+ public function storeProduct(Request $request)
 {
-     $affiliate = $request->user()->affiliate;
+    $affiliate = $request->user()->affiliate;
 
     $request->validate(['product_id' => ['required', 'integer']]);
 
@@ -100,11 +100,15 @@ public function storeProduct(Request $request)
         ['affiliate_id' => $affiliate->id, 'product_id' => $request->product_id],
         [
             'product_name'  => $product->name ?? null,
-            'product_image' => $product->image ?? null, // filename only, prefix applied at display time
+            'product_image' => $product->image ?? null,
             'product_price' => $product->price ?? null,
-            'product_slug' => $product->slug ?? null,
+            'product_slug'  => $product->slug ?? null,
         ]
     );
+
+    if ($request->wantsJson()) {
+        return response()->json(['status' => true, 'message' => 'Added to your promotion list.']);
+    }
 
     return back()->with('success', 'Product added to your promotion list.');
 }
@@ -203,12 +207,8 @@ public function uploadKyc(Request $request)
     }
 
     $request->validate([
-        'document_type'        => ['required', 'in:id_proof,address_proof,other'],
-        'file'                 => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
-        'bank_account_holder'  => ['required', 'string', 'max:255'],
-        'bank_account_number'  => ['required', 'string', 'max:34'], // IBAN max length as a safe upper bound
-        'bank_name'            => ['required', 'string', 'max:255'],
-        'bank_ifsc'            => ['required', 'string', 'max:20'],
+        'document_type' => ['required', 'in:id_proof,address_proof,other'],
+        'file'          => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
     ]);
 
     $path = $request->file('file')->store('kyc-documents/' . $affiliate->id, 'private');
@@ -221,15 +221,11 @@ public function uploadKyc(Request $request)
     ]);
 
     $affiliate->update([
-        'kyc_status'           => 'pending',
-        'kyc_submitted_at'     => now(),
-        'bank_account_holder'  => $request->bank_account_holder,
-        'bank_account_number'  => $request->bank_account_number, // encrypted automatically via model cast
-        'bank_name'            => $request->bank_name,
-        'bank_ifsc'            => $request->bank_ifsc,
+        'kyc_status'       => 'pending',
+        'kyc_submitted_at' => now(),
     ]);
 
-    return back()->with('success', 'Document and bank details submitted for review.');
+    return back()->with('success', 'Document submitted for review.');
 }
 
 public function training(Request $request)
@@ -301,5 +297,25 @@ public function markLessonWatched(Request $request, int $lessonId)
  public function lessonProgress(): HasMany
  {
       return $this->hasMany(AffiliateLessonProgress::class);
+}
+public function saveBankDetails(Request $request)
+{
+    $affiliate = $request->user()->affiliate;
+
+    $request->validate([
+        'bank_account_holder' => ['required', 'string', 'max:255'],
+        'bank_account_number' => ['required', 'string', 'max:34'],
+        'bank_name'           => ['required', 'string', 'max:255'],
+        'bank_ifsc'           => ['required', 'string', 'max:20'],
+    ]);
+
+    $affiliate->update([
+        'bank_account_holder' => $request->bank_account_holder,
+        'bank_account_number' => $request->bank_account_number, // encrypted via model cast
+        'bank_name'           => $request->bank_name,
+        'bank_ifsc'           => $request->bank_ifsc,
+    ]);
+
+    return back()->with('success', 'Bank details saved.');
 }
 }
