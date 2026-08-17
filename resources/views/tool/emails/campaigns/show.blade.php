@@ -32,6 +32,15 @@
                             Start Campaign
                         </button>
                     </form>
+                @elseif ($campaign->status === 'scheduled')
+                    <span class="badge bg-warning">
+                        <i class="fas fa-clock me-1"></i>
+                        Scheduled
+                    </span>
+
+                    <small class="text-muted d-block mt-1">
+                        {{ $campaign->scheduled_at->format('d M Y, h:i A') }}
+                    </small>
                 @endif
                 {{-- @if ($campaign->status === 'processing')
                     <form action="{{ route('emails.campaigns.pause', $campaign) }}" method="POST">
@@ -209,7 +218,7 @@
 
                                 <th>Name</th>
 
-                                <th>Sender</th>
+                                <th>Email View</th>
 
                                 <th>Status</th>
 
@@ -240,7 +249,15 @@
                                     </td>
 
                                     <td>
-                                        {{ $recipient->sender_email ?? '-' }}
+                                        @if ($recipient->open_count > 0)
+                                            <span class="badge bg-success">
+                                                Viewed
+                                            </span>
+                                        @else
+                                            <span class="badge bg-secondary">
+                                                Not Viewed
+                                            </span>
+                                        @endif
                                     </td>
 
                                     <td>
@@ -279,7 +296,7 @@
                                         @if ($recipient->error_message)
                                             <small class="text-danger">
 
-                                                {{ Str::limit($recipient->error_message, 80) }}
+                                                {{ Str::limit($recipient->error_message, 100) }}
 
                                             </small>
                                         @else

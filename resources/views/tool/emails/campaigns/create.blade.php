@@ -106,6 +106,19 @@
 
                             </div>
 
+                            <div class="mb-3">
+                                <label for="scheduled_at" class="form-label">
+                                    Schedule At <span class="text-muted">(Optional)</span>
+                                </label>
+
+                                <input type="datetime-local" name="scheduled_at" id="scheduled_at" class="form-control"
+                                    value="{{ old('scheduled_at') }}" min="{{ now()->format('Y-m-d\TH:i') }}">
+
+                                <small class="text-muted">
+                                    Leave empty to send the campaign immediately.
+                                </small>
+                            </div>
+
                         </div>
 
                     </div>

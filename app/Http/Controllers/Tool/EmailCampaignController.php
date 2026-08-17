@@ -91,6 +91,7 @@ class EmailCampaignController extends Controller
             'recipient_ids' => ['nullable', 'array'],
             'recipient_ids.*' => ['integer'],
             'custom_emails' => ['nullable', 'string'],
+            'scheduled_at' => ['nullable', 'date', 'after_or_equal:now'],
         ]);
 
         // return $validated['recipient_type'];
@@ -155,6 +156,7 @@ class EmailCampaignController extends Controller
                 'template_id' => $validated['template_id'],
                 'recipient_type' => $validated['recipient_type'],
                 'status' => 'draft',
+                'scheduled_at' => $validated['scheduled_at'] ?? null,
                 'created_by' => Auth::id(),
             ]);
 
@@ -299,10 +301,15 @@ class EmailCampaignController extends Controller
                 throw new \Exception('No valid recipients found.');
             }
 
+            // $campaign->update([
+            //     'total_recipients' => $count,
+            //     'queued_count' => $count,
+            //     'status' => 'queued',
+            // ]);
             $campaign->update([
                 'total_recipients' => $count,
                 'queued_count' => $count,
-                'status' => 'queued',
+                'status' => !empty($validated['scheduled_at']) ? 'scheduled' : 'queued',
             ]);
 
             return $campaign;
@@ -332,7 +339,9 @@ class EmailCampaignController extends Controller
         //     'started_at' => now(),
         // ]);
 
-        return redirect()->route('emails.campaigns.show', $campaign)->with('status', 'success')->with('message', 'Campaign has been queued successfully.');
+        $message = $campaign->status === 'scheduled'? 'Campaign scheduled successfully.': 'Campaign has been queued successfully.';
+
+        return redirect()->route('emails.campaigns.show', $campaign)->with('status', 'success')->with('message', $message);
     }
 
 
