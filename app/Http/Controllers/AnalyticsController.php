@@ -138,4 +138,27 @@ class AnalyticsController extends Controller
         );
     }
 
+    public function pageViews(Visitor $visitor)
+    {
+        $pageViews = $visitor->pageViews()
+            ->select([
+                'page_title',
+                'page_url',
+                'referrer',
+            ])
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'visitor' => [
+                'entry_point' => $visitor->referrer,
+                'campaign' => $visitor->utm_campaign,
+                'device' => $visitor->device,
+                'browser' => $visitor->browser,
+                // 'country' => $visitor->country,
+                // 'visit_count' => $visitor->visit_count,
+            ],
+            'page_views' => $pageViews,
+        ]);
+    }
 }

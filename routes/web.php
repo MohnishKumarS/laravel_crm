@@ -116,6 +116,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // ANALYTICS
     Route::get('analytics/visitors', [AnalyticsController::class, 'visitors'])->name('analytics.visitors');
     Route::get('/analytics/visitors/export', [AnalyticsController::class, 'exportVisitors'])->name('analytics.visitors.export');
+    Route::get('/visitors/{visitor}/page-views', [AnalyticsController::class, 'pageViews'])->name('visitors.pageViews');
+    Route::get('/visitorShop/{visitor}/page-views', [shopAnalytics::class, 'shopPageViews'])->name('visitorShop.pageViews');
 
     Route::get('/upload-test', [TestController::class, 'index']);
     Route::post('/upload-test', [TestController::class, 'store'])->name('upload.test');
@@ -157,6 +159,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('analytics/shop', [shopAnalytics::class, 'shopVisitors'])->name('analytics.shop');
     Route::get('/analytics/shop/export', [shopAnalytics::class, 'exportShopVisitors'])->name('analytics.shop.export');
 
+    // AFFILIATE ADMIN
     Route::prefix('affiliates')->name('affiliates.')->group(function () {
         Route::controller(AffiliateSettingController::class)->group(function () {
             Route::get('settings', 'edit')->name('settings.edit');

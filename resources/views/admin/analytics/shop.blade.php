@@ -90,7 +90,12 @@
                             <span class="badge badge-warning">{{ $topPages->count() }}</span>
                         </a>
                     </li>
-
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" type="button" data-bs-target="#cart">
+                            Cart Appeals
+                            <span class="badge badge-warning">{{ $totalCartCount }}</span>
+                        </a>
+                    </li>
 
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" type="button" data-bs-target="#countries">
@@ -148,9 +153,9 @@
 
                                         <th>City</th>
 
-                                        <th>Browser</th>
+                                        {{-- <th>Browser</th>
 
-                                        <th>Device</th>
+                                        <th>Device</th> --}}
 
                                         <th>Visits</th>
 
@@ -158,7 +163,7 @@
 
                                         <th>Last Visit</th>
 
-                                        <th>Page Views</th>
+                                        {{-- <th>Page Views</th> --}}
 
                                         <th>Status</th>
 
@@ -169,7 +174,8 @@
                                 <tbody>
 
                                     @foreach ($visitors as $visitor)
-                                        <tr>
+                                        <tr class="visitor-row" style="cursor: pointer;"
+                                            data-visitor-id="{{ $visitor->id }}">
 
                                             <td>{{ $loop->iteration }}</td>
 
@@ -181,9 +187,9 @@
 
                                             <td>{{ $visitor->city ?: '-' }}</td>
 
-                                            <td>{{ $visitor->browser }}</td>
+                                            {{-- <td>{{ $visitor->browser }}</td>
 
-                                            <td>{{ $visitor->device }}</td>
+                                            <td>{{ $visitor->device }}</td> --}}
 
                                             <td>{{ number_format($visitor->visit_count) }}</td>
 
@@ -191,7 +197,7 @@
 
                                             <td>{{ $visitor->last_visit }}</td>
 
-                                            <td>{{ number_format($visitor->page_views_count) }}</td>
+                                            {{-- <td>{{ number_format($visitor->page_views_count) }}</td> --}}
 
                                             <td>
 
@@ -361,6 +367,8 @@
 
                                         <th>country</th>
 
+                                        <th>Visit from</th>
+
                                         <th>Date</th>
 
                                     </tr>
@@ -378,6 +386,8 @@
                                             <td>{{ $page->page_url }}</td>
 
                                             <td>{{ $page->visitor->country }}</td>
+
+                                            <td>{{ $page->referrer }}</td>
 
                                             <td>{{ $page->created_at }} ( {{ $page->created_at->diffForHumans() }} )</td>
 
@@ -423,6 +433,49 @@
                             </table>
                         </div>
                     </div>
+                    <div class="tab-pane fade" id="cart">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="cartTable">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>#</th>
+
+                                        <th>Image</th>
+
+                                        <th>Product Name</th>
+
+                                        <th>Code</th>
+                                        <th>Price</th>
+
+                                        <th>Cart Count</th>
+
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    @foreach ($cartData as $page)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td><img src="{{ rtrim(config('app.marketplace_asset_url'), '/') . '/' . $page->image }}"
+                                                    alt="{{ $page->product_name }}" width="50"></td>
+                                            <td>{{ $page->product_name }}</td>
+                                            <td>{{ $page->code }}</td>
+                                            <td>{{ number_format($page->price, 2) }}</td>
+                                            <td>{{ $page->total_cart_count }}</td>
+                                        </tr>
+                                    @endforeach
+
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -436,7 +489,7 @@
 
 @push('scripts')
     <script>
-        $('#visitorTable').DataTable();
+        // $('#visitorTable').DataTable();
 
         $('#countryTable').DataTable({});
 
@@ -444,6 +497,7 @@
 
         $('#pageTable').DataTable({});
         $('#pageNotFoundTable').DataTable({});
+        $('#cartTable').DataTable({});
 
         $("#monthFilter").change(function() {
 
@@ -451,6 +505,155 @@
                 "{{ route('analytics.shop') }}" +
                 "?month=" + $(this).val();
 
+        });
+
+
+        const visitorTable = $('#visitorTable').DataTable();
+
+        $('#visitorTable tbody').on('click', 'tr.visitor-row', function() {
+
+            const row = visitorTable.row(this);
+            const visitorId = $(this).data('visitor-id');
+
+            if (row.child.isShown()) {
+
+                row.child.hide();
+
+                $(this)
+                    .removeClass('shown')
+                    .find('.visitor-arrow')
+                    .removeClass('fa-chevron-down')
+                    .addClass('fa-chevron-right');
+
+                return;
+            }
+
+            // Show loading message
+            row.child(`
+        <div class="p-3 text-center">
+            <i class="fas fa-spinner fa-spin"></i>
+            Loading page views...
+        </div>
+    `).show();
+
+            $(this)
+                .addClass('shown')
+                .find('.visitor-arrow')
+                .removeClass('fa-chevron-right')
+                .addClass('fa-chevron-down');
+
+            $.ajax({
+                url: `/visitorShop/${visitorId}/page-views`,
+                type: 'GET',
+
+                success: function(response) {
+
+                    //     if (!response.length) {
+                    //         row.child(`
+                //     <div class="p-3 text-muted">
+                //         No page views found.
+                //     </div>
+                // `).show();
+
+                    //     return;
+                    // }
+
+                    const visitor = response.visitor;
+                    const pageViews = response.page_views;
+
+                    let html = `
+<div class="p-3">
+
+    <div class="card border-0 shadow mb-3">
+        <div class="card-header bg-light">
+            <strong>Visitor Journey Summary</strong>
+        </div>
+
+        <div class="card-body py-3">
+            <div class="row">
+
+                <div class="col-md-6 mb-2">
+                    <small class="text-muted d-block">Entry Point</small>
+                    <strong>${visitor.entry_point ?? '-'}</strong>
+                </div>
+
+                <div class="col-md-6 mb-2">
+                    <small class="text-muted d-block">Campaign</small>
+                    <strong>${visitor.campaign ?? 'Direct Visit'}</strong>
+                </div>
+
+                <div class="col-md-6 mb-2">
+                    <small class="text-muted d-block">Device</small>
+                    <span class="badge badge-info">
+                        ${visitor.device ?? '-'}
+                    </span>
+                </div>
+
+                <div class="col-md-6 mb-2">
+                    <small class="text-muted d-block">Browser</small>
+                    <strong>${visitor.browser ?? '-'}</strong>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <h6 class="mt-3 mb-2">
+        <i class="fas fa-history mr-1"></i>
+        Page View History
+    </h6>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover mb-0">
+            <thead class="thead-light">
+                <tr>
+                    <th width="25%">Page Title</th>
+                    <th width="45%">Page URL</th>
+                    <th width="30%">Previous Visit</th>
+                </tr>
+            </thead>
+            <tbody>
+`;
+                    pageViews.forEach(function(page) {
+
+                        html += `
+        <tr>
+            <td>${page.page_title ?? '-'}</td>
+
+            <td>
+                <a href="${page.page_url}"
+                   target="_blank"
+                   class="text-primary">
+                    ${page.page_url ?? '-'}
+                </a>
+            </td>
+
+            <td>
+                ${page.referrer ?? '-'}
+            </td>
+        </tr>
+    `;
+                    });
+
+                    html += `
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+            `;
+
+                    row.child(html).show();
+                },
+
+                error: function() {
+
+                    row.child(`
+                <div class="p-3 text-danger">
+                    Failed to load page views.
+                </div>
+            `).show();
+                }
+            });
         });
     </script>
 @endpush

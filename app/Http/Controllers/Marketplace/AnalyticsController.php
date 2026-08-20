@@ -403,6 +403,32 @@ class AnalyticsController extends Controller
 
         // return $referrals;
 
+        $cartData = DB::connection('marketplace')
+            ->table('product_views')
+            ->selectRaw('
+        sma_products.name as product_name,
+        sma_products.code,
+        sma_products.image,
+        sma_products.price,
+        SUM(sma_product_views.cart_count) as total_cart_count
+    ')
+            ->leftJoin('products', 'products.id', '=', 'product_views.product_id')
+            ->whereYear('product_views.viewed_at', $date->year)
+            ->whereMonth('product_views.viewed_at', $date->month)
+            ->where('product_views.cart_count', '>', 0)
+            ->groupBy(
+                'product_views.product_id',
+            )
+            ->get();
+
+        $totalCartCount = DB::connection('marketplace')
+            ->table('product_views')
+            ->whereYear('viewed_at', $date->year)
+            ->whereMonth('viewed_at', $date->month)
+            ->sum('cart_count');
+
+        // return $totalCartCount;
+
         return view('admin.analytics.shop', compact(
             // 'visitors',
             'months',
@@ -412,7 +438,9 @@ class AnalyticsController extends Controller
             'deviceStats',
             'topPages',
             'notFoundPages',
-            'referrals'
+            'referrals',
+            'cartData',
+            'totalCartCount'
         ));
     }
 
@@ -423,5 +451,29 @@ class AnalyticsController extends Controller
             new ShopVisitorsExport($request->month),
             'marketplace-visitors-' . $request->month . '.xlsx'
         );
+    }
+
+    public function shopPageViews(VisitorLogs $visitor)
+    {
+        $pageViews = $visitor->pageViews()
+            ->select([
+                'page_title',
+                'page_url',
+                'referrer',
+            ])
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'visitor' => [
+                'entry_point' => $visitor->referrer,
+                'campaign' => $visitor->utm_campaign,
+                'device' => $visitor->device,
+                'browser' => $visitor->browser,
+                // 'country' => $visitor->country,
+                // 'visit_count' => $visitor->visit_count,
+            ],
+            'page_views' => $pageViews,
+        ]);
     }
 }
