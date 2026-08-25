@@ -95,7 +95,7 @@
 
         <div class="row mb-4">
 
-            <div class="col-md-3">
+            <div class="col-md-2">
 
                 <div class="card border-0 shadow-sm">
 
@@ -118,7 +118,7 @@
             </div>
 
 
-            <div class="col-md-3">
+            <div class="col-md-2">
 
                 <div class="card border-0 shadow-sm">
 
@@ -141,7 +141,7 @@
             </div>
 
 
-            <div class="col-md-3">
+            <div class="col-md-2">
 
                 <div class="card border-0 shadow-sm">
 
@@ -164,7 +164,7 @@
             </div>
 
 
-            <div class="col-md-3">
+            <div class="col-md-2">
 
                 <div class="card border-0 shadow-sm">
 
@@ -177,6 +177,27 @@
                         <h3 class="mb-0 text-danger">
 
                             {{ number_format($campaign->failed_count) }}
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="col-md-2">
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-body">
+
+                        <small class="text-muted">
+                            Total Views
+                        </small>
+
+                        <h3 class="mb-0 text-primary">
+
+                            {{ number_format($total_views) }}
 
                         </h3>
 

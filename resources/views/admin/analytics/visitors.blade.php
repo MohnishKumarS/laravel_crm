@@ -453,8 +453,10 @@
                 .removeClass('fa-chevron-right')
                 .addClass('fa-chevron-down');
 
+                const pageViewUrl = "{{ url('visitors') }}";
+
             $.ajax({
-                url: `/visitors/${visitorId}/page-views`,
+                url: `${pageViewUrl}/${visitorId}/page-views`,
                 type: 'GET',
 
                 success: function(response) {

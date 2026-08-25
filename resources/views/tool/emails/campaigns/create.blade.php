@@ -177,7 +177,7 @@
                                 <div class="row">
 
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
 
                                         <div class="form-check border rounded p-3">
 
@@ -203,7 +203,7 @@
                                     </div>
 
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
 
                                         <div class="form-check border rounded p-3">
 
@@ -228,8 +228,23 @@
 
                                     </div>
 
+                                    <div class="col-md-3">
+                                        <div class="form-check border rounded p-3">
+                                            <input type="radio" name="recipient_type" value="guests" id="guestsRadio"
+                                                class="form-check-input" @checked(old('recipient_type') === 'guests')>
 
-                                    <div class="col-md-4">
+                                            <label for="guestsRadio" class="form-check-label">
+                                                <strong>Guest Users</strong>
+                                                <br>
+                                                <small class="text-muted">
+                                                    Select guest users
+                                                </small>
+                                            </label>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-3">
 
                                         <div class="form-check border rounded p-3">
 
@@ -294,6 +309,28 @@
                                 <small class="text-muted">
                                     Select one or more sellers.
                                 </small>
+                            </div>
+
+                            {{-- Guest Users --}}
+                            <div id="guestsBox" class="recipient-box d-none">
+
+                                <label class="form-label">Select Guest Users</label>
+
+                                <div class="form-check mb-2">
+                                    <input type="checkbox" class="form-check-input" id="selectAllGuests">
+
+                                    <label class="form-check-label" for="selectAllGuests" id="selectAllGuestsLabel">
+                                        Select All Guests
+                                    </label>
+                                </div>
+
+                                <select name="recipient_ids[]" id="guestsSelect" class="form-select" multiple>
+                                </select>
+
+                                <small class="text-muted">
+                                    Select one or more guest users.
+                                </small>
+
                             </div>
 
 
@@ -370,7 +407,7 @@
                             </div>
 
 
-                            <div class="mb-3">
+                            {{-- <div class="mb-3">
 
                                 <small class="text-muted">
                                     Sender Count
@@ -380,7 +417,7 @@
                                     0
                                 </div>
 
-                            </div>
+                            </div> --}}
 
 
                             <hr>
@@ -575,6 +612,59 @@
             });
 
             /*
+                |--------------------------------------------------------------------------
+                | Guest Users Select
+                |--------------------------------------------------------------------------
+                */
+            $.ajax({
+                url: "{{ route('emails.recipients.guests') }}",
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+
+                    data.data.forEach(function(guest) {
+
+                        const option = new Option(
+                            guest.name + ' - ' + guest.email,
+                            guest.id,
+                            false,
+                            false
+                        );
+
+                        $('#guestsSelect').append(option);
+                    });
+
+                    $('#guestsSelect').select2({
+                        placeholder: 'Select guest users',
+                        width: '100%'
+                    });
+
+                    $('#selectAllGuestsLabel').text(
+                        'Select All Guests (' + data.data.length + ')'
+                    );
+                }
+            });
+
+            $('#selectAllGuests').on('change', function() {
+
+                if ($(this).is(':checked')) {
+
+                    const allGuestIds = $('#guestsSelect option').map(function() {
+                        return $(this).val();
+                    }).get();
+
+                    $('#guestsSelect').val(allGuestIds).trigger('change');
+
+                } else {
+
+                    $('#guestsSelect').val([]).trigger('change');
+
+                }
+
+            });
+
+
+            /*
             |--------------------------------------------------------------------------
             | Recipient Type
             |--------------------------------------------------------------------------
@@ -620,6 +710,14 @@
                         $('#sellersSelect')
                             .prop('disabled', false);
 
+
+                    } else if (type === 'guests') {
+
+                        $('#guestsBox')
+                            .removeClass('d-none');
+
+                        $('#guestsSelect')
+                            .prop('disabled', false);
 
                     } else if (type === 'custom') {
 

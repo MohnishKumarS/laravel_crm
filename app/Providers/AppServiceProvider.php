@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Setting;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
@@ -15,7 +16,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // $this->app->singleton('settings', function () {
+        //     return cache()->rememberForever('settings', function () {
+        //         return Setting::first();
+        //     });
+        // });
+        // $settings = app('settings');
     }
 
     /**
@@ -63,7 +69,7 @@ class AppServiceProvider extends ServiceProvider
                 'notifications' => $notifications,
                 'notificationCount' => $notificationCount,
                 'partnerMessages' => $partnerMessages,
-                'partnerCount' => $partnerCount
+                'partnerCount' => $partnerCount,
 
             ]);
         });
@@ -81,6 +87,6 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Bootstrap Paginate
-         Paginator::useBootstrapFive();
+        Paginator::useBootstrapFive();
     }
 }

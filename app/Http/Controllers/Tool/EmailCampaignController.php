@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Tool;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendBulkEmailJob;
 use App\Models\Marketplace\ShopCustomer;
+use App\Models\Marketplace\ShopGuest;
 use App\Models\Marketplace\ShopUser;
 use App\Models\Tool\EmailCampaign;
 use App\Models\Tool\EmailCampaignRecipient;
 use App\Models\Tool\EmailTemplate;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -76,6 +76,20 @@ class EmailCampaignController extends Controller
             'data' => $sellers,
         ]);
     }
+    /**
+     * AJAX guests
+     */
+    public function guests(Request $request)
+    {
+        $guests = ShopGuest::select('id', 'name', 'email')
+            ->whereNotNull('email')
+            ->groupBy('email')
+            ->get();
+
+        return response()->json([
+            'data' => $guests,
+        ]);
+    }
 
 
     /**
@@ -87,7 +101,7 @@ class EmailCampaignController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'template_id' => ['required', 'exists:email_templates,id'],
             'sender_email' => ['required', 'email', 'max:255'],
-            'recipient_type' => ['required', 'in:users,sellers,custom'],
+            'recipient_type' => ['required', 'in:users,sellers,custom,guests'],
             'recipient_ids' => ['nullable', 'array'],
             'recipient_ids.*' => ['integer'],
             'custom_emails' => ['nullable', 'string'],
@@ -113,6 +127,10 @@ class EmailCampaignController extends Controller
 
         if ($validated['recipient_type'] === 'custom' && empty($validated['custom_emails'])) {
             return back()->withInput()->withErrors(['custom_emails' => 'Please enter at least one email.']);
+        }
+
+        if ($validated['recipient_type'] === 'guests' && empty($validated['recipient_ids'])) {
+            return back()->withInput()->withErrors(['recipient_ids' => 'Please select at least one guest.']);
         }
 
 
@@ -177,12 +195,23 @@ class EmailCampaignController extends Controller
                     ->get();
 
                 foreach ($users as $user) {
+                    $email = trim($user->email);
+
+                    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                        continue;
+                    }
+
+                    $username = explode('@', $email)[0];
+
+                    if (ctype_digit($username)) {
+                        continue;
+                    }
                     $recipients[] = [
                         'campaign_id' => $campaign->id,
                         'recipient_type' => 'user',
                         'recipient_id' => $user->id,
-                        'name' => $user->name,
-                        'email' => $user->email,
+                        'name' => $user->name ?? 'Customer',
+                        'email' => $email,
                         'sender_email' => $validated['sender_email'],
                         'status' => 'queued',
                         'tracking_token' => Str::uuid(),
@@ -207,12 +236,64 @@ class EmailCampaignController extends Controller
                     ->get();
 
                 foreach ($sellers as $seller) {
+                    $email = trim($seller->email);
+
+                    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                        continue;
+                    }
+
+                    $username = explode('@', $email)[0];
+
+                    if (ctype_digit($username)) {
+                        continue;
+                    }
+
                     $recipients[] = [
                         'campaign_id' => $campaign->id,
                         'recipient_type' => 'seller',
                         'recipient_id' => $seller->id,
-                        'name' => $seller->first_name,
-                        'email' => $seller->email,
+                        'name' => $seller->first_name ?? 'Seller',
+                        'email' => $email,
+                        'sender_email' => $validated['sender_email'],
+                        'status' => 'queued',
+                        'tracking_token' => Str::uuid(),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Guests
+            |--------------------------------------------------------------------------
+            */
+
+            if ($validated['recipient_type'] === 'guests') {
+                $guests = ShopGuest::query()
+                    ->whereIn('id', $validated['recipient_ids'])
+                    ->whereNotNull('email')
+                    ->select(['id', 'name', 'email'])
+                    ->get();
+
+                foreach ($guests as $guest) {
+                    $email = trim($guest->email);
+
+                    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                        continue;
+                    }
+
+                    $username = explode('@', $email)[0];
+
+                    if (ctype_digit($username)) {
+                        continue;
+                    }
+                    $recipients[] = [
+                        'campaign_id' => $campaign->id,
+                        'recipient_type' => 'guest',
+                        'recipient_id' => $guest->id,
+                        'name' => $guest->name ?? 'Customer',
+                        'email' => $email,
                         'sender_email' => $validated['sender_email'],
                         'status' => 'queued',
                         'tracking_token' => Str::uuid(),
@@ -299,6 +380,7 @@ class EmailCampaignController extends Controller
 
             if ($count === 0) {
                 throw new \Exception('No valid recipients found.');
+                //  return redirect()->back()->with('status', 'error')->with('message', 'No valid recipients found.');
             }
 
             // $campaign->update([
@@ -339,7 +421,7 @@ class EmailCampaignController extends Controller
         //     'started_at' => now(),
         // ]);
 
-        $message = $campaign->status === 'scheduled'? 'Campaign scheduled successfully.': 'Campaign has been queued successfully.';
+        $message = $campaign->status === 'scheduled' ? 'Campaign scheduled successfully.' : 'Campaign has been queued successfully.';
 
         return redirect()->route('emails.campaigns.show', $campaign)->with('status', 'success')->with('message', $message);
     }
@@ -354,7 +436,13 @@ class EmailCampaignController extends Controller
 
         $recipients = $campaign->recipients()->latest()->get();
 
-        return view('tool.emails.campaigns.show', compact('campaign', 'recipients'));
+        $total_views = $campaign->recipients()
+            ->whereNotNull('opened_at')
+            ->count();
+
+        // return $total_views;
+
+        return view('tool.emails.campaigns.show', compact('campaign', 'recipients', 'total_views'));
     }
 
 

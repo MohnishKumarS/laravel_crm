@@ -149,6 +149,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
         Route::get('recipients/users', [EmailCampaignController::class, 'users'])->name('recipients.users');
         Route::get('recipients/sellers', [EmailCampaignController::class, 'sellers'])->name('recipients.sellers');
+        Route::get('recipients/guests', [EmailCampaignController::class, 'guests'])->name('recipients.guests');
 
         Route::post('campaigns/{campaign}/send', [EmailCampaignController::class, 'send'])->name('campaigns.send');
         Route::post('campaigns/{campaign}/pause', [EmailCampaignController::class, 'pause'])->name('campaigns.pause');
