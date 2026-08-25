@@ -573,7 +573,7 @@
                     data.data.forEach(function(seller) {
 
                         const option = new Option(
-                            seller.first_name + ' - ' + seller.email,
+                            seller.name + ' - ' + seller.email,
                             seller.id,
                             false,
                             false

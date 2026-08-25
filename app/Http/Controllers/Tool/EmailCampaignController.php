@@ -7,6 +7,7 @@ use App\Jobs\SendBulkEmailJob;
 use App\Models\Marketplace\ShopCustomer;
 use App\Models\Marketplace\ShopGuest;
 use App\Models\Marketplace\ShopUser;
+use App\Models\Marketplace\Warehouse;
 use App\Models\Tool\EmailCampaign;
 use App\Models\Tool\EmailCampaignRecipient;
 use App\Models\Tool\EmailTemplate;
@@ -53,6 +54,7 @@ class EmailCampaignController extends Controller
         $users = ShopCustomer::query()
             ->select('id', 'name', 'email')
             ->whereNotNull('email')
+            ->where('group_id', 3)
             ->orderBy('name')
             ->get();
 
@@ -67,9 +69,9 @@ class EmailCampaignController extends Controller
      */
     public function sellers(Request $request)
     {
-        $sellers = ShopUser::select('id', 'username', 'email', 'first_name')
+        $sellers = Warehouse::select('id', 'name', 'email')
             ->whereNotNull('email')
-            ->where('group_id', 4)
+            ->where('verify', '1')
             ->get();
 
         return response()->json([
