@@ -120,9 +120,9 @@ class VisitorSeeder extends Seeder
         $visitorIds = [];
 
         // 50 Visitors
-        for ($i = 1; $i <= 5; $i++) {
+        for ($i = 1; $i <= 10000; $i++) {
 
-            $firstVisit = $faker->dateTimeBetween('-30 days', '-2 days');
+            $firstVisit = $faker->dateTimeBetween('-8 days', 'now');
             $lastVisit = $faker->dateTimeBetween($firstVisit, 'now');
 
             $visitorId = DB::table('visitors')->insertGetId([
@@ -170,7 +170,7 @@ class VisitorSeeder extends Seeder
         }
 
         // 100 Page Views
-        for ($i = 1; $i <= 100; $i++) {
+        for ($i = 1; $i <= 1000; $i++) {
 
             $index = array_rand($pages);
 
@@ -193,7 +193,7 @@ class VisitorSeeder extends Seeder
 
                 'time_on_page' => rand(5, 600),
 
-                'created_at' => $faker->dateTimeBetween('-30 days', 'now'),
+                'created_at' => $faker->dateTimeBetween('-8 days', 'now'),
                 'updated_at' => now(),
             ]);
         }

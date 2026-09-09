@@ -127,7 +127,7 @@
                     {{-- Visitors --}}
                     <div class="tab-pane fade " id="visitors">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-hover" id="visitorTable">
+                            <table class="table table-bordered table-hover" id="visitorTable" style="width: 100%">
 
                                 <thead>
 
@@ -163,7 +163,7 @@
 
                                 <tbody>
 
-                                    @foreach ($visitors as $visitor)
+                                    {{-- @foreach ($visitors as $visitor)
                                         <tr class="visitor-row" style="cursor: pointer;"
                                             data-visitor-id="{{ $visitor->id }}">
 
@@ -177,17 +177,11 @@
 
                                             <td>{{ $visitor->city ?: '-' }}</td>
 
-                                            {{-- <td>{{ $visitor->browser }}</td>
-
-                                            <td>{{ $visitor->device }}</td> --}}
-
                                             <td>{{ number_format($visitor->visit_count) }}</td>
 
                                             <td>{{ $visitor->first_visit }}</td>
 
                                             <td>{{ $visitor->last_visit }}</td>
-
-                                            {{-- <td>{{ number_format($visitor->page_views_count) }}</td> --}}
 
                                             <td>
 
@@ -204,11 +198,12 @@
                                             </td>
 
                                         </tr>
-                                    @endforeach
+                                    @endforeach --}}
 
                                 </tbody>
                             </table>
                         </div>
+                        {{-- {{ $visitors->links() }} --}}
                     </div>
 
                     {{-- Countries --}}
@@ -400,7 +395,6 @@
 
 @push('scripts')
     <script>
-
         // $('#visitorTable').DataTable();
 
         $('#countryTable').DataTable({});
@@ -417,14 +411,79 @@
                 "?month=" + $(this).val();
 
         });
+        // const visitorTable = $('#visitorTable').DataTable();
 
+        const visitorTable = $('#visitorTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('analytics.visitors.data') }}",
+                data: function(d) {
+                    d.month = $('#monthFilter').val(); // if month filter exists
+                }
+            },
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    searchable: false,
+                    orderable: false
+                },
+                {
+                    data: 'visitor_id',
+                    name: 'visitor_id'
+                },
+                {
+                    data: 'country',
+                    name: 'country'
+                },
+                {
+                    data: 'state',
+                    name: 'state'
+                },
+                {
+                    data: 'city',
+                    name: 'city'
+                },
+                {
+                    data: 'visit_count',
+                    name: 'visit_count'
+                },
+                {
+                    data: 'first_visit',
+                    name: 'first_visit'
+                },
+                {
+                    data: 'last_visit',
+                    name: 'last_visit'
+                },
+                {
+                    data: 'status',
+                    name: 'status',
+                    searchable: false,
+                    orderable: false
+                }
+            ],
+            order: [[7, 'desc']],
+            createdRow: function(row, data) {
+                $(row)
+                    .addClass('visitor-row')
+                    .attr('data-visitor-id', data.visitor_db_id)
+                    .css('cursor', 'pointer');
+            },
+            pageLength: 25
+        });
 
-        const visitorTable = $('#visitorTable').DataTable();
+        $('#visitorTable tbody').on('click', 'tr', function() {
 
-        $('#visitorTable tbody').on('click', 'tr.visitor-row', function() {
+            // const data = visitorTable.row(this).data();
+
+            // const visitorId = data.visitor_db_id;
+
+            // console.log(data); return ;
 
             const row = visitorTable.row(this);
-            const visitorId = $(this).data('visitor-id');
+            const data = visitorTable.row(this).data();
+            const visitorId = data.visitor_db_id;
 
             if (row.child.isShown()) {
 
@@ -441,11 +500,11 @@
 
             // Show loading message
             row.child(`
-        <div class="p-3 text-center">
-            <i class="fas fa-spinner fa-spin"></i>
-            Loading page views...
-        </div>
-    `).show();
+            <div class="p-3 text-center">
+                <i class="fas fa-spinner fa-spin"></i>
+                Loading page views...
+            </div>
+        `).show();
 
             $(this)
                 .addClass('shown')
@@ -453,7 +512,7 @@
                 .removeClass('fa-chevron-right')
                 .addClass('fa-chevron-down');
 
-                const pageViewUrl = "{{ url('visitors') }}";
+            const pageViewUrl = "{{ url('visitors') }}";
 
             $.ajax({
                 url: `${pageViewUrl}/${visitorId}/page-views`,
@@ -461,8 +520,8 @@
 
                 success: function(response) {
 
-                //     if (!response.length) {
-                //         row.child(`
+                    //     if (!response.length) {
+                    //         row.child(`
                 //     <div class="p-3 text-muted">
                 //         No page views found.
                 //     </div>
@@ -475,57 +534,57 @@
                     const pageViews = response.page_views;
 
                     let html = `
-<div class="p-3">
+        <div class="p-3">
 
-    <div class="card border-0 shadow mb-3">
-        <div class="card-header bg-light">
-            <strong>Visitor Journey Summary</strong>
-        </div>
-
-        <div class="card-body py-3">
-            <div class="row">
-
-                <div class="col-md-6 mb-2">
-                    <small class="text-muted d-block">Entry Point</small>
-                    <strong>${visitor.entry_point ?? '-'}</strong>
+            <div class="card border-0 shadow mb-3">
+                <div class="card-header bg-light">
+                    <strong>Visitor Journey Summary</strong>
                 </div>
 
-                <div class="col-md-6 mb-2">
-                    <small class="text-muted d-block">Campaign</small>
-                    <strong>${visitor.campaign ?? 'Direct Visit'}</strong>
-                </div>
+                <div class="card-body py-3">
+                    <div class="row">
 
-                <div class="col-md-6 mb-2">
-                    <small class="text-muted d-block">Device</small>
-                    <span class="badge badge-info">
-                        ${visitor.device ?? '-'}
-                    </span>
-                </div>
+                        <div class="col-md-6 mb-2">
+                            <small class="text-muted d-block">Entry Point</small>
+                            <strong>${visitor.entry_point ?? '-'}</strong>
+                        </div>
 
-                <div class="col-md-6 mb-2">
-                    <small class="text-muted d-block">Browser</small>
-                    <strong>${visitor.browser ?? '-'}</strong>
-                </div>
+                        <div class="col-md-6 mb-2">
+                            <small class="text-muted d-block">Campaign</small>
+                            <strong>${visitor.campaign ?? 'Direct Visit'}</strong>
+                        </div>
 
-            </div>
-        </div>
-    </div>
+                        <div class="col-md-6 mb-2">
+                            <small class="text-muted d-block">Device</small>
+                            <span class="badge badge-info">
+                                ${visitor.device ?? '-'}
+                            </span>
+                                </div>
 
-    <h6 class="mt-3 mb-2">
-        <i class="fas fa-history mr-1"></i>
-        Page View History
-    </h6>
+                                <div class="col-md-6 mb-2">
+                                    <small class="text-muted d-block">Browser</small>
+                                    <strong>${visitor.browser ?? '-'}</strong>
+                                </div>
 
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover mb-0">
-            <thead class="thead-light">
-                <tr>
-                    <th width="25%">Page Title</th>
-                    <th width="45%">Page URL</th>
-                    <th width="30%">Previous Visit</th>
-                </tr>
-            </thead>
-            <tbody>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="mt-3 mb-2">
+                        <i class="fas fa-history mr-1"></i>
+                        Page View History
+                    </h6>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th width="25%">Page Title</th>
+                                    <th width="45%">Page URL</th>
+                                    <th width="30%">Previous Visit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 `;
                     pageViews.forEach(function(page) {
 

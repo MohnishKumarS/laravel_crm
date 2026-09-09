@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Yajra\DataTables\DataTables;
 
 class AnalyticsController extends Controller
 {
@@ -89,7 +90,7 @@ class AnalyticsController extends Controller
 
         $topPages = PageView::select(
             'page_title',
-            'page_url',
+            DB::raw('MAX(page_url) as page_url'),
             DB::raw('count(*) as total')
         )
             ->when($selectedMonth, function ($query) use ($date) {
@@ -98,7 +99,7 @@ class AnalyticsController extends Controller
             })
             ->whereNotNull('page_title')
             ->where('page_title', '!=', '')
-            ->groupBy('page_title', 'page_url')
+            ->groupBy('page_title')
             ->orderByDesc('total')
             ->get();
 
@@ -160,5 +161,40 @@ class AnalyticsController extends Controller
             ],
             'page_views' => $pageViews,
         ]);
+    }
+
+
+    public function visitorsData(Request $request)
+    {
+        $selectedMonth = $request->month ?? now()->format('Y-m');
+
+        $date = Carbon::createFromFormat('Y-m', $selectedMonth);
+
+        $query = Visitor::query()
+            ->withCount('pageViews')
+            ->whereBetween('first_visit', [
+                $date->copy()->startOfMonth(),
+                $date->copy()->endOfMonth()
+            ]);
+            // ->latest('last_visit');
+
+        // return $query;
+
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->editColumn('country', fn($row) => $row->country ?: '-')
+            ->editColumn('state', fn($row) => $row->state ?: '-')
+            ->editColumn('city', fn($row) => $row->city ?: '-')
+            ->addColumn('status', function ($row) {
+                return $row->last_visit >= now()->subMinutes(5)
+                    ? '<span class="badge badge-success">Active</span>'
+                    : '<span class="badge badge-secondary">Offline</span>';
+            })
+            ->addColumn('visitor_db_id', function ($row) {
+                return $row->id;
+            })
+            ->rawColumns(['status'])
+            ->orderColumn('last_visit', 'last_visit $1')
+            ->make(true);
     }
 }

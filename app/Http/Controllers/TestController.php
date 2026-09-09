@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class TestController extends Controller
 {
@@ -11,18 +12,36 @@ class TestController extends Controller
     public function index()
     {
 
-        $results = DB::table('yuukke_dashbaord.visitors')
-            ->join(
-                'marketplace_new.sma_products',
-                'yuukke_dashbaord.visitors.visitor_id',
-                '=',
-                'marketplace_new.sma_products.details'
-            )
-            ->select(
-                'yuukke_dashbaord.visitors.*',
-                'marketplace_new.sma_products.name'
-            )
-            ->get();
+         $token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3ODgxNjk2ODEsImV4cCI6MTc4ODE3MzI4MSwiZGF0YSI6eyJ1c2VyX2lkIjoiMTEiLCJlbWFpbCI6ImFiY0BhYmMuY29tIn19.9vkCEAN8MvAAjNVIPrEaaAH4rfDH2Ox0sz9d7Iezwn0';
+
+    $response = Http::withToken($token)
+        ->acceptJson()
+        ->get('https://marketplace.betalearnings.com/api/v1/Marketv2/newArraivals');
+
+        if (!$response->successful()) {
+            return "No response from the API or an error occurred.";
+        }
+
+        $products = $response->json();
+
+        dd(
+    $response->status(),
+    $response->headers(),
+    $response->json()
+);
+
+        // $results = DB::table('yuukke_dashbaord.visitors')
+        //     ->join(
+        //         'marketplace_new.sma_products',
+        //         'yuukke_dashbaord.visitors.visitor_id',
+        //         '=',
+        //         'marketplace_new.sma_products.details'
+        //     )
+        //     ->select(
+        //         'yuukke_dashbaord.visitors.*',
+        //         'marketplace_new.sma_products.name'
+        //     )
+        //     ->get();
 
         // $products = DB::connection('marketplace')
         //     ->table('products')
@@ -43,11 +62,11 @@ class TestController extends Controller
         //     });
 
 
-        $create = DB::connection('marketplace')->table('visitors')
-        ->insert([
-            'ip_address' => '123:345:45',
-            'page' => 'http://127.0.0.1:8000/upload-test'
-        ]);
+        // $create = DB::connection('marketplace')->table('visitors')
+        // ->insert([
+        //     'ip_address' => '123:345:45',
+        //     'page' => 'http://127.0.0.1:8000/upload-test'
+        // ]);
 
         return 'successfully inserted';
         return view('upload-test');

@@ -137,7 +137,7 @@
                     {{-- Visitors --}}
                     <div class="tab-pane fade " id="visitors">
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="visitorTable">
+                            <table class="table table-bordered" id="visitorTable" style="width: 100%;">
 
                                 <thead>
 
@@ -173,7 +173,7 @@
 
                                 <tbody>
 
-                                    @foreach ($visitors as $visitor)
+                                    {{-- @foreach ($visitors as $visitor)
                                         <tr class="visitor-row" style="cursor: pointer;"
                                             data-visitor-id="{{ $visitor->id }}">
 
@@ -187,17 +187,11 @@
 
                                             <td>{{ $visitor->city ?: '-' }}</td>
 
-                                            {{-- <td>{{ $visitor->browser }}</td>
-
-                                            <td>{{ $visitor->device }}</td> --}}
-
                                             <td>{{ number_format($visitor->visit_count) }}</td>
 
                                             <td>{{ $visitor->first_visit }}</td>
 
                                             <td>{{ $visitor->last_visit }}</td>
-
-                                            {{-- <td>{{ number_format($visitor->page_views_count) }}</td> --}}
 
                                             <td>
 
@@ -214,7 +208,7 @@
                                             </td>
 
                                         </tr>
-                                    @endforeach
+                                    @endforeach --}}
 
                                 </tbody>
                             </table>
@@ -508,12 +502,73 @@
         });
 
 
-        const visitorTable = $('#visitorTable').DataTable();
+        // const visitorTable = $('#visitorTable').DataTable();
+
+        const visitorTable = $('#visitorTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('analytics.shop.data') }}",
+                data: function(d) {
+                    d.month = $('#monthFilter').val(); // if month filter exists
+                }
+            },
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    searchable: false,
+                    orderable: false
+                },
+                {
+                    data: 'visitor_id',
+                    name: 'visitor_id'
+                },
+                {
+                    data: 'country',
+                    name: 'country'
+                },
+                {
+                    data: 'state',
+                    name: 'state'
+                },
+                {
+                    data: 'city',
+                    name: 'city'
+                },
+                {
+                    data: 'visit_count',
+                    name: 'visit_count'
+                },
+                {
+                    data: 'first_visit',
+                    name: 'first_visit'
+                },
+                {
+                    data: 'last_visit',
+                    name: 'last_visit'
+                },
+                {
+                    data: 'status',
+                    name: 'status',
+                    searchable: false,
+                    orderable: false
+                }
+            ],
+            order: [[7, 'desc']],
+            createdRow: function(row, data) {
+                $(row)
+                    .addClass('visitor-row')
+                    .attr('data-visitor-id', data.visitor_db_id)
+                    .css('cursor', 'pointer');
+            },
+            pageLength: 25
+        });
 
         $('#visitorTable tbody').on('click', 'tr.visitor-row', function() {
 
             const row = visitorTable.row(this);
-            const visitorId = $(this).data('visitor-id');
+            const data = visitorTable.row(this).data();
+            const visitorId = data.visitor_db_id;
 
             if (row.child.isShown()) {
 
@@ -542,7 +597,7 @@
                 .removeClass('fa-chevron-right')
                 .addClass('fa-chevron-down');
 
-                const pageViewUrl = "{{ url('visitorShop') }}";
+            const pageViewUrl = "{{ url('visitorShop') }}";
 
             $.ajax({
                 url: `${pageViewUrl}/${visitorId}/page-views`,

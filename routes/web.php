@@ -116,6 +116,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // ANALYTICS
     Route::get('analytics/visitors', [AnalyticsController::class, 'visitors'])->name('analytics.visitors');
     Route::get('/analytics/visitors/export', [AnalyticsController::class, 'exportVisitors'])->name('analytics.visitors.export');
+    Route::get('/analytics/visitors/data', [AnalyticsController::class, 'visitorsData'])->name('analytics.visitors.data');
     Route::get('/visitors/{visitor}/page-views', [AnalyticsController::class, 'pageViews'])->name('visitors.pageViews');
     Route::get('/visitorShop/{visitor}/page-views', [shopAnalytics::class, 'shopPageViews'])->name('visitorShop.pageViews');
 
@@ -156,9 +157,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('campaigns/{campaign}/retry', [EmailCampaignController::class, 'retry'])->name('campaigns.retry');
     });
 
-    // ANALYTICS
+    // SHOP ANALYTICS
     Route::get('analytics/shop', [shopAnalytics::class, 'shopVisitors'])->name('analytics.shop');
     Route::get('/analytics/shop/export', [shopAnalytics::class, 'exportShopVisitors'])->name('analytics.shop.export');
+    Route::get('/analytics/shop/data', [shopAnalytics::class, 'shopVisitorsData'])->name('analytics.shop.data');
 
     // AFFILIATE ADMIN
     Route::prefix('affiliates')->name('affiliates.')->group(function () {
