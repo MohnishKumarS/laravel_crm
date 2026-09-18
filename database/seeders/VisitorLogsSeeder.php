@@ -3,30 +3,29 @@
 namespace Database\Seeders;
 
 use Faker\Factory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class VisitorSeeder extends Seeder
+class VisitorLogsSeeder extends Seeder
 {
     /**
-     * How many visitors / page views to generate. Tune these to test
-     * whatever volume you need past the 1,000-row mark.
+     * VisitorLogs::$connection is 'marketplace', so every query here must
+     * go through that connection explicitly rather than the default one.
      */
-    protected int $totalVisitors = 5000;
+    protected string $connection = 'marketplace';
+
+    protected int $totalVisitors = 11000;
     protected int $chunkSize = 500;
 
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $faker = Factory::create();
+        $db = DB::connection($this->connection);
 
         // Clear existing data
-        // DB::table('page_views')->truncate();
-        // DB::table('visitors')->truncate();
+        // $db->table('visitor_views')->truncate();
+        // $db->table('visitor_logs')->truncate();
 
         $pages = [
             '/', '/about', '/contact', '/services', '/products',
@@ -43,13 +42,24 @@ class VisitorSeeder extends Seeder
         $browsers   = ['Chrome', 'Firefox', 'Edge', 'Safari', 'Opera'];
         $os         = ['Windows', 'Linux', 'Android', 'iOS', 'macOS'];
         $devices    = ['Desktop', 'Mobile', 'Tablet'];
-        $languages  = ['en', 'en-US', 'ta-IN', 'hi-IN'];
+        $languages  = ['en', 'en-IN', 'ta-IN', 'hi-IN'];
         $timezones  = ['Asia/Kolkata', 'Europe/London', 'America/New_York', 'Asia/Dubai'];
         $countries  = ['India', 'USA', 'UK', 'Canada', 'Australia'];
         $states     = ['Tamil Nadu', 'Karnataka', 'Kerala', 'Maharashtra', 'Delhi'];
         $cities     = ['Chennai', 'Bengaluru', 'Kochi', 'Mumbai', 'Delhi'];
-        $referrers  = ['Google', 'Facebook', 'LinkedIn', 'Twitter', 'Direct', 'Bing'];
-        $campaigns  = ['Summer Sale', 'Email Campaign', 'Facebook Ads', 'Google Ads', 'Organic', null];
+
+        // Full-URL referrers, matching the shape in your sample row
+        // (https://google.com), plus a chance of no referrer at all.
+        $referrers = [
+            'https://google.com',
+            'https://facebook.com',
+            'https://linkedin.com',
+            'https://twitter.com',
+            'https://bing.com',
+            null,
+        ];
+
+        $campaigns = ['Summer Sale', 'Email Campaign', 'Facebook Ads', 'Google Ads', 'Organic', null];
 
         $this->command?->getOutput()->progressStart($this->totalVisitors);
 
@@ -67,7 +77,8 @@ class VisitorSeeder extends Seeder
 
                 $visitorRows[] = [
                     'visitor_id'   => $uuid,
-                    'ip_address'   => $faker->ipv4(),
+                    // ~15% of visitors have no captured IP, like your sample row.
+                    'ip_address'   => $faker->boolean(85) ? $faker->ipv4() : null,
 
                     'country'      => $faker->randomElement($countries),
                     'state'        => $faker->randomElement($states),
@@ -87,27 +98,25 @@ class VisitorSeeder extends Seeder
                     'last_visit'   => $lastVisit,
                     'visit_count'  => rand(1, 20),
 
-                    'created_at'   => now(),
-                    'updated_at'   => now(),
+                    'created_at'   => $firstVisit,
+                    'updated_at'   => $lastVisit,
                 ];
             }
 
-            // Bulk insert this chunk of visitors in one query.
-            DB::table('visitors')->insert($visitorRows);
+            // Bulk insert this chunk of visitor_logs in one query.
+            $db->table('visitor_logs')->insert($visitorRows);
 
-            // Fetch back the auto-increment ids for the uuids we just
-            // inserted, since insert() (unlike insertGetId) doesn't return
-            // ids for a multi-row insert.
-            $idMap = DB::table('visitors')
+            // insert() doesn't return ids for multi-row inserts, so pull
+            // back the auto-increment ids we just created via the uuids.
+            $idMap = $db->table('visitor_logs')
                 ->whereIn('visitor_id', $visitorUuids)
                 ->pluck('id', 'visitor_id');
 
-            // 1–15 page views per visitor in this chunk.
-            $pageViewRows = [];
+            $viewRows = [];
 
             foreach ($visitorUuids as $uuid) {
-                $visitorPk = $idMap[$uuid] ?? null;
-                if (! $visitorPk) {
+                $logId = $idMap[$uuid] ?? null;
+                if (! $logId) {
                     continue;
                 }
 
@@ -116,8 +125,9 @@ class VisitorSeeder extends Seeder
                 for ($v = 0; $v < $viewsForThisVisitor; $v++) {
                     $index = array_rand($pages);
 
-                    $pageViewRows[] = [
-                        'visitor_id'   => $visitorPk,
+                    $viewRows[] = [
+                        // Matches VisitorLogs::pageViews() -> hasMany(VisitorViews::class, 'visitor_id', 'id')
+                        'visitor_id'   => $logId,
                         'page_url'     => $pages[$index],
                         'page_title'   => $titles[$index],
                         'route'        => str_replace('/', '', $pages[$index]) ?: 'home',
@@ -129,10 +139,10 @@ class VisitorSeeder extends Seeder
                 }
             }
 
-            // Insert page views in sub-chunks so a single query never
-            // carries an unreasonable number of rows.
-            foreach (array_chunk($pageViewRows, 1000) as $subChunk) {
-                DB::table('page_views')->insert($subChunk);
+            // Insert views in sub-chunks so no single query carries an
+            // unreasonable number of rows.
+            foreach (array_chunk($viewRows, 1000) as $subChunk) {
+                $db->table('visitor_views')->insert($subChunk);
             }
 
             $this->command?->getOutput()->progressAdvance($count);

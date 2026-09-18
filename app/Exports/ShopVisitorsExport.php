@@ -4,13 +4,19 @@ namespace App\Exports;
 
 use App\Models\Marketplace\VisitorLogs;
 use Carbon\Carbon;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class ShopVisitorsExport implements FromCollection, WithHeadings, WithColumnWidths, WithMapping
+class ShopVisitorsExport implements FromQuery, WithHeadings, WithMapping, WithColumnWidths, WithChunkReading, ShouldAutoSize, ShouldQueue
 {
+    use Exportable;
+
     protected $month;
 
     public function __construct($month)
@@ -18,20 +24,33 @@ class ShopVisitorsExport implements FromCollection, WithHeadings, WithColumnWidt
         $this->month = $month;
     }
 
-    public function collection()
+    public function query()
     {
         $date = Carbon::createFromFormat('Y-m', $this->month);
 
-        return VisitorLogs::withCount('pageViews')
+        // VisitorLogs::$connection is 'marketplace' — the query builder
+        // picks that up automatically, no extra connection() call needed.
+        return VisitorLogs::query()
+            ->withCount('pageViews')
             ->whereYear('first_visit', $date->year)
             ->whereMonth('first_visit', $date->month)
-            ->get();
+            ->orderBy('first_visit');
+    }
+
+    /**
+     * Rows pulled from the DB per batch, instead of loading the whole
+     * month into memory at once via ->get(). This is what let 60k rows
+     * work locally but choke around 20k on the server — see the timeout
+     * checklist from earlier.
+     */
+    public function chunkSize(): int
+    {
+        return 1000;
     }
 
     public function headings(): array
     {
         return [
-
             'Visitor ID',
             'Country',
             'State',
@@ -44,8 +63,7 @@ class ShopVisitorsExport implements FromCollection, WithHeadings, WithColumnWidt
             'Visit Count',
             'First Visit',
             'Last Visit',
-            'Page Views'
-
+            'Page Views',
         ];
     }
 
@@ -62,9 +80,9 @@ class ShopVisitorsExport implements FromCollection, WithHeadings, WithColumnWidt
             $visitor->language,
             $visitor->timezone,
             $visitor->visit_count,
-            $visitor->first_visit,
-            $visitor->last_visit,
-            $visitor->page_views_count, // Include if needed
+            optional($visitor->first_visit)->format('Y-m-d H:i:s'),
+            optional($visitor->last_visit)->format('Y-m-d H:i:s'),
+            $visitor->page_views_count,
         ];
     }
 
@@ -78,12 +96,12 @@ class ShopVisitorsExport implements FromCollection, WithHeadings, WithColumnWidt
             'E' => 20,
             'F' => 20,
             'G' => 20,
+            'H' => 20,
             'I' => 20,
             'J' => 20,
             'K' => 25,
             'L' => 25,
-            'M' => 25,
-            'N' => 25,
+            'M' => 15,
         ];
     }
 }
